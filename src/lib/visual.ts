@@ -1,9 +1,9 @@
 import type { Photo, Sense, Word } from '../types';
-import { buildVisualQuery, VISUAL_SCHEMA } from './visual-inference';
+import { VISUAL_SCHEMA } from './visual-schema';
 export function visualQuery(sense: Sense): string | null {
   if (sense.visualOrigin === 'curated' && sense.visualType === 'abstract') return null;
   if (sense.visualQuery && sense.visualType !== 'abstract') return sense.visualQuery;
-  return buildVisualQuery({ englishMeaning: sense.english, partOfSpeech: sense.partOfSpeech })?.query ?? null;
+  return null; // All UI senses arrive classified by the build or dictionary worker.
 }
 export const IMAGE_TTL = 86_400_000;
 export function imageCacheKey(word: Word, sense: Sense) { return JSON.stringify([VISUAL_SCHEMA, 'pixabay>pexels>curated', word.id, sense.id, visualQuery(sense)?.trim().replace(/\s+/g, ' ').toLowerCase() ?? 'explanation', sense.visualType, word.category ?? '', 'photo+all']); }

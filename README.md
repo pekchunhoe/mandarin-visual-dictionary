@@ -45,7 +45,7 @@ Bundled and fallback pictures: [Pexels license](https://www.pexels.com/license/)
 
 Font: locally bundled DM Sans via `@fontsource-variable/dm-sans` (SIL Open Font License in that package). CJK text uses the device's installed Chinese fonts. No Google Fonts requests are made.
 
-English semantic classification: a compact, deterministic derivative of Princeton WordNet 3.1, with provenance in `src/data/visual-lexicon-source.json` and license in `public/data/WORDNET-LICENSE.txt`. Its noun categories, verb lemmas and 669 emotion/state/adjective expressions are compiled into browser and server JavaScript; Python, the original archive, and runtime WordNet downloads are unnecessary. `src/data/visual-templates.json` provides English visual contexts, expanded through explicitly selected WordNet synsets and adjective satellites. No Mandarin word membership is involved. Invalid lexicon structure preserves curated overrides and the English template anchors; unresolved meanings degrade conservatively.
+English semantic classification: a compact, deterministic derivative of Princeton WordNet 3.1, with provenance in `src/data/visual-lexicon-source.json` and license in `public/data/WORDNET-LICENSE.txt`. Its complete noun categories, verb lemmas and 669 emotion/state/adjective expressions remain embedded in the server function. The browser worker fetches one content-hashed JSON asset on demand; the main UI never imports or parses it. Python, the original archive, and external WordNet downloads are unnecessary at runtime. `src/data/visual-templates.json` provides English visual contexts, expanded through explicitly selected WordNet synsets and adjective satellites. No Mandarin word membership is involved. Invalid lexicon structure preserves curated overrides and the English template anchors; unresolved meanings degrade conservatively.
 
 ## Architecture
 
@@ -53,11 +53,14 @@ English semantic classification: a compact, deterministic derivative of Princeto
 src/App.tsx                      Hash routes, search lifecycle, saved words
 src/components/                  Search, speech, pictures, preview, quiz, error boundary
 src/pages/                       Home and word detail
-src/data/learning.ts              Reviewed word/sense enhancements and categories
+src/data/learning-source.ts       Build-time editorial source and canonical starter selection
+src/data/learning-runtime.json    Generated, already classified starter words
+src/data/learning.ts              Lightweight UI access to generated starters
 src/data/cedict-core.json         Genuine CC-CEDICT starter subset
 src/lib/dictionary.ts             Pinyin normalization and in-memory index
 src/lib/dictionary.worker.ts      Full dictionary loading and indexing off the UI thread
-src/lib/search.ts                 Shared worker, caching, obsolete-search cancellation
+src/lib/search.ts                 Core search and result cache
+src/lib/dictionary-client.ts      Shared worker messages and obsolete-request cancellation
 src/lib/images.ts                 Shared thumbnail/gallery requests and expiring sense-aware cache
 server/images.ts                 Provider ordering, request deduplication, bounded caches
 server/providers.ts              Pixabay/Pexels adapters and response normalization
@@ -66,7 +69,8 @@ server/dictionary.ts             Lazy, canonical full-dictionary resolution
 server/image-handler.ts          Shared HTTP handler and input/rate controls
 server/image-service.mjs         Generated native Node bundle, including WordNet data
 api/images.js                    Vercel entrypoint with guarded service initialization
-src/lib/visual-inference.ts       Shared deterministic English semantic inference
+src/lib/visual-inference-core.ts  Unchanged classifier factory, used by worker and server
+src/lib/visual-inference.ts       Server/build entry with embedded semantic data
 public/data/cedict.json           Full dictionary; never parsed on each search
 public/photos/                   Reviewed local Pexels images
 public/sw.js                     Production offline cache template
@@ -75,9 +79,9 @@ vite.config.ts                   Local API and build-specific precache generatio
 
 Hash routing keeps links reloadable on static hosts without catch-all routing that could swallow `/api/images`. The core dictionary runs locally, so a separate `/api/dictionary` round trip is unnecessary. AI is not used to generate factual definitions or request translations. No Gemini dependency or key is needed.
 
-Cache keys include the visual schema version, provider (or the browser provider chain), word, sense, normalized query, visual/category type, image type and request mode. Stable identifiers keep unrelated meanings apart. Full-dictionary entries use canonical simplified/traditional/pinyin row IDs and canonical sense IDs. Curated metadata is an override, not a membership gate. `buildVisualQuery` cleans the selected English meaning, considers at most four separate synonyms, recognizes emotional/state predicates before action verbs, and selects a contextual English query. For example, `panic` becomes `panicked person facial expression`, `amazed` becomes `surprised person facial expression`, and `cold` becomes `person feeling cold winter`. One conservative fallback retains the subject or human context. Explicit figurative/grammatical meanings and unresolved terms skip providers.
+Cache keys include the visual schema version, provider (or the browser provider chain), word, sense, normalized query, visual/category type, image type and request mode. Stable identifiers keep unrelated meanings apart. Full-dictionary entries use canonical simplified/traditional/pinyin row IDs and canonical sense IDs. Curated metadata is an override, not a membership gate. `buildVisualQuery` cleans the selected English meaning, considers at most four separate synonyms, recognizes emotional/state predicates before action verbs, and selects a contextual English query. For example, `panic` becomes `panicked person facial expression`, `amazed` becomes `surprised person facial expression`, and `cold` becomes `person feeling cold winter`. One conservative fallback retains the subject or human context. Explicit figurative/grammatical meanings skip providers; unresolved lexical terms use the conceptual fallback.
 
-The current `dictionary-visual-v4` schema invalidates older image/classification cache keys. Saved dictionary entries are reclassified from their English meanings at startup, so old non-visual decisions cannot persist in My words. Only explicit curated overrides are retained; legacy derived queries without an origin are recomputed. No browser image results are persisted in local storage. The service worker cache includes the visual schema and content hash, precaches the new inference code, removes obsolete app caches and excludes `/api/` responses from caching.
+The current `dictionary-visual-v4` schema invalidates older image/classification cache keys. Saved dictionary entries are reclassified by the worker before they appear in My words or a saved detail page, so old non-visual decisions cannot persist. Loading and retry states cover this asynchronous step. Only explicit curated overrides are retained; legacy derived queries without an origin are recomputed. No browser image results are persisted in local storage. The service worker cache includes the visual schema and content hash, precaches the new inference code, removes obsolete app caches and excludes `/api/` responses from caching.
 
 Conceptual vocabulary follows the same selected-English-sense pipeline as concrete words. The WordNet export retains 18 abstract noun classes as `concept:*` categories, alongside physical nouns, verbs and descriptors. `src/data/concept-templates.json` supplies shared English domain queries (for example, politics → government parliament politics); it contains no Mandarin membership list. Domain annotations qualify a meaning rather than vetoing it. Grammar, particles and connectors still skip image search. Unmatched lexical meanings use their own phrase plus `concept`, with the plain phrase as a single fallback, even when optional WordNet data is unavailable. Nonliteral domain descriptors retain their domain instead of using a literal human-expression template. Existing exclusions for unsafe meanings, proper names and explicit figurative annotations remain.
 
@@ -148,3 +152,11 @@ No commit, push, or deployment is performed by the implementation task. The API 
 The supplied directory was empty and had no `.git`, framework, routing, API, styling, Gemini integration, Vercel setup, PWA, tests, reusable components, or environment patterns to preserve. React/Vite and Vercel functions follow the requested defaults. See `IMPLEMENTATION_REPORT.md` for verification results.
 
 Malay coverage, examples, approved image queries, and relationship diagrams are curated subsets, not claims of full 125,173-entry educational enrichment. Most starter covers have one offline photo; apple has eight. Live galleries provide up to 12 where the provider has relevant results. ID/URL deduplication does not detect every visually similar crop, and images should be reviewed for high-assurance classroom deployment. Pronunciation quality and availability depend on installed device voices. No accounts, handwriting, stroke animation, AI enhancement, or spaced repetition are included.
+
+## Bundle performance
+
+`npm run build` regenerates all 54 starter words from the unchanged editorial source and classifier before compilation. `npm run dev` does the same. Do not edit `learning-runtime.json` by hand. Word detail/preview and quiz code are lazy modules; the small home, category and saved layouts stay together. The main thread indexes only the starter collection. It passes that collection to the worker once, avoiding a duplicate starter payload in worker JavaScript. Full CC-CEDICT remains a separate, unchanged static asset.
+
+A fresh PWA install precaches the small worker, lazy UI modules and local pictures, but does not fetch the large semantic JSON or full dictionary. The first full lookup downloads and caches both. Saved-word reclassification only needs the semantic asset. Upgrades preserve a previously downloaded dictionary and prepare the new semantic asset when upgrading from the old bundled worker, so existing offline capabilities remain available. Hashed assets ignore the preview server's Origin variation when matching precached module requests. API responses remain excluded.
+
+Run `npm run test:bundle` after a production build to verify the emitted UI/worker import boundaries, deduplication and precache coverage. Run `npm run measure:bundle` for actual raw/gzip/Brotli sizes. Both use build evidence in `.tmp`; no analyzer ships to browsers. With `npm run preview` running, `npm run test:lazy` verifies cold-home network requests, offline lazy pages, worker data reuse, saved entries and upgrades. The full-dictionary parity test checks all 125,173 rows against the pre-optimization classifier. See `BUNDLE_OPTIMIZATION_REPORT.md` for the measured comparison.

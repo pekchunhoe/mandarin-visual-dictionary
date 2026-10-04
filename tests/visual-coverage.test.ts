@@ -1,8 +1,9 @@
 // @vitest-environment node
 import { readFileSync } from 'node:fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fromRow, byId } from '../src/data/learning';
-import type { RawRow } from '../src/data/learning';
+import { byId } from '../src/data/learning';
+import { fromRow } from '../src/lib/dictionary-entry';
+import type { RawRow } from '../src/lib/dictionary-entry';
 import { visualQuery } from '../src/lib/visual';
 import { clearImageCache, getImages } from '../server/images';
 import { DictionaryIndex } from '../src/lib/dictionary';

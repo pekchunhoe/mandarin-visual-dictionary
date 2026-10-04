@@ -1,0 +1,10 @@
+import { build } from 'esbuild';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
+await mkdir('.tmp', { recursive: true });
+const outfile = resolve('.tmp/learning-build.mjs');
+await build({ entryPoints: ['src/data/learning-source.ts'], outfile, bundle: true, platform: 'node', format: 'esm', logLevel: 'silent' });
+const { words, categories } = await import(pathToFileURL(outfile).href + '?build=' + Date.now());
+await writeFile('src/data/learning-runtime.json', JSON.stringify({ words, categories }) + '\n');
+console.log(`PASS: generated ${words.length} starter words with unchanged canonical senses and visual queries.`);

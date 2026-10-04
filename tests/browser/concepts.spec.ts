@@ -2,6 +2,19 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const rows = JSON.parse(readFileSync('public/data/cedict.json', 'utf8')) as [string, string, string, string[]][];
 
+test('optional semantic data failure does not block dictionary meanings or concept eligibility', async ({ page, context }) => {
+  let semanticAttempts = 0;
+  await context.route(url => url.pathname.endsWith('/visual-lexicon.json') && !url.search, route => { semanticAttempts++; return route.abort(); });
+  await page.route('**/api/images?**', route => route.fulfill({ json: { status: 'unavailable', images: [] } }));
+  await page.goto('/#search=' + encodeURIComponent('政治'));
+  const card = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '政治', exact: true }) }).first();
+  await expect(card).toBeVisible({ timeout: 30000 }); await card.click();
+  await expect(page.locator('.word-header h1')).toHaveText('政治');
+  await expect(page.locator('.gallery-section')).toBeVisible();
+  await expect(page.locator('.abstract-card')).toHaveCount(0);
+  expect(semanticAttempts).toBe(1);
+});
+
 for (const text of ['政治', '经济', '文化', '科学', '法律']) {
   test(`${text} requests conceptual pictures before showing a gallery and preview`, async ({ page }) => {
     const row = rows.find(r => r[1] === text)!;

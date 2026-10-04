@@ -32,7 +32,8 @@ describe('bounded browser image requests', () => {
     expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v4');
     expect(imageCacheKey(refreshed, refreshed.senses[0])).not.toContain('dictionary-visual-v2');
     expect(refreshWordVisuals(apple).senses[0].visualQuery).toBe(apple.senses[0].visualQuery);
-    expect(visualQuery({ ...stale.senses[0], visualOrigin: 'curated', visualType: 'emotion' })).toBe('panicked person facial expression');
+    const missingQuery = { ...word, senses: [{ ...stale.senses[0], visualOrigin: 'curated' as const, visualType: 'emotion' as const }] };
+    expect(visualQuery(refreshWordVisuals(missingQuery).senses[0])).toBe('panicked person facial expression');
   });
   it('ignores old persisted image records and versions the current cache', async () => {
     localStorage.setItem('kanjian-images', JSON.stringify({ images: [], status: 'unavailable' }));

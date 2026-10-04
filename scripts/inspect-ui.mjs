@@ -1,0 +1,26 @@
+import { chromium } from '@playwright/test';
+import { mkdir, readdir } from 'node:fs/promises';
+const browser = await chromium.launch({ channel: 'msedge' });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+await mkdir('.tmp', { recursive: true });
+page.on('pageerror', error => console.error('PAGE ERROR', error.message));
+await page.goto('http://127.0.0.1:5173');
+await page.locator('.hero-cat img').waitFor();
+async function loadPictures() { for (const picture of await page.locator('img').all()) await picture.scrollIntoViewIfNeeded(); await page.evaluate(() => Promise.all([...document.images].map(i => i.decode().catch(() => {})))); await page.evaluate(() => scrollTo(0, 0)); }
+await loadPictures();
+await page.screenshot({ path: '.tmp/home-desktop.png', fullPage: true, animations: 'disabled' });
+await page.setViewportSize({ width: 390, height: 844 });
+await page.screenshot({ path: '.tmp/home-mobile.png', fullPage: true, animations: 'disabled' });
+await page.goto('http://127.0.0.1:5173/#word=苹果');
+await page.locator('.gallery-grid figure').last().waitFor();
+await loadPictures();
+await page.screenshot({ path: '.tmp/apple-mobile.png', fullPage: true, animations: 'disabled' });
+await page.setViewportSize({ width: 1440, height: 1000 });
+await page.screenshot({ path: '.tmp/apple-desktop.png', fullPage: true, animations: 'disabled' });
+const photos = (await readdir('public/photos')).filter(file => file.endsWith('.jpg'));
+await page.setViewportSize({ width: 1000, height: 760 });
+await page.setContent(`<body style="margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:white">${photos.map(file => `<div><img src="http://127.0.0.1:5173/photos/${file}" style="width:194px;height:140px;object-fit:cover"><span>${file}</span></div>`).join('')}</body>`);
+await page.locator('img').last().waitFor();
+await page.evaluate(() => Promise.all([...document.images].map(i => i.decode().catch(() => {}))));
+await page.screenshot({ path: '.tmp/photos.png', fullPage: true });
+await browser.close();

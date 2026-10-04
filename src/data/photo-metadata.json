@@ -1,0 +1,110 @@
+{
+  "airplane": {
+    "width": 900,
+    "height": 400
+  },
+  "apple-basket": {
+    "width": 900,
+    "height": 1350
+  },
+  "apple-green": {
+    "width": 900,
+    "height": 600
+  },
+  "apple-halves": {
+    "width": 900,
+    "height": 900
+  },
+  "apple-hand": {
+    "width": 900,
+    "height": 600
+  },
+  "apple-picking": {
+    "width": 900,
+    "height": 600
+  },
+  "apple-slices": {
+    "width": 900,
+    "height": 600
+  },
+  "apple-tree": {
+    "width": 900,
+    "height": 1350
+  },
+  "apple": {
+    "width": 900,
+    "height": 900
+  },
+  "banana": {
+    "width": 900,
+    "height": 600
+  },
+  "bird": {
+    "width": 900,
+    "height": 600
+  },
+  "book": {
+    "width": 900,
+    "height": 1350
+  },
+  "car": {
+    "width": 900,
+    "height": 506
+  },
+  "cat": {
+    "width": 900,
+    "height": 1350
+  },
+  "cold": {
+    "width": 900,
+    "height": 675
+  },
+  "doctor": {
+    "width": 900,
+    "height": 1350
+  },
+  "dog": {
+    "width": 900,
+    "height": 675
+  },
+  "elephant": {
+    "width": 900,
+    "height": 1600
+  },
+  "fish": {
+    "width": 900,
+    "height": 600
+  },
+  "flower": {
+    "width": 900,
+    "height": 1350
+  },
+  "happy": {
+    "width": 900,
+    "height": 1175
+  },
+  "house": {
+    "width": 900,
+    "height": 600
+  },
+  "running": {
+    "width": 900,
+    "height": 506
+  },
+  "school": {
+    "width": 900,
+    "height": 600
+  },
+  "tree": {
+    "width": 900,
+    "height": 600
+  },
+  "umbrella": {
+    "width": 900,
+    "height": 1200
+  },
+  "watermelon": {
+    "width": 900,
+    "height": 1350
+  }
+}

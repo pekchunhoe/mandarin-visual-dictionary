@@ -1,0 +1,8 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import '@fontsource-variable/dm-sans';
+import './styles.css';
+import { ErrorBoundary } from './components/ErrorBoundary';
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><ErrorBoundary><App/></ErrorBoundary></React.StrictMode>);
+if ('serviceWorker' in navigator && import.meta.env.PROD) window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => { /* Offline caching is optional. */ }); });

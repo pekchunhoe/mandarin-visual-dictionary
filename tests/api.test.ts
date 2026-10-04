@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import handler from '../api/images';
+import handler from '../server/image-handler';
 import { clearImageCache } from '../server/images';
 beforeEach(() => { clearImageCache(); vi.stubEnv('PIXABAY_API_KEY', ''); vi.stubEnv('PEXELS_API_KEY', ''); });
 afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
@@ -12,6 +12,7 @@ async function request(url: string, method = 'GET', ip = 'test') {
   await handler(req, res); return { status: res.statusCode, headers, body: JSON.parse(body) };
 }
 describe('server API safeguards', () => {
+  it('normalizes malformed request URLs', async () => expect((await request('http://[')).status).toBe(400));
   it('rejects unsupported methods', async () => expect((await request('/?word=苹果&sense=sense-0', 'POST')).status).toBe(405));
   it('rejects arbitrary image queries and URL proxies', async () => { expect((await request('/?q=anything')).status).toBe(400); expect((await request('/?word=苹果&sense=sense-0&url=https://example.com')).status).toBe(400); });
   it('validates sense and input length', async () => { expect((await request('/?word=苹果&sense=other')).status).toBe(400); expect((await request('/?word=' + 'a'.repeat(41) + '&sense=sense-0')).status).toBe(400); });

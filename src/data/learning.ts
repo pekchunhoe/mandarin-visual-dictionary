@@ -1,6 +1,9 @@
 import type { Example, Sense, VisualType, Word } from '../types';
 import raw from './cedict-core.json';
-import { displayMeaning, toneMarks } from '../lib/dictionary';
+import { fromRow } from '../lib/dictionary-entry';
+import type { RawRow } from '../lib/dictionary-entry';
+export { fromRow } from '../lib/dictionary-entry';
+export type { RawRow } from '../lib/dictionary-entry';
 
 type Lesson = [string, string, string, VisualType, string?, string?];
 // Editorial learning material, separate from the unchanged CC-CEDICT definitions.
@@ -86,11 +89,6 @@ const relationships: Record<string, [string, string, string]> = {
   '可能': ['明天 · Tomorrow', '可能 / perhaps', '会下雨？ · Will it rain?'],
   '如果': ['如果下雨 · If it rains', '如果 → 就 / condition → result', '在家看书 · Read at home']
 };
-export type RawRow = [string, string, string, string[]];
-export function fromRow(row: RawRow): Word {
-  const [traditional, simplified, numericPinyin, definitions] = row;
-  return { id: `${simplified}|${traditional}|${numericPinyin}`, simplified, traditional, numericPinyin, pinyin: toneMarks(numericPinyin), source: 'CC-CEDICT', senses: definitions.filter(d => !d.startsWith('CL:')).map((english, i) => ({ id: `sense-${i}`, english: displayMeaning(english), visualType: 'abstract', examples: [] })) };
-}
 export const words: Word[] = Object.entries(lessons).flatMap(([chinese, lesson]) => {
   const rows = (raw as RawRow[]).filter(r => r[1] === chinese);
   const preferred: Record<string, string> = { '苹果': 'ping2 guo3', '跑': 'pao3', '书': 'shu1', '云': 'yun2', '鸟': 'niao3' };
@@ -100,8 +98,9 @@ export const words: Word[] = Object.entries(lessons).flatMap(([chinese, lesson])
   if (chinese === '热') word.senses.sort((a, b) => Number(b.english.startsWith('hot')) - Number(a.english.startsWith('hot')));
   if (chinese === '兔子') word.senses.sort((a, b) => Number(b.english === 'rabbit') - Number(a.english === 'rabbit'));
   const base = word.senses[0];
-  // Enrich only the selected first sense. Unrelated dictionary senses retain independent IDs and no photo query.
-  word.senses[0] = { ...base, malay, chineseExplanation: explanation, visualType, visualQuery, examples: examples[chinese] ?? [], relationship: relationships[chinese] };
+  // Enrich only the selected first sense. Other meanings retain canonical IDs
+  // and their own independently inferred visual intent.
+  word.senses[0] = { ...base, malay, chineseExplanation: explanation, visualType, visualQuery, visualOrigin: 'curated', examples: examples[chinese] ?? [], relationship: relationships[chinese] };
   if (chinese === '开') {
     const opening = word.senses.find(s => /^to open/.test(s.english));
     const operating = word.senses.find(s => /to turn on/.test(s.english));

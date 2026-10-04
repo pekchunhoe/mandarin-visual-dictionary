@@ -32,16 +32,17 @@ describe('Pixabay integration', () => {
   it.each(['因为', '但是', '虽然', '已经', '如果', '可能'])('does not search stock photos for %s', async word => {
     const fetcher = vi.fn(); expect((await getImages(word, 'sense-0', options(fetcher))).images).toEqual([]); expect(fetcher).not.toHaveBeenCalled();
   });
-  it('deduplicates IDs and resized URLs; rejects malformed, tiny, unsafe, irrelevant and wrong-intent hits', () => {
+  it('deduplicates IDs and resized URLs; rejects malformed, tiny, unsafe and known wrong-intent hits without requiring matching tags', () => {
     const result = normalizePixabay([hit(), hit(), { ...hit(2), largeImageURL: hit().largeImageURL }, { ...hit(3), webformatURL: 'javascript:alert(1)' }, { ...hit(4), imageWidth: 10 }, hit(5, 'apple, iphone, technology'), hit(6, 'mountain'), null, {}], 'apple fruit');
-    expect(result.map(p => p.id)).toEqual(['pixabay-1']);
+    expect(result.map(p => p.id)).toEqual(['pixabay-1', 'pixabay-6']);
     expect(normalizePixabay([hit(1, 'bank, riverbank'), hit(2, 'bank, finance')], 'bank financial institution').map(p => p.id)).toEqual(['pixabay-2']);
   });
   it('uses at most one supporting search to fill a sparse gallery', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(success([hit()])).mockResolvedValueOnce(success(Array.from({ length: 8 }, (_, i) => hit(i + 2))));
     const result = await getImages('苹果', 'sense-0', options(fetcher));
     expect(fetcher).toHaveBeenCalledTimes(2); expect(result.images.filter(p => p.provider === 'pixabay')).toHaveLength(9);
-    expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('q')).toBe('apple orchard');
+    expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('q')).toBe('apple fruit');
+    expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('image_type')).toBe('all');
   });
   it('returns one thumbnail and uses only the minimum Pixabay page size', async () => {
     const fetcher = vi.fn().mockResolvedValue(success([hit(), hit(2), hit(3)]));
@@ -67,7 +68,7 @@ describe('Pixabay integration', () => {
     const fetcher = vi.fn().mockResolvedValue(success([]));
     await getImages('开', word.senses[0].id, { pixabayKey: 'test-key', fetcher, mode: 'thumbnail' });
     await getImages('开', word.senses[1].id, { pixabayKey: 'test-key', fetcher, mode: 'thumbnail' });
-    expect(fetcher).toHaveBeenCalledTimes(2); expect(fetcher.mock.calls[0][0]).not.toBe(fetcher.mock.calls[1][0]);
+    expect(fetcher).toHaveBeenCalledTimes(4); expect(fetcher.mock.calls[0][0]).not.toBe(fetcher.mock.calls[2][0]);
   });
   it('falls through empty Pixabay searches to configured Pexels', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(success([])).mockResolvedValueOnce(success([])).mockResolvedValueOnce({ ok: true, json: async () => ({ photos: [{ id: 99, width: 900, height: 700, url: 'https://www.pexels.com/photo/99/', src: { medium: 'https://images.pexels.com/photos/99/medium.jpg', large: 'https://images.pexels.com/photos/99/large.jpg' } }] }) });
@@ -110,5 +111,18 @@ describe('Pixabay integration', () => {
     expect(normalizeVisualQuery('  Apple   FRUIT ')).toBe('apple fruit'); expect(() => normalizeVisualQuery('a'.repeat(101))).toThrow(); expect(() => normalizeVisualQuery('bad\u0000query')).toThrow();
     const plan = imageSearchPlan(byId.get('苹果')!, byId.get('苹果')!.senses[0])!;
     expect(() => pixabayRequest({ ...plan.primary, category: 'unsafe' as never }, 'test-key')).toThrow(); expect(() => pixabayRequest({ ...plan.primary, imageType: 'video' as never }, 'test-key')).toThrow();
+  });
+  it('retries transient failures after a short cache instead of waiting 24 hours', async () => {
+    vi.useFakeTimers(); const fetcher = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue(success());
+    const opts = { pixabayKey: 'new-fixture-key', fetcher };
+    expect((await getImages('苹果', 'sense-0', opts)).diagnostics).toContain('pixabay_upstream_failure');
+    vi.advanceTimersByTime(59999); await getImages('苹果', 'sense-0', opts); expect(fetcher).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(1); expect((await getImages('苹果', 'sense-0', opts)).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it('uses newly configured credentials without stale missing-key or auth-failure caching', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce({ ok: false, status: 403 }).mockResolvedValue(success());
+    expect((await getImages('苹果', 'sense-0', { fetcher })).diagnostics).toContain('pixabay_not_configured');
+    await getImages('苹果', 'sense-0', { pixabayKey: 'old-invalid-key', fetcher });
+    expect((await getImages('苹果', 'sense-0', { pixabayKey: 'new-valid-key', fetcher })).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(2);
   });
 });

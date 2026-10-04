@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Word } from '../types';
-import { byId } from '../data/learning';
 import { localPhoto } from '../data/photos';
 import { visualQuery } from '../lib/visual';
 import { useImages } from '../lib/useImages';
@@ -14,7 +13,7 @@ export function WordThumbnail({ word }: { word: Word }) {
     const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting)) { setVisible(true); observer.disconnect(); } }, { rootMargin: '100px' });
     observer.observe(element); return () => observer.disconnect();
   }, [word.id]);
-  const { result } = useImages(word, word.senses[0], 'thumbnail', visible && byId.has(word.id) && !!visualQuery(word.senses[0]));
+  const { result } = useImages(word, word.senses[0], 'thumbnail', visible && !!visualQuery(word.senses[0]));
   const fallback = word.photo ? localPhoto(word.photo, word.senses[0].english) : undefined;
   const candidate = result?.images[0] ?? fallback;
   const photo = candidate?.thumbnailUrl === failedUrl ? fallback : candidate;

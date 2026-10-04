@@ -82,3 +82,22 @@ test('category and related cards lazily request thumbnails, never background gal
   await expect.poll(() => urls.some(url => url.searchParams.get('mode') === 'thumbnail' && url.searchParams.get('word') === '香蕉')).toBe(true);
   expect(urls.filter(url => url.searchParams.get('mode') === 'gallery')).toHaveLength(1);
 });
+test('a non-curated giraffe entry reaches the gallery through Chinese, traditional, pinyin and English search', async ({ page }) => {
+  const requests: URL[] = [];
+  await page.route('**/api/images?**', async route => {
+    const url = new URL(route.request().url());
+    if (!url.searchParams.get('word')?.startsWith('长颈鹿|')) return route.fallback();
+    requests.push(url);
+    await route.fulfill({ json: { status: 'live', expiresAt: Date.now() + 86400000, images: [{ id: 'pixabay-fixture', provider: 'pixabay', thumbnailUrl: '/photos/cat.jpg', largeUrl: '/photos/cat.jpg', width: 900, height: 700, alt: 'Mocked giraffe visual', source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/giraffe-1/' }] } });
+  });
+  for (const query of ['长颈鹿', '長頸鹿', 'chang jing lu', 'giraffe']) {
+    await page.goto('/#search=' + encodeURIComponent(query));
+    const card = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '长颈鹿', exact: true }) }).first();
+    await expect(card).toBeVisible({ timeout: 30000 }); await card.click();
+    await expect(page.locator('.word-header h1')).toHaveText('长颈鹿');
+    await expect(page.getByRole('button', { name: 'Enlarge picture: Mocked giraffe visual' })).toBeVisible();
+  }
+  expect(new Set(requests.map(url => url.searchParams.get('word')))).toEqual(new Set(['长颈鹿|長頸鹿|chang2 jing3 lu4']));
+  expect(requests.every(url => url.searchParams.get('sense') === 'sense-0')).toBe(true);
+  expect(requests.some(url => url.searchParams.get('mode') === 'gallery')).toBe(true);
+});

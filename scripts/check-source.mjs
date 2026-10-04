@@ -21,4 +21,6 @@ const config = JSON.parse(await readFile('vercel.json', 'utf8'));
 const csp = config.headers[0].headers.find(header => header.key === 'Content-Security-Policy').value;
 assert(csp.includes('https://pixabay.com') && csp.includes('https://cdn.pixabay.com') && csp.includes("connect-src 'self'"));
 assert((await readFile('public/sw.js', 'utf8')).includes("url.pathname.startsWith('/api/')"), 'Service worker must not cache image API responses');
+assert(config.functions['api/images.js'].includeFiles === 'public/data/cedict.json', 'Server dictionary must be explicitly packaged');
+assert((await readFile('api/images.js', 'utf8')).includes('../server/image-service.mjs'), 'Production API must use its native Node bundle');
 console.log('PASS: server/browser boundary, built assets, empty environment placeholders, secret ignore rules, CSP, and API service-worker exclusion.');

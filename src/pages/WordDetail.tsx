@@ -1,7 +1,7 @@
 import { ArrowLeft, Bookmark, BookOpen, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
 import type { Word } from '../types';
-import { words, byId } from '../data/learning';
+import { words } from '../data/learning';
 import { PronunciationButton } from '../components/PronunciationButton';
 import { VisualGallery } from '../components/VisualGallery';
 import { WordCard } from '../components/WordCard';
@@ -10,7 +10,7 @@ import { visualQuery } from '../lib/visual';
 export function WordDetail({ word, onOpen, saved, onSave, onBack }: { word: Word; onOpen: (w: Word) => void; saved: string[]; onSave: (id: string) => void; onBack: () => void }) {
   const [selected, setSelected] = useState(word.senses[0].id); const sense = word.senses.find(s => s.id === selected) ?? word.senses[0];
   const related = words.filter(w => w.id !== word.id && w.category === word.category && w.photo).slice(0, 4);
-  const curated = byId.has(word.id); const hasPictures = !!visualQuery(sense) && curated;
+  const hasPictures = !!visualQuery(sense);
   return <article className="word-detail"><button className="text-button back-link" onClick={onBack}><ArrowLeft size={16}/> Back to exploring</button><section className="word-header"><div><span className="eyebrow">{word.category ?? 'DICTIONARY'} · {sense.visualType === 'abstract' ? 'WORDS & CONNECTIONS' : 'DISCOVER A WORD'}</span><h1 lang="zh-Hans">{word.simplified}</h1><div className="pronunciation-line"><span className="detail-pinyin">{word.pinyin}</span><PronunciationButton text={word.simplified}/></div><p className="traditional">Traditional <span lang="zh-Hant">{word.traditional}</span></p></div><div className="meaning-panel"><div><span className="eyebrow">ENGLISH</span><p>{sense.english}</p></div><div><span className="eyebrow">BAHASA MELAYU</span><p>{sense.malay ?? <span className="subtle">Not available for this meaning yet</span>}</p></div></div><button className={`save-word ${saved.includes(word.id) ? 'is-saved' : ''}`} aria-pressed={saved.includes(word.id)} onClick={() => onSave(word.id)}><Bookmark size={19} fill={saved.includes(word.id) ? 'currentColor' : 'none'}/>{saved.includes(word.id) ? 'Saved' : 'Save word'}</button></section>
     {word.senses.length > 1 && <div className="sense-selector"><span>Choose a meaning</span><div role="group" aria-label="Word meaning">{word.senses.map((s, i) => <button key={s.id} aria-pressed={selected === s.id} onClick={() => setSelected(s.id)}>{i + 1}. {s.english}</button>)}</div></div>}
     {hasPictures ? <VisualGallery word={word} sense={sense}/> : <section className="abstract-card"><div className="abstract-intro"><span className="note-icon"><Lightbulb size={26}/></span><div><span className="eyebrow">SEE THE CONNECTION</span><h2>{sense.relationship ? 'An idea you can picture.' : 'Let’s understand this meaning.'}</h2><p>{sense.chineseExplanation ?? 'This meaning does not have a reviewed visual explanation yet. Explore the dictionary definition and listen to the pronunciation.'}</p></div></div>{sense.relationship && <div className="relationship-diagram"><div>{sense.relationship[0]}</div><span>{sense.relationship[1]}<b>→</b></span><div>{sense.relationship[2]}</div></div>}</section>}

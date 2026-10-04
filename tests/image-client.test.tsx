@@ -8,6 +8,9 @@ import { WordDetail } from '../src/pages/WordDetail';
 import { WordCard } from '../src/components/WordCard';
 import { Home } from '../src/pages/Home';
 import type { ImageResult } from '../src/types';
+import { fromRow } from '../src/lib/dictionary-entry';
+import { VISUAL_SCHEMA } from '../src/lib/visual-inference';
+import { imageCacheKey } from '../src/lib/visual';
 const apple = byId.get('苹果')!;
 const live = (label = 'Live apple', expiresAt = Date.now() + IMAGE_TTL): ImageResult => ({ status: 'live', expiresAt, images: [{ id: label, provider: 'pixabay', thumbnailUrl: 'https://pixabay.com/get/apple_340.jpg', displayUrl: 'https://pixabay.com/get/apple_640.jpg', largeUrl: 'https://pixabay.com/get/apple_1280.jpg', width: 900, height: 700, alt: label, source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/apple-1/' }] });
 const response = (result: ImageResult) => ({ ok: true, json: async () => result }) as Response;
@@ -19,6 +22,12 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 function intersect(element: Element) { for (const observer of observers) if (observer.element === element) observer.callback([{ isIntersecting: true, target: element } as IntersectionObserverEntry], {} as IntersectionObserver); }
 describe('bounded browser image requests', () => {
+  it('ignores old persisted image records and versions the current cache', async () => {
+    localStorage.setItem('kanjian-images', JSON.stringify({ images: [], status: 'unavailable' }));
+    expect(imageCacheKey(apple, apple.senses[0])).toContain(VISUAL_SCHEMA);
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response(live()));
+    expect((await fetchImages(apple, apple.senses[0])).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(1); localStorage.removeItem('kanjian-images');
+  });
   it('deduplicates concurrent calls and expires at the original server deadline', async () => {
     vi.useFakeTimers(); const expiresAt = Date.now() + 1000;
     const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response(live('first', expiresAt)));
@@ -52,6 +61,15 @@ describe('bounded browser image requests', () => {
   });
 });
 describe('lazy cards and gallery lifecycle', () => {
+  it('renders a live gallery for a full-dictionary entry outside the starter collection', async () => {
+    const word = fromRow(['長頸鹿', '长颈鹿', 'chang2 jing3 lu4', ['giraffe', 'CL:只[zhi1]']]);
+    expect(byId.has(word.id)).toBe(false);
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response(live('Giraffe animal')));
+    render(<WordDetail word={word} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);
+    await screen.findByRole('button', { name: 'Enlarge picture: Giraffe animal' });
+    expect(new URL(String(fetcher.mock.calls[0][0]), 'http://localhost').searchParams.get('word')).toBe(word.id);
+    expect(screen.queryByText('Let’s understand this meaning.')).not.toBeInTheDocument();
+  });
   it('loads category thumbnails only when near the viewport and deduplicates matching word cards', async () => {
     const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response(live()));
     const view = render(<Home onSearch={vi.fn()} onOpen={vi.fn()} onCategory={vi.fn()} recent={[]} saved={[]} onSave={vi.fn()}/>);

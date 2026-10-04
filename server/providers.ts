@@ -11,8 +11,8 @@ function sourceUrl(value: unknown, hosts: string[]): string {
   try { const url = new URL(text(value)); return url.protocol === 'https:' && hosts.includes(url.hostname) && !url.username && !url.password && !url.port && !url.search ? url.href : ''; } catch { return ''; }
 }
 export function pixabayRequest(search: ImageSearch, key: string, mode: ImageMode = 'gallery') {
-  if (!key || !['photo', 'illustration'].includes(search.imageType) || (search.category && !PIXABAY_CATEGORIES.includes(search.category))) throw new Error('Invalid image provider configuration');
-  const params = new URLSearchParams({ key, q: normalizeVisualQuery(search.query), safesearch: 'true', lang: 'en', image_type: search.imageType, order: 'popular', per_page: mode === 'thumbnail' ? '3' : '32', min_width: '400', min_height: '300', orientation: 'all' });
+  if (!key || !['photo', 'illustration', 'all'].includes(search.imageType) || (search.category && !PIXABAY_CATEGORIES.includes(search.category))) throw new Error('Invalid image provider configuration');
+  const params = new URLSearchParams({ key, q: normalizeVisualQuery(search.query), safesearch: 'true', lang: 'en', image_type: search.imageType, order: 'popular', per_page: mode === 'thumbnail' ? '3' : '32', min_width: '300', min_height: '200', orientation: 'all' });
   if (search.category) params.set('category', search.category);
   return { url: `https://pixabay.com/api/?${params}` };
 }
@@ -22,12 +22,12 @@ export function normalizePixabay(hits: unknown[], query: string): Photo[] {
     const hit = record(value); const id = dimension(hit.id); const medium = text(hit.webformatURL); const large = text(hit.largeImageURL) || medium;
     const page = sourceUrl(hit.pageURL, ['pixabay.com', 'www.pixabay.com']);
     const width = dimension(hit.imageWidth); const height = dimension(hit.imageHeight); const aspect = width / height;
-    if (!Number.isSafeInteger(id) || id <= 0 || !page || !isImageUrl(medium) || !isImageUrl(large) || width < 400 || height < 300 || dimension(hit.webformatWidth) < 300 || dimension(hit.webformatHeight) < 200 || aspect > 3 || aspect < 0.33) return [];
+    if (!Number.isSafeInteger(id) || id <= 0 || !page || !isImageUrl(medium) || !isImageUrl(large) || width < 300 || height < 200 || aspect > 5 || aspect < 0.2) return [];
     const tags = text(hit.tags).split(',').map(tag => tag.trim()).filter(Boolean).slice(0, 15);
     const tagWords = tags.join(' ').toLowerCase().split(/\W+/);
     const relevance = tagWords.filter(t => terms.has(t)).length;
-    // A matching subject matters more than popularity. Known metadata mismatches are excluded.
-    if (!relevance) return [];
+    // Provider search already selects matches. Sparse tags and synonyms affect
+    // ranking, not eligibility; known intent mismatches remain excluded.
     if (/\bapple\b/.test(query) && tags.some(t => /\b(logo|iphone|macbook|computer|technology)\b/i.test(t))) return [];
     if (/financial institution/.test(query) && tags.some(t => /\b(river|riverbank|piggy)\b/i.test(t))) return [];
     const photographer = text(hit.user).trim() || undefined; const userId = dimension(hit.user_id);

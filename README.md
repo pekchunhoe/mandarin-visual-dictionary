@@ -4,7 +4,7 @@ A working React + Vite + TypeScript dictionary built around photographs, Mandari
 
 ## Run locally
 
-Requires Node.js 22.12+ (verified with Node 24).
+Requires Node.js 24 (also pinned for Vercel in `package.json`).
 
 ```sh
 npm ci
@@ -30,9 +30,9 @@ Optionally set `PEXELS_API_KEY` for fallback searches. Pixabay is tried first, t
 - Mandarin-only speech using an installed Chinese voice; replay, stop, and cancellation between buttons. If no Mandarin voice is installed, the app explains how to add one instead of using an English voice.
 - Editorial Malay meanings, simple Chinese explanations, and multilingual examples for selected vocabulary. Missing enhancements are explicitly marked rather than invented at runtime.
 - A varied **eight-photo apple gallery** and 19 other starter cover photos are bundled for use without a key. The sources are real Pexels photographs, visually checked during implementation. No mock API responses are used in production.
-- Configured Pixabay searches target 6–12 unique pictures per approved sense, with attribution, a hero image, previews, loading and failure states. Server and browser caches expire live results within 24 hours. Actual availability varies by meaning/provider.
+- Configured Pixabay searches target 6–12 unique pictures per visual dictionary sense, with attribution, a hero image, previews, loading and failure states. Server and browser caches expire live results within 24 hours. Actual availability varies by meaning/provider.
 - Related-word, browse, and category cards lazily request one thumbnail near the viewport, reuse cached or pending requests, and retain bundled pictures when unavailable.
-- Abstract connectors get relationship diagrams. Unreviewed meanings show their dictionary definition and pronunciation without a speculative photo query.
+- Ordinary concrete dictionary senses use deterministic English semantic inference; curated metadata overrides the inferred intent where available. Abstract connectors get relationship diagrams, while unresolved meanings retain their definition and pronunciation without a stock-image search.
 - A production service worker precaches the app, worker, local fonts, and starter photos. The full dictionary becomes available offline after its first successful download while the service worker controls the page.
 
 ## Sources and licensing
@@ -44,6 +44,8 @@ Live Pixabay pictures: [Pixabay API documentation](https://pixabay.com/api/docs/
 Bundled and fallback pictures: [Pexels license](https://www.pexels.com/license/). `src/data/photos.ts` maps each cover to its original photo ID; `src/data/apple-gallery.json` records the additional source IDs and verified photographer names. Missing photographer metadata is not fabricated. Every bundled gallery picture links to its original Pexels page; the application includes the required Pexels provider link. Live API results retain photographer names, profile links, and source links. Follow the [Pexels API guidelines](https://www.pexels.com/api/documentation/) when extending or deploying the integration.
 
 Font: locally bundled DM Sans via `@fontsource-variable/dm-sans` (SIL Open Font License in that package). CJK text uses the device's installed Chinese fonts. No Google Fonts requests are made.
+
+English semantic classification: a compact, deterministic derivative of Princeton WordNet 3.1, with provenance in `src/data/visual-lexicon-source.json` and license in `public/data/WORDNET-LICENSE.txt`. Its noun categories and verb lemmas are compiled into browser and server JavaScript; Python, the original archive, and runtime WordNet downloads are unnecessary. Invalid lexicon structure degrades conservatively to unresolved meanings while preserving curated overrides and independent visual rules.
 
 ## Architecture
 
@@ -59,8 +61,12 @@ src/lib/search.ts                 Shared worker, caching, obsolete-search cancel
 src/lib/images.ts                 Shared thumbnail/gallery requests and expiring sense-aware cache
 server/images.ts                 Provider ordering, request deduplication, bounded caches
 server/providers.ts              Pixabay/Pexels adapters and response normalization
-server/image-plan.ts             Approved semantic queries and provider cache keys
-api/images.ts                    Vercel HTTP handler and input/rate controls
+server/image-plan.ts             Selected-sense semantic queries and provider cache keys
+server/dictionary.ts             Lazy, canonical full-dictionary resolution
+server/image-handler.ts          Shared HTTP handler and input/rate controls
+server/image-service.mjs         Generated native Node bundle, including WordNet data
+api/images.js                    Vercel entrypoint with guarded service initialization
+src/lib/visual-inference.ts       Shared deterministic English semantic inference
 public/data/cedict.json           Full dictionary; never parsed on each search
 public/photos/                   Reviewed local Pexels images
 public/sw.js                     Production offline cache template
@@ -69,7 +75,7 @@ vite.config.ts                   Local API and build-specific precache generatio
 
 Hash routing keeps links reloadable on static hosts without catch-all routing that could swallow `/api/images`. The core dictionary runs locally, so a separate `/api/dictionary` round trip is unnecessary. AI is not used to generate factual definitions or request translations. No Gemini dependency or key is needed.
 
-Cache keys include provider (or the browser provider chain), word, sense, normalized query, visual/category type, image type and request mode. Stable identifiers keep unrelated meanings apart. Uncurated entries retain their dictionary definitions and pronunciation; no automatic stock-photo interpretation is applied to them. Query construction is deterministic and reviewed in the learning data (`bank financial institution building`, `person running action`, etc.).
+Cache keys include the visual schema version, provider (or the browser provider chain), word, sense, normalized query, visual/category type, image type and request mode. Stable identifiers keep unrelated meanings apart. Full-dictionary entries use canonical simplified/traditional/pinyin row IDs and canonical sense IDs. Curated metadata is an override, not a membership gate: other concrete meanings derive semantic queries from WordNet noun categories and visible actions. Abstract or unresolved meanings skip providers. No browser image results are persisted in local storage; obsolete records cannot suppress new requests.
 
 Obsolete dictionary requests detach their listeners and never update the current search. Image calls are deduplicated; shared in-flight requests finish into the cache, while unmounted galleries ignore their results. This avoids cancelling a request that another component still needs. Explicit retry bypasses the browser result cache while respecting provider and HTTP 429 cooldowns. Live expiry is inherited from the server, so reading an old server result never starts a new 24-hour lifetime. Mounted galleries/cards refresh at expiry. Server entries are capped at 500 and browser entries at 100; failures use a short 60-second cache. API responses use `Cache-Control: no-store` to prevent HTTP/edge caches from extending signed URL lifetime.
 
@@ -80,11 +86,11 @@ GET /api/images?word=苹果&sense=sense-0&mode=gallery
 GET /api/images?word=苹果&sense=sense-0&mode=thumbnail
 ```
 
-- Only GET, known learning words, existing sense IDs, and `gallery`/`thumbnail` modes are accepted. Duplicate parameters are rejected. Arbitrary `q`, proxy URLs, extra parameters, and oversized inputs are rejected.
+- Only GET, known canonical dictionary entries (or starter-word aliases), existing sense IDs, and `gallery`/`thumbnail` modes are accepted. Duplicate parameters are rejected. Arbitrary `q`, proxy URLs, extra parameters, and oversized inputs are rejected.
 - The server builds the provider query from the selected sense. User input never becomes a free-form provider search.
 - `PIXABAY_API_KEY` stays in the server-to-Pixabay request; the optional Pexels key stays in its server Authorization header. Neither is exposed through Vite, API responses, errors, logs, or React. Upstream requests abort after at most 3.5 seconds each, within an 8-second overall search budget. Redirects are rejected. Provider failures leave dictionary data and available local photos usable.
-- Pixabay always receives `safesearch=true`, English, approved category/image-type values, and a reviewed semantic query. The client cannot override these. Abstract/function words skip providers.
-- Galleries request 32 candidate Pixabay hits and at most one supporting query if fewer than six survive filtering. Cards request the documented minimum of three candidates, return just one thumbnail, and never trigger a supporting/gallery search. Pexels requests 24 gallery candidates or one thumbnail candidate.
+- Pixabay always receives `safesearch=true`, English, approved category/image-type values, and a server-derived semantic query. The client cannot override these. Abstract/function words skip providers.
+- Galleries request 32 candidate Pixabay hits and at most one broader image-type query if fewer than six survive filtering. Cards request the documented minimum of three candidates, return just one thumbnail, and permit one broader query only when the primary query is empty. Pexels requests 24 gallery candidates or one thumbnail candidate.
 - Provider image URLs are restricted to approved Pixabay/Pexels HTTPS hosts; duplicates, undersized pictures, and malformed responses are filtered. React renders all text without raw HTML.
 - Bounded in-memory per-client limits permit 30 calls/minute per server instance. Vercel's trusted client-IP header is preferred. For a large multi-instance deployment, add Vercel Firewall limits or a shared rate-limit store; process-local limits are not globally coordinated.
 - Pexels does **not document a safe-search switch**. Approved educational queries restrict the search surface, but automated provider results are not a guarantee of child-suitable content. An unmoderated Wikimedia fallback is deliberately not enabled. Deployments needing editorial approval of every photo should use an approved-photo catalogue.
@@ -97,8 +103,9 @@ npm test                 # Focused dictionary, UI, speech, provider and API test
 npm run typecheck
 npm run build
 npm run test:browser     # Real browser interaction, eight screen widths, axe accessibility
+npm run test:packaging   # Isolated native Node artifact, mocked provider and failure cases
 npm run check:source     # Browser/server boundary, environment, CSP and built asset checks
-npm run check:whitespace # git diff --no-index --check for this initially non-Git workspace
+npm run check:whitespace # Includes tracked and untracked source/config files
 ```
 
 Browser tests use installed Microsoft Edge on Windows; elsewhere run `npx playwright install chromium` first. `PLAYWRIGHT_CHANNEL` can explicitly select an installed browser. External image API responses are mocked in automated tests; tests do not depend on live Pixabay or Pexels accounts. No lint script is configured; TypeScript and source/whitespace checks cover the configured static checks.
@@ -122,7 +129,7 @@ The photo maintenance scripts `scripts/download-photos.mjs` and `scripts/downloa
 ## Deploy to Vercel
 
 1. Import this project into Vercel (or run the Vercel CLI from this directory).
-2. Use the Vite framework preset, `npm run build`, and `dist` output. `vercel.json` already records these settings and security headers. Vercel discovers `api/images.ts` automatically.
+2. Use the Vite framework preset, `npm run build`, and `dist` output. Vercel discovers `api/images.js` automatically. The build regenerates and verifies `server/image-service.mjs`; `vercel.json` explicitly packages `public/data/cedict.json`. Keep the generated bundle in the deployment source. The dictionary is resolved relative to the server module, independent of the function's working directory. No external npm dependency or loose WordNet file is needed at runtime.
 3. Open **Settings → Environment Variables → PIXABAY_API_KEY**, enter your key for the intended deployment environments, then **Redeploy**. Optionally also set **PEXELS_API_KEY** for fallback. Never use a `VITE_` prefix.
 4. After redeploying, check the photo endpoint with a known word/sense, pronunciation on a device with a Mandarin voice, and an offline reload after the service worker installs.
 

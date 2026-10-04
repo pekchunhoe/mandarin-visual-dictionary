@@ -1,6 +1,7 @@
 import { DictionaryIndex } from './dictionary';
 import { fromRow, words } from '../data/learning';
 import type { RawRow } from '../data/learning';
+import { canonicalWordId } from './dictionary-entry';
 let index: DictionaryIndex | undefined;
 let loading: Promise<void> | undefined;
 async function load() {
@@ -9,8 +10,8 @@ async function load() {
     const response = await fetch('/data/cedict.json');
     if (!response.ok) throw new Error('Dictionary could not be downloaded.');
     const rows: RawRow[] = await response.json();
-    const curated = new Set(words.map(w => w.simplified));
-    index = new DictionaryIndex([...words, ...rows.filter(r => !curated.has(r[1])).map(fromRow)]);
+    const curated = new Set(words.map(w => w.dictionaryId));
+    index = new DictionaryIndex([...words, ...rows.filter(r => !curated.has(canonicalWordId(r))).map(fromRow)]);
   })().catch(error => { loading = undefined; throw error; });
   await loading;
 }

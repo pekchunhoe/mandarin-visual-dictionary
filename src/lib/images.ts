@@ -1,5 +1,4 @@
 import type { ImageMode, ImageResult, Sense, Word } from '../types';
-import { byId } from '../data/learning';
 import { offlineGallery } from '../data/photos';
 import { IMAGE_TTL, imageCacheKey, visualQuery } from './visual';
 const cache = new Map<string, ImageResult>();
@@ -11,7 +10,7 @@ function cached(key: string) {
   cache.delete(key);
 }
 export function fetchImages(word: Word, sense: Sense, retry = false, mode: ImageMode = 'gallery'): Promise<ImageResult> {
-  if (!byId.has(word.id) || !visualQuery(sense)) return Promise.resolve({ images: [], status: 'unavailable' });
+  if (!visualQuery(sense)) return Promise.resolve({ images: [], status: 'unavailable' });
   if (typeof navigator !== 'undefined' && !navigator.onLine) return Promise.resolve({ images: word.photo && sense.id === word.senses[0].id ? offlineGallery(word.photo, sense.english).slice(0, mode === 'thumbnail' ? 1 : 12) : [], status: 'curated' });
   const base = imageCacheKey(word, sense); const key = `${base}|${mode}`;
   const single = (result: ImageResult): ImageResult => ({ ...result, images: result.images.slice(0, 1) });

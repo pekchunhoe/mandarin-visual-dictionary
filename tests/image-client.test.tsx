@@ -8,9 +8,10 @@ import { WordDetail } from '../src/pages/WordDetail';
 import { WordCard } from '../src/components/WordCard';
 import { Home } from '../src/pages/Home';
 import type { ImageResult } from '../src/types';
-import { fromRow } from '../src/lib/dictionary-entry';
+import { fromRow, refreshWordVisuals } from '../src/lib/dictionary-entry';
 import { VISUAL_SCHEMA } from '../src/lib/visual-inference';
 import { imageCacheKey } from '../src/lib/visual';
+import { visualQuery } from '../src/lib/visual';
 const apple = byId.get('苹果')!;
 const live = (label = 'Live apple', expiresAt = Date.now() + IMAGE_TTL): ImageResult => ({ status: 'live', expiresAt, images: [{ id: label, provider: 'pixabay', thumbnailUrl: 'https://pixabay.com/get/apple_340.jpg', displayUrl: 'https://pixabay.com/get/apple_640.jpg', largeUrl: 'https://pixabay.com/get/apple_1280.jpg', width: 900, height: 700, alt: label, source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/apple-1/' }] });
 const response = (result: ImageResult) => ({ ok: true, json: async () => result }) as Response;
@@ -22,6 +23,17 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 function intersect(element: Element) { for (const observer of observers) if (observer.element === element) observer.callback([{ isIntersecting: true, target: element } as IntersectionObserverEntry], {} as IntersectionObserver); }
 describe('bounded browser image requests', () => {
+  it('reclassifies old saved non-visual words and versions their query caches', () => {
+    const word = fromRow(['恐慌', '恐慌', 'kong3 huang1', ['panic', 'panicky', 'panic-stricken']]);
+    const stale = { ...word, senses: word.senses.map(s => ({ ...s, visualType: 'abstract' as const, visualQuery: undefined, visualSubject: undefined })) };
+    const refreshed = refreshWordVisuals(stale);
+    expect(refreshed.senses[0].visualType).toBe('emotion');
+    expect(visualQuery(refreshed.senses[0])).toBe('panicked person facial expression');
+    expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v3');
+    expect(imageCacheKey(refreshed, refreshed.senses[0])).not.toContain('dictionary-visual-v2');
+    expect(refreshWordVisuals(apple).senses[0].visualQuery).toBe(apple.senses[0].visualQuery);
+    expect(visualQuery({ ...stale.senses[0], visualOrigin: 'curated', visualType: 'emotion' })).toBe('panicked person facial expression');
+  });
   it('ignores old persisted image records and versions the current cache', async () => {
     localStorage.setItem('kanjian-images', JSON.stringify({ images: [], status: 'unavailable' }));
     expect(imageCacheKey(apple, apple.senses[0])).toContain(VISUAL_SCHEMA);
@@ -61,6 +73,31 @@ describe('bounded browser image requests', () => {
   });
 });
 describe('lazy cards and gallery lifecycle', () => {
+  it.each([
+    ['恐慌', '恐慌', 'kong3 huang1', 'panic'],
+    ['驚訝', '惊讶', 'jing1 ya4', 'amazed']
+  ])('shows the definition immediately and a live emotion gallery for %s', async (traditional, simplified, pinyin, meaning) => {
+    const word = fromRow([traditional, simplified, pinyin, [meaning]]);
+    let finish!: (value: Response) => void;
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+    render(<WordDetail word={word} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);
+    expect(screen.getByText(meaning, { exact: true })).toBeVisible();
+    expect(screen.getByRole('status', { name: 'Loading pictures' })).toBeVisible();
+    expect(screen.queryByText(/does not have a reviewed visual explanation/)).not.toBeInTheDocument();
+    await act(async () => finish(response(live('Emotion expression'))));
+    await screen.findByRole('button', { name: 'Enlarge picture: Emotion expression' });
+    const params = new URL(String(fetcher.mock.calls[0][0]), 'http://localhost').searchParams;
+    expect(params.get('word')).toBe(word.id); expect(params.get('sense')).toBe('sense-0'); expect(params.get('mode')).toBe('gallery');
+  });
+  it('loads only a lazy thumbnail for a non-curated emotion card', async () => {
+    const word = fromRow(['恐慌', '恐慌', 'kong3 huang1', ['panic']]);
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response(live('Emotion thumbnail')));
+    const view = render(<WordCard word={word} onOpen={vi.fn()}/>);
+    expect(fetcher).not.toHaveBeenCalled();
+    act(() => intersect(view.container.querySelector('.word-thumbnail')!));
+    await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('alt', 'Emotion thumbnail'));
+    expect(fetcher).toHaveBeenCalledTimes(1); expect(String(fetcher.mock.calls[0][0])).toContain('mode=thumbnail');
+  });
   it('renders a live gallery for a full-dictionary entry outside the starter collection', async () => {
     const word = fromRow(['長頸鹿', '长颈鹿', 'chang2 jing3 lu4', ['giraffe', 'CL:只[zhi1]']]);
     expect(byId.has(word.id)).toBe(false);

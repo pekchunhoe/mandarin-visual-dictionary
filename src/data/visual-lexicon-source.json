@@ -2,5 +2,7 @@
   "source": "https://wordnetcode.princeton.edu/wn3.1.dict.tar.gz",
   "sha256": "3f7d8be8ef6ecc7167d39b10d66954ec734280b5bdcd57f7d9eafe429d11c22a",
   "nouns": 33245,
-  "verbs": 3862
+  "verbs": 3862,
+  "descriptors": 669,
+  "templates_sha256": "f3582c70f7268267c651edf16862cdf585f630c64259c5385e483178c428b94b"
 }

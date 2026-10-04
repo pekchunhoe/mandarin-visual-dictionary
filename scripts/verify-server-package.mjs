@@ -76,19 +76,20 @@ if (scenario === 'missing-service' || scenario === 'broken-service') {
 } else {
   // Intentionally not the function root: file reads must be module-relative.
   process.chdir(fileURLToPath(new URL('./different-cwd', import.meta.url)));
-  for (const word of ['苹果', ...['长颈鹿', '冰箱', '厨师', '瀑布', '鳄鱼', '游泳'].map(canonical)]) {
+  const visualWords = ['苹果', ...['长颈鹿', '冰箱', '厨师', '瀑布', '鳄鱼', '游泳', '恐慌', '惊讶', '生气', '害怕', '困惑', '饿', '渴', '慢', '哭', '跳舞'].map(canonical)];
+  for (const word of visualWords) {
     const result = await request(word);
     assert.equal(result.status, 200); assert.equal(result.body.status, 'live');
     assert.equal(result.body.images[0].provider, 'pixabay');
   }
-  assert.equal(calls, 7);
+  assert.equal(calls, visualWords.length);
   const abstract = await request('因为');
   assert.equal(abstract.status, 200); assert.equal(abstract.body.status, 'unavailable');
   assert.deepEqual(abstract.body.images, []);
   assert.equal((await request('invalid-word')).status, 400);
   assert.equal((await request(canonical('长颈鹿'), 'sense-999')).status, 400);
   assert.equal((await request('')).status, 400);
-  assert.equal(calls, 7);
+  assert.equal(calls, visualWords.length);
 }
 assert(!logs.join(' ').includes(secret));
 console.log('PASS: isolated deployment artifact — ' + scenario);

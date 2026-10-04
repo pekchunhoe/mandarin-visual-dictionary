@@ -101,3 +101,51 @@ test('a non-curated giraffe entry reaches the gallery through Chinese, tradition
   expect(requests.every(url => url.searchParams.get('sense') === 'sense-0')).toBe(true);
   expect(requests.some(url => url.searchParams.get('mode') === 'gallery')).toBe(true);
 });
+
+for (const [text, traditional, pinyin, meanings] of [
+  ['恐慌', '恐慌', 'kong3 huang1', ['panic', 'panicky', 'panic-stricken']],
+  ['惊讶', '驚訝', 'jing1 ya4', ['amazed', 'astonished']]
+] as const) {
+  test(`${text} renders an emotion gallery for each selected sense`, async ({ page }) => {
+    const requests: URL[] = [];
+    const id = `${text}|${traditional}|${pinyin}`;
+    await page.route('**/api/images?**', async route => {
+      const url = new URL(route.request().url());
+      if (url.searchParams.get('word') !== id) return route.fallback();
+      requests.push(url);
+      const images = Array.from({ length: 8 }, (_, i) => ({ id: `expression-${i}`, provider: 'pixabay', thumbnailUrl: '/photos/happy.jpg', displayUrl: '/photos/happy.jpg', largeUrl: '/photos/happy.jpg', width: 900, height: 700, alt: `Mock expression ${url.searchParams.get('sense')} ${i}`, source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/expression-1/' }));
+      await route.fulfill({ json: { status: 'live', expiresAt: Date.now() + 86400000, images: images.slice(0, url.searchParams.get('mode') === 'thumbnail' ? 1 : 8) } });
+    });
+    await page.goto('/#search=' + encodeURIComponent(text));
+    const card = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: text, exact: true }) }).first();
+    await expect(card).toBeVisible({ timeout: 30000 }); await card.click();
+    await expect(page.locator('.word-header h1')).toHaveText(text);
+    for (const [i, meaning] of meanings.entries()) {
+      await page.getByRole('button', { name: `${i + 1}. ${meaning}`, exact: true }).click();
+      await expect(page.locator('.meaning-panel').getByText(meaning, { exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: `Enlarge picture: Mock expression sense-${i} 0`, exact: true })).toBeVisible();
+      await expect(page.locator('.gallery-grid figure')).toHaveCount(8);
+      await expect(page.locator('.abstract-card')).toHaveCount(0);
+    }
+    expect(requests.some(url => url.searchParams.get('mode') === 'thumbnail')).toBe(true);
+    for (const i of meanings.keys()) expect(requests.some(url => url.searchParams.get('mode') === 'gallery' && url.searchParams.get('sense') === `sense-${i}`)).toBe(true);
+    await page.getByRole('button', { name: `1. ${meanings[0]}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Enlarge picture: Mock expression sense-0 0', exact: true })).toBeVisible();
+    await page.screenshot({ path: `.tmp/${text === '恐慌' ? 'panic' : 'surprise'}-visual-regression.png`, fullPage: true });
+  });
+}
+
+test('a previously saved non-visual panic entry gets current visuals without clearing storage', async ({ page }) => {
+  const id = '恐慌|恐慌|kong3 huang1';
+  await page.addInitScript(({ id }) => {
+    localStorage.setItem('kanjian-saved', JSON.stringify([id]));
+    localStorage.setItem('kanjian-saved-entries', JSON.stringify([{ id, simplified: '恐慌', traditional: '恐慌', pinyin: 'kǒng huāng', numericPinyin: 'kong3 huang1', source: 'CC-CEDICT', senses: [{ id: 'sense-0', english: 'panic', visualOrigin: 'inferred', visualType: 'abstract', examples: [] }] }]));
+    localStorage.setItem('kanjian-images', JSON.stringify({ images: [], status: 'unavailable' }));
+  }, { id });
+  await page.route('**/api/images?**', route => route.fulfill({ json: { status: 'live', expiresAt: Date.now() + 86400000, images: [{ id: 'new-panic', provider: 'pixabay', thumbnailUrl: '/photos/happy.jpg', largeUrl: '/photos/happy.jpg', width: 900, height: 700, alt: 'Current emotion fixture', source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/expression-1/' }] } }));
+  await page.goto('/#saved=');
+  await page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '恐慌', exact: true }) }).click();
+  await expect(page.getByRole('button', { name: 'Enlarge picture: Current emotion fixture', exact: true })).toBeVisible();
+  await expect(page.locator('.abstract-card')).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('kanjian-saved'))).toContain(id);
+});

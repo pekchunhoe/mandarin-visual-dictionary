@@ -20,6 +20,7 @@ export function pixabayCategory(word: Word, sense: Sense): PixabayCategory | und
   if (sense.visualType === 'nature' || sense.visualType === 'weather') return 'nature';
   if (word.category === 'Transport') return 'transportation';
   if (sense.visualType === 'emotion') return 'feelings';
+  if (sense.visualType === 'human-state') return 'people';
   if (sense.visualType === 'person') return 'people';
   if (word.category === 'School') return 'education';
   if (word.category === 'Nature' || word.category === 'Weather') return 'nature';
@@ -34,7 +35,7 @@ export function imageSearchPlan(word: Word, sense: Sense): { primary: ImageSearc
   // One cheaper query broadens image type and removes optional category/context,
   // while preserving disambiguation for curated intents and action subjects.
   const inferred = inferVisualIntent(sense.english);
-  const subject = sense.visualOrigin === 'curated' ? (inferred?.subject && query.startsWith(inferred.subject) ? inferred.subject : query) : sense.visualSubject ?? inferred?.subject ?? query;
+  const subject = sense.visualOrigin === 'curated' ? (inferred?.subject && query.startsWith(inferred.subject) ? inferred.subject : query) : inferred?.query === query ? inferred.fallback ?? inferred.subject : sense.visualSubject ?? query;
   const supporting = /financial institution|apple fruit/.test(primary.query) ? primary.query.replace(/ building$/, '') : subject;
   return { primary, supporting: { ...primary, query: normalizeVisualQuery(supporting), category: undefined, imageType: 'all' } };
 }

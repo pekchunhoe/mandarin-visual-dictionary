@@ -85,13 +85,62 @@ with tarfile.open(archive) as source:
     tokens = set(re.findall('[a-z]+', ' '.join(d for row in rows for d in row[3]).lower()))
     nouns = {k: v for k, v in sorted(nouns.items()) if all(t in tokens for t in k.split())}
     verbs = sorted(v for v in verbs if v in tokens)
+    # Expand English visual families through WordNet synsets. These are semantic
+    # templates, never Mandarin entries. Seed sense numbers select literal or
+    # human meanings (e.g. short in stature, not short in duration).
+    templates = json.loads(Path('src/data/visual-templates.json').read_text(encoding='utf-8'))
+    semantic_nodes, semantic_index = {}, {}
+    for pos in ('adj', 'noun', 'verb'):
+        semantic_nodes[pos] = {}
+        for line in read('data.' + pos).splitlines():
+            if not re.match(r'^\d{8} ', line):
+                continue
+            fields = line.split(' | ')[0].split()
+            count = int(fields[3], 16); cursor = 4 + count * 2
+            names = [re.sub(r'\([a-z]+\)$', '', name).replace('_', ' ') for name in fields[4:cursor:2]]
+            pointers = fields[cursor + 1:cursor + 1 + int(fields[cursor]) * 4]
+            similar = [pointers[i + 1] for i in range(0, len(pointers), 4) if pointers[i] == '&']
+            semantic_nodes[pos][fields[0]] = (fields[2], names, similar)
+        semantic_index[pos] = {}
+        for line in read('index.' + pos).splitlines():
+            if not line or line.startswith(' '):
+                continue
+            fields = line.split()
+            semantic_index[pos][fields[0].replace('_', ' ')] = fields[6 + int(fields[3]):]
+
+    descriptors = {}
+    def offer(lemma, family, distance):
+        lemma = lemma.replace('-', ' ')
+        if not re.fullmatch(r'[a-z][a-z ]{1,55}', lemma) or not all(t in tokens for t in lemma.split()):
+            return
+        previous = descriptors.get(lemma)
+        if previous is None or distance < previous[1]:
+            descriptors[lemma] = (family, distance)
+
+    for family, template in templates.items():
+        for anchor in template['anchors']:
+            pos, lemma, *sense = anchor.split(':')
+            offset = semantic_index[pos][lemma][int(sense[0]) if sense else 0]
+            kind, names, similar = semantic_nodes[pos][offset]
+            offer(lemma, family, 0)
+            for name in names:
+                offer(name, family, 1)
+            # Only expand outwards from a head adjective. A satellite must not
+            # pull in the whole parent family (panic is more specific than fear).
+            if pos == 'adj' and kind == 'a':
+                for related in similar:
+                    for name in semantic_nodes[pos][related][1]:
+                        offer(name, family, 2)
+    descriptor_buckets = {}
+    for lemma, (family, _) in sorted(descriptors.items()):
+        descriptor_buckets.setdefault(family, []).append(lemma)
     buckets = {}
     for lemma, category in nouns.items():
         buckets.setdefault(category, []).append(lemma)
-    output = {'version': 'wordnet-3.1-cedict-v1', 'nouns': {category: '|'.join(lemmas) for category, lemmas in sorted(buckets.items())}, 'verbs': '|'.join(verbs)}
+    output = {'version': 'wordnet-3.1-cedict-v2', 'nouns': {category: '|'.join(lemmas) for category, lemmas in sorted(buckets.items())}, 'verbs': '|'.join(verbs), 'descriptors': {family: '|'.join(lemmas) for family, lemmas in sorted(descriptor_buckets.items())}}
     Path('src/data/visual-lexicon.json').write_text(json.dumps(output, separators=(',', ':')) + '\n', encoding='utf-8', newline='\n')
     license_text = '\n'.join(re.sub(r'^\s+\d+ ?', '', line).rstrip() for line in noun_text.splitlines() if line.startswith(' '))
     Path('public/data/WORDNET-LICENSE.txt').write_text(license_text + '\n', encoding='utf-8', newline='\n')
-    manifest = {'source': 'https://wordnetcode.princeton.edu/wn3.1.dict.tar.gz', 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'nouns': len(nouns), 'verbs': len(verbs)}
+    manifest = {'source': 'https://wordnetcode.princeton.edu/wn3.1.dict.tar.gz', 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'nouns': len(nouns), 'verbs': len(verbs), 'descriptors': len(descriptors), 'templates_sha256': hashlib.sha256(Path('src/data/visual-templates.json').read_bytes()).hexdigest()}
     Path('src/data/visual-lexicon-source.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(manifest))

@@ -9,13 +9,14 @@ import { WordCard } from './components/WordCard';
 import { PictureQuiz } from './components/PictureQuiz';
 import { searchDictionary } from './lib/search';
 import { readStored, writeStored } from './lib/storage';
+import { refreshWordVisuals } from './lib/dictionary-entry';
 type Route = { page: 'home' | 'category' | 'saved' | 'practice' | 'search' | 'word'; value?: string; entry?: string };
 function readRoute(): Route { const params = new URLSearchParams(location.hash.slice(1)); for (const page of ['word', 'category', 'search'] as const) if (params.has(page)) return { page, value: params.get(page)!, entry: params.get('entry') ?? undefined }; if (params.has('saved')) return { page: 'saved' }; if (params.has('practice')) return { page: 'practice' }; return { page: 'home' }; }
 export default function App() {
   const [route, setRoute] = useState<Route>(readRoute); const [selected, setSelected] = useState<Word>(); const [found, setFound] = useState<Word[]>([]); const [loading, setLoading] = useState(false); const [error, setError] = useState('');
   const [recent, setRecent] = useState<string[]>(() => { const stored = readStored<unknown>('kanjian-recent', []); return Array.isArray(stored) ? stored.filter(v => typeof v === 'string').slice(0, 6) : []; });
   const [saved, setSaved] = useState<string[]>(() => { const stored = readStored<unknown>('kanjian-saved', []); return Array.isArray(stored) ? stored.filter(v => typeof v === 'string') : []; });
-  const [savedEntries, setSavedEntries] = useState<Word[]>(() => { const stored = readStored<unknown>('kanjian-saved-entries', []); return Array.isArray(stored) ? stored.filter(w => w && typeof w.id === 'string' && typeof w.simplified === 'string' && Array.isArray(w.senses) && w.senses.length) : []; });
+  const [savedEntries, setSavedEntries] = useState<Word[]>(() => { const stored = readStored<unknown>('kanjian-saved-entries', []); return Array.isArray(stored) ? stored.filter(w => w && typeof w.id === 'string' && typeof w.simplified === 'string' && Array.isArray(w.senses) && w.senses.length).map(refreshWordVisuals) : []; });
   const [offline, setOffline] = useState(!navigator.onLine); const [practiceIndex, setPracticeIndex] = useState(0); const [retry, setRetry] = useState(0); const heading = useRef<HTMLElement>(null); const first = useRef(true);
   const practiceWords = words.filter(w => w.photo);
   useEffect(() => { const change = () => setRoute(readRoute()); const online = () => setOffline(!navigator.onLine); window.addEventListener('hashchange', change); window.addEventListener('online', online); window.addEventListener('offline', online); return () => { window.removeEventListener('hashchange', change); window.removeEventListener('online', online); window.removeEventListener('offline', online); }; }, []);

@@ -1,13 +1,14 @@
 import lexicon from '../data/visual-lexicon.json';
 import templateData from '../data/visual-templates.json';
+import conceptData from '../data/concept-templates.json';
 import type { VisualType } from '../types';
-export const VISUAL_SCHEMA = 'dictionary-visual-v3';
-export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string }
+export const VISUAL_SCHEMA = 'dictionary-visual-v4';
+export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string; conceptDomain?: string }
 interface VisualTemplate { visualType: VisualType; query: string; fallback: string; anchors: string[] }
 const templates: Record<string, VisualTemplate> = templateData as Record<string, VisualTemplate>;
 // WordNet is compiled into the bundle, with no runtime package or data path.
 // If its structure is unavailable, preserve curated overrides and conservative
-// rule-based classifications; unresolved meanings safely stay non-visual.
+// rule-based classifications and a generic lexical concept fallback.
 function loadLexicon(data: unknown): { nouns: Record<string, string>; verbs: Set<string>; descriptors: Record<string, string> } {
   // Direct English anchors remain usable even when optional WordNet expansion
   // is unavailable. They are shared semantic families, not Mandarin overrides.
@@ -31,13 +32,28 @@ function loadLexicon(data: unknown): { nouns: Record<string, string>; verbs: Set
   }
 }
 const { nouns, verbs, descriptors } = loadLexicon(lexicon);
+const concepts: Record<string, { domain: string; query: string }> = Object.create(null);
+for (const [domain, template] of Object.entries(conceptData)) {
+  for (const anchor of template.anchors) concepts[anchor] = { domain, query: template.query };
+}
+function conceptIntent(phrase: string, category?: string): VisualIntent {
+  const subject = phrase.replace(/^to /, '');
+  const template = concepts[subject];
+  // Unrecognized content keeps its own meaning. Do not invent a person,
+  // object or domain just because WordNet lacks the selected English phrase.
+  return { visualType: 'conceptual', subject, query: template?.query ?? `${subject} concept`.slice(0, 100), fallback: subject.slice(0, 100), conceptDomain: template?.domain ?? category?.replace(/^concept:/, '') ?? 'general' };
+}
+const functionPhrase = /^(?:of|so|as a result|the reason why|owing to|on account of|in case|in the event that|even though|even if|after that|afterwards|really and truly|also pr\..*|unofficial variant of.*)$/i;
+const grammarNote = /\([^)]*\b(?:particle|suffix|prefix|action marker|modal marker|discourse connector)\b[^)]*\)|^(?:(?:a|an|the) )?(?:modal |grammatical |sentence-final |discourse )?(?:particle|suffix|prefix)(?: used| indicating|$)/i;
 const unsuitable = /\b(?:surname|given name|personal name|company|corporation|inc\.|brand|trademark|province|county|dynasty|emperor|mythology|deity|sexual|sex|genital|penis|vagina|porn|prostitut|rape|suicide|kill|murder|torture|weapon|gun|bomb|cocaine|heroin|narcotic|vulgar|offensive|slur)\b/i;
-const grammatical = /^(?:because|but|although|though|if|already|possibly|possible|perhaps|maybe|therefore|thus|hence|moreover|furthermore|however|and|or|then|as well as|in addition|so that|provided that|whether|unless|despite|not|very|also|again|still|yet|even|only|just|almost|rather|quite|too|such|some|any|each|every|all|both|either|neither|other|another|what|which|who|when|where|why|how|can|could|may|might|must|should|would|will|shall|is|are|was|were|be|being|been)(?:\b|$)/i;
-const nonvisualVerbs = /^(?:be|have|do|make|get|take|go|come|mean|think|know|believe|consider|suppose|seem|become|exist|happen|occur|allow|require|depend|include|contain|belong|represent|understand|remember|forget|intend|want|need|hope|feel|regard|refer|relate|imply|cause|affect|change|die|suffer|attack|fight|shoot|stab|burn|cut|inject|strip|undress|bleed|vomit|defecate|urinate|seduce|molest|abuse|threaten|insult|swear)$/;
+const grammatical = /^(?:(?:because|although|though|if|whether|unless|despite|not)\b.*|but(?: also)?|already|possibly|possible|perhaps|maybe|therefore|thus|hence|moreover|furthermore|however|and|or|then|as well as|in addition|so that|provided that|very|also|again|still|yet|even|only|just|almost|rather|quite|too|such|some|any|each|every|all|both|either|neither|other|another|what|which|who|when|where|why|how|can|could|may|might|must|should|would|will|shall|is|are|was|were|be|being|been)$/i;
+const conceptualVerbs = /^(?:be|have|do|make|get|take|go|come|mean|think|know|believe|consider|suppose|seem|become|exist|happen|occur|allow|require|depend|include|contain|belong|represent|understand|remember|forget|intend|want|need|hope|feel|regard|refer|relate|imply|cause|affect|change)$/;
+const excludedVerbs = /^(?:die|suffer|attack|fight|shoot|stab|burn|cut|inject|strip|undress|bleed|vomit|defecate|urinate|seduce|molest|abuse|threaten|insult|swear)$/;
 const nonliteralContext = /\([^)]*\b(?:fig|figurative|rank|time|duration|supply|popular|personality|physiology|chemistry|finance|grammar|mathematics)\b[^)]*\)/i;
 
 /** Clean only the selected CC-CEDICT meaning; never concatenate other senses. */
 export function normalizeVisualMeaning(meaning: string): string | null {
+  if (grammarNote.test(meaning) || functionPhrase.test(meaning.trim())) return null;
   if (!meaning || meaning.length > 1000 || unsuitable.test(meaning) || /^(?:CL:|see\b|variant of\b|old variant of\b|abbr\.|abbreviation|used (?:as|in|to)|a (?:particle|suffix|prefix)|grammatical)/i.test(meaning.trim())) return null;
   if (/\((?:fig(?:uratively)?\.?|idiom|literary|archaic|classical|euph\.?|derog\.?|slang)\)/i.test(meaning)) return null;
   // Preserve nouns in parenthetical disambiguators rather than confusing e.g. a
@@ -45,7 +61,7 @@ export function normalizeVisualMeaning(meaning: string): string | null {
   const context = [...meaning.matchAll(/\(([^)]+)\)/g)].map(m => m[1]).filter(note => /\b(?:animal|fruit|vegetable|food|river|financial|building|person|appliance|vehicle)\b/i.test(note)).join(' ');
   const clean = meaning.replace(/\([^)]*\)/g, ' ').replace(/\[[^\]]*\]/g, ' ').replace(/\bCL:.*$/i, '').split(/[;/]/)[0]
     .trim().replace(/^(?:a |an |the )/i, '').replace(/\b(?:esp\.|e\.g\.|i\.e\.).*$/i, '').replace(/[,].*$/, '').trim();
-  if (!clean || /[^a-zA-Z\s'-]/.test(clean) || grammatical.test(clean) || /^(probable|probably|likely|likelihood|possibility|probability)\b/i.test(clean)) return null;
+  if (!clean || /[^a-zA-Z\s'-]/.test(clean) || grammatical.test(clean) || /^(probable|probably|likely)$/i.test(clean)) return null;
   return `${clean} ${context}`.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 export function participle(verb: string): string {
@@ -88,19 +104,25 @@ function descriptorIntent(meaning: string): VisualIntent | null {
 }
 
 function inferCandidate(meaning: string, partOfSpeech?: string): VisualIntent | null {
-  // Do not fall through to an unrelated noun homonym after rejecting a
-  // nonliteral adjective: short (of duration) must not become 'short object'.
-  if (nonliteralContext.test(meaning)) return null;
   const phrase = normalizeVisualMeaning(meaning); if (!phrase) return null;
+  if (functionPhrase.test(phrase)) return null;
+  // Domain annotations qualify content; they must not veto the whole sense.
+  // Keep nonliteral descriptors out of literal photo templates.
+  if (nonliteralContext.test(meaning)) {
+    const domain = meaning.match(nonliteralContext)?.[0].match(/\b(?:rank|time|duration|supply|popular|personality|physiology|chemistry|finance|grammar|mathematics)\b/i)?.[0].toLowerCase();
+    return conceptIntent(concepts[phrase.replace(/^to /, '')] || !domain ? phrase : `${phrase} ${domain}`);
+  }
   const descriptor = descriptorIntent(meaning); if (descriptor) return descriptor;
   const verbPhrase = phrase.replace(/^to /, '');
+  if (concepts[verbPhrase]) return conceptIntent(phrase);
   // Common English action constructions, applicable to any dictionary entry.
   const actionPhrases: Record<string, string> = { 'go to bed': 'sleep', 'take a walk': 'walk', 'burst into tears': 'cry', 'give a smile': 'smile' };
   const actionAliases: Record<string, string> = { see: 'look', hear: 'listen' };
   const rawVerb = actionPhrases[verbPhrase] ?? actionVerb(phrase);
   const verb = rawVerb ? actionAliases[rawVerb] ?? rawVerb : undefined;
   if (/^to /.test(phrase) || /^v(?:erb)?\b/i.test(partOfSpeech ?? '') || (!nouns[phrase] && (verbPhrase === rawVerb || /^\w+ing(?: |$)/.test(phrase)))) {
-    if (!verb || nonvisualVerbs.test(verb)) return null;
+    if (excludedVerbs.test(verb ?? verbPhrase.split(' ')[0])) return null;
+    if (!verb || conceptualVerbs.test(verb)) return conceptIntent(phrase);
     const context: Record<string, string> = { eat: 'food', drink: 'water', read: 'book', drive: 'vehicle', ride: 'bicycle', cook: 'food', play: 'game', wash: 'hands', look: 'at scenery', listen: 'to music' };
     const subject = `person ${participle(verb)}`;
     return { visualType: 'action', subject, query: `${subject}${context[verb] ? ' ' + context[verb] : ''}`, fallback: subject };
@@ -115,7 +137,7 @@ function inferCandidate(meaning: string, partOfSpeech?: string): VisualIntent | 
     const singular = head.endsWith('ies') ? head.slice(0, -3) + 'y' : head.endsWith('s') ? head.slice(0, -1) : head;
     category = nouns[head] ?? nouns[singular];
   }
-  if (!category) return null;
+  if (!category || category.startsWith('concept:')) return conceptIntent(phrase, category);
   const contexts: Record<string, string> = { animal: 'animal', fruit: 'fruit food', vegetable: 'vegetable food', food: 'food', vehicle: 'vehicle', household: 'household object', technology: 'device', clothing: 'clothing', building: 'building', weather: 'weather', body: 'body', person: 'person', nature: 'nature', place: 'place', object: 'object' };
   let context = contexts[category] ?? 'object';
   if (/\b(?:refrigerator|freezer|oven|washer|machine|fan)\b/.test(subject) && category === 'household') context = 'appliance';
@@ -127,6 +149,7 @@ function inferCandidate(meaning: string, partOfSpeech?: string): VisualIntent | 
 
 /** Build one deterministic query from the selected English sense only. */
 export function buildVisualQuery({ englishMeaning, partOfSpeech }: { englishMeaning: string; partOfSpeech?: string }): VisualIntent | null {
+  if (/^(?:particle|conjunction|preposition|pronoun|determiner|auxiliary|connector)\b/i.test(partOfSpeech ?? '')) return null;
   if (!englishMeaning || englishMeaning.length > 1000 || unsuitable.test(englishMeaning) || /\((?:fig(?:uratively)?\.?|idiom|literary|archaic|classical|euph\.?|derog\.?|slang)\)/i.test(englishMeaning)) return null;
   if (/^(?:CL:|see\b|variant of\b|old variant of\b|abbr\.|abbreviation|used (?:as|in|to)|classifier\b|a (?:particle|suffix|prefix)|grammatical|(?:to )?not\b)/i.test(englishMeaning.trim())) return null;
   // Protect annotations while splitting alternatives within this sense. Never

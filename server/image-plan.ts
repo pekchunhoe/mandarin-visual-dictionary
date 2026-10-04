@@ -11,7 +11,7 @@ export function normalizeVisualQuery(value: string): string {
   return query;
 }
 export function pixabayCategory(word: Word, sense: Sense): PixabayCategory | undefined {
-  if (sense.visualType === 'abstract') return;
+  if (sense.visualType === 'abstract' || sense.visualType === 'conceptual') return;
   if (/\b(doctor|hospital|medical|healthcare)\b/.test(sense.visualQuery ?? '')) return 'health';
   if (sense.visualType === 'animal') return 'animals';
   if (['food', 'fruit', 'vegetable'].includes(sense.visualType)) return 'food';
@@ -31,7 +31,7 @@ const primaryQueries: Record<string, string> = { '苹果': 'apple fruit', '飞�
 export function imageSearchPlan(word: Word, sense: Sense): { primary: ImageSearch; supporting: ImageSearch } | null {
   const query = visualQuery(sense); if (!query) return null;
   const reviewedPrimary = sense.id === word.senses[0].id ? primaryQueries[word.id] : undefined;
-  const primary: ImageSearch = { wordId: word.id, senseId: sense.id, query: normalizeVisualQuery(reviewedPrimary ?? query), category: pixabayCategory(word, sense), imageType: 'photo' };
+  const primary: ImageSearch = { wordId: word.id, senseId: sense.id, query: normalizeVisualQuery(reviewedPrimary ?? query), category: pixabayCategory(word, sense), imageType: sense.visualType === 'conceptual' ? 'all' : 'photo' };
   // One cheaper query broadens image type and removes optional category/context,
   // while preserving disambiguation for curated intents and action subjects.
   const inferred = inferVisualIntent(sense.english);

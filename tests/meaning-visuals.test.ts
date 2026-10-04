@@ -76,7 +76,7 @@ describe('English meaning to visuals without curated metadata', () => {
   it('does not borrow a query from another selected sense', () => {
     const word = entries('紧张')[0];
     expect(visualQuery(word.senses[0])).toContain('nervous person');
-    expect(visualQuery(word.senses.find(s => s.english === 'in short supply')!)).toBeNull();
+    expect(visualQuery(word.senses.find(s => s.english === 'in short supply')!)).toBe('in short supply concept');
   });
   it.each('喜悦 沮丧 羞涩 尴尬 孤独 疲倦 潮湿 干燥 明亮 黑暗 粗糙 光滑 发抖 鼓掌 蹲 拥抱 擦 拖'.split(' '))('infers further dictionary entry %s without Mandarin metadata', async text => {
     const word = entries(text).find(w => w.senses.some(s => visualQuery(s)));
@@ -89,8 +89,12 @@ describe('English meaning to visuals without curated metadata', () => {
   it.each(['to be panicky', 'to feel panicked', 'to get panic-stricken'])('recognizes the state in %s before filtering the copula', meaning => {
     expect(buildVisualQuery({ englishMeaning: meaning, partOfSpeech: 'verb' })?.query).toBe('panicked person facial expression');
   });
-  it.each(['because of', 'possibility', 'to understand', 'classifier for happy people', '(fig.) cold; hot', 'not happy / sad', 'cold (of personality)', 'short (of duration)', 'nervous (physiology)', 'used as an adjective for tall people'])('does not turn nonliteral/grammatical %s into stock photography', meaning => {
+  it.each(['because of', 'classifier for happy people', '(fig.) cold; hot', 'not happy / sad', 'used as an adjective for tall people'])('does not turn nonliteral/grammatical %s into stock photography', meaning => {
     expect(inferVisualIntent(meaning)).toBeNull();
+  });
+  it.each(['cold (of personality)', 'short (of duration)', 'nervous (physiology)'])('keeps the domain of %s instead of using a literal photo template', meaning => {
+    expect(inferVisualIntent(meaning)?.visualType).toBe('conceptual');
+    expect(inferVisualIntent(meaning)?.query).not.toMatch(/\bperson\b/);
   });
   it('preserves explicit physical subjects', () => {
     expect(inferVisualIntent('cold (of water)')?.query).toBe('cold water');

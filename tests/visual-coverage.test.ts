@@ -40,7 +40,7 @@ describe('non-curated dictionary visual coverage', () => {
     const inferred = rows.filter(row => row[1] === text).flatMap(row => fromRow(row).senses);
     expect(inferred.some(sense => sense.visualQuery?.startsWith('person ' + action))).toBe(true);
   });
-  it.each(['因为', '但是', '虽然', '如果', '已经', '可能', '所以', '而且', '然后', '然而', '以及'])('%s skips stock images', async text => {
+  it.each(['因为', '但是', '虽然', '如果', '已经', '所以', '而且', '然后', '然而', '以及'])('%s skips stock images', async text => {
     const word = byId.get(text) ?? fromRow(rows.find(r => r[1] === text)!); const fetcher = vi.fn();
     for (const sense of word.senses) { expect(visualQuery(sense)).toBeNull(); await getImages(word.id, sense.id, { pixabayKey: 'test-key', fetcher }); }
     expect(fetcher).not.toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('non-curated dictionary visual coverage', () => {
     }
   });
   it('does not turn figurative, dangerous or proper-name meanings into generic pictures', () => {
-    for (const meaning of ['(fig.) tiger; brave person', 'sexual organ', 'surname Smith', 'Apple Inc.', 'to kill', 'to understand', 'possibility']) expect(inferVisualIntent(meaning), meaning).toBeNull();
+    for (const meaning of ['(fig.) tiger; brave person', 'sexual organ', 'surname Smith', 'Apple Inc.', 'to kill']) expect(inferVisualIntent(meaning), meaning).toBeNull();
   });
   it('uses one simplified all-image fallback after an empty enriched query', async () => {
     const word = fromRow(rows.find(r => r[1] === '冰箱')!);

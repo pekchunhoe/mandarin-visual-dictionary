@@ -46,7 +46,14 @@ with tarfile.open(archive) as source:
         ]:
             if family.intersection(roots):
                 return category
-        return {5: 'animal', 6: 'object', 8: 'body', 13: 'food', 15: 'place', 17: 'nature', 18: 'person', 20: 'nature'}.get(lex)
+        # Preserve abstract lexical classes as concepts, not nonvisual words.
+        return {5: 'animal', 6: 'object', 8: 'body', 13: 'food', 15: 'place', 17: 'nature', 18: 'person', 20: 'nature',
+                3: 'concept:entity', 4: 'concept:act', 7: 'concept:attribute',
+                9: 'concept:cognition', 10: 'concept:communication', 11: 'concept:event',
+                12: 'concept:feeling', 14: 'concept:group', 16: 'concept:motive',
+                19: 'concept:phenomenon', 21: 'concept:possession', 22: 'concept:process',
+                23: 'concept:quantity', 24: 'concept:relation', 25: 'concept:shape',
+                26: 'concept:state', 27: 'concept:substance', 28: 'concept:time'}.get(lex)
 
     nouns = {}
     priority = ['animal', 'fruit', 'vegetable', 'food', 'vehicle', 'household', 'technology', 'clothing', 'building', 'weather', 'body', 'person', 'nature', 'place', 'object']
@@ -64,7 +71,7 @@ with tarfile.open(archive) as source:
         edible = [c for c in categories if c in ('animal', 'fruit', 'vegetable', 'food')]
         physical_alternate = next((c for c in categories if c in {'technology', 'household', 'object'}), None) if nodes[offsets[0]][0] == 10 else None
         if first or edible or physical_alternate:
-            nouns[lemma] = min(edible, key=priority.index) if edible else first or physical_alternate
+            nouns[lemma] = min(edible, key=priority.index) if edible else physical_alternate or first
 
     verb_nodes = {}
     for line in read('data.verb').splitlines():
@@ -137,7 +144,7 @@ with tarfile.open(archive) as source:
     buckets = {}
     for lemma, category in nouns.items():
         buckets.setdefault(category, []).append(lemma)
-    output = {'version': 'wordnet-3.1-cedict-v2', 'nouns': {category: '|'.join(lemmas) for category, lemmas in sorted(buckets.items())}, 'verbs': '|'.join(verbs), 'descriptors': {family: '|'.join(lemmas) for family, lemmas in sorted(descriptor_buckets.items())}}
+    output = {'version': 'wordnet-3.1-cedict-v3', 'nouns': {category: '|'.join(lemmas) for category, lemmas in sorted(buckets.items())}, 'verbs': '|'.join(verbs), 'descriptors': {family: '|'.join(lemmas) for family, lemmas in sorted(descriptor_buckets.items())}}
     Path('src/data/visual-lexicon.json').write_text(json.dumps(output, separators=(',', ':')) + '\n', encoding='utf-8', newline='\n')
     license_text = '\n'.join(re.sub(r'^\s+\d+ ?', '', line).rstrip() for line in noun_text.splitlines() if line.startswith(' '))
     Path('public/data/WORDNET-LICENSE.txt').write_text(license_text + '\n', encoding='utf-8', newline='\n')

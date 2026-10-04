@@ -76,7 +76,7 @@ if (scenario === 'missing-service' || scenario === 'broken-service') {
 } else {
   // Intentionally not the function root: file reads must be module-relative.
   process.chdir(fileURLToPath(new URL('./different-cwd', import.meta.url)));
-  const visualWords = ['苹果', ...['长颈鹿', '冰箱', '厨师', '瀑布', '鳄鱼', '游泳', '恐慌', '惊讶', '生气', '害怕', '困惑', '饿', '渴', '慢', '哭', '跳舞'].map(canonical)];
+  const visualWords = ['苹果', ...['长颈鹿', '冰箱', '厨师', '瀑布', '鳄鱼', '游泳', '恐慌', '惊讶', '生气', '害怕', '困惑', '饿', '渴', '慢', '哭', '跳舞', '政治', '经济', '金融', '数学', '科学'].map(canonical)];
   for (const word of visualWords) {
     const result = await request(word);
     assert.equal(result.status, 200); assert.equal(result.body.status, 'live');

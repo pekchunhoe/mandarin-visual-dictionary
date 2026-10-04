@@ -15,7 +15,7 @@ export function fromRow(row: RawRow): Word {
 /** Saved words retain definitions, not obsolete visual classification decisions. */
 export function refreshWordVisuals(word: Word): Word {
   return { ...word, senses: word.senses.map(sense => {
-    if (sense.visualOrigin === 'curated' || (!sense.visualOrigin && sense.visualQuery)) return sense;
+    if (sense.visualOrigin === 'curated') return sense;
     const intent = buildVisualQuery({ englishMeaning: sense.english, partOfSpeech: sense.partOfSpeech });
     return { ...sense, visualType: intent?.visualType ?? 'abstract', visualQuery: intent?.query, visualSubject: intent?.subject, visualOrigin: 'inferred' };
   }) };

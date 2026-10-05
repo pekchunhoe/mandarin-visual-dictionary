@@ -7,6 +7,7 @@ import type { ImageSearch } from './image-plan';
 import { providers } from './providers';
 import type { ImageProvider } from './providers';
 import { createHash } from 'node:crypto';
+import { imageRelevance, rankImageCandidates } from './visual-search';
 export { normalizePexels } from './providers';
 
 interface CachedSearch { images: Photo[]; expiresAt: number; failed?: boolean; diagnostic?: string }
@@ -74,19 +75,27 @@ export async function getImages(wordId: string, senseId: string, options: Option
   const fallback = word.photo && sense === word.senses[0] ? offlineGallery(word.photo, word.simplified + ' · ' + sense.english).slice(0, limit) : [];
   const images: Photo[] = []; let failed = false; const diagnostics: string[] = [];
   const deadline = Date.now() + 8000;
+  const ranked = () => rankImageCandidates(images, plan);
+  const enough = () => ranked().filter(photo => plan.relevance.conceptual || imageRelevance(photo, plan).semantic).length >= (options.mode === 'thumbnail' ? 1 : 6);
   for (const provider of ['pixabay', 'pexels'] as const) {
     const secret = (provider === 'pixabay' ? options.pixabayKey : options.pexelsKey)?.trim();
     if (!secret) { diagnostics.push(`${provider}_not_configured`); continue; }
-    const searches = provider === 'pixabay' ? [plan.primary, plan.supporting] : [plan.primary];
+    // Three bounded attempts for visible emotions, two for other meanings and
+    // thumbnails. Stop on enough relevant results or any transient failure.
+    const searches = provider === 'pixabay' ? plan.candidates.slice(0, options.mode === 'thumbnail' ? 2 : 3) : [plan.primary];
     for (const search of searches) {
       const result = await searchProvider(provider, search, secret, options, deadline);
       images.push(...result.images); failed ||= !!result.failed;
       if (result.diagnostic) diagnostics.push(result.diagnostic);
-      if (result.failed || deduplicateImages(images).length >= (options.mode === 'thumbnail' ? 1 : 6)) break;
+      if (result.failed || enough()) break;
     }
-    if (deduplicateImages(images).length >= (options.mode === 'thumbnail' ? 1 : 6)) break;
+    if (enough()) break;
   }
-  const live = deduplicateImages(images).slice(0, limit);
+  const ordered = ranked();
+  const relevant = ordered.filter(photo => imageRelevance(photo, plan).semantic);
+  // Do not pad a clear subject with broad-category hits just to reach twelve.
+  // Sparse/absent metadata remains a small last resort, not semantic evidence.
+  const live = (plan.relevance.conceptual ? ordered : relevant.length ? relevant : ordered.slice(0, 2)).slice(0, limit);
   if (live.length) return { images: deduplicateImages([...live, ...fallback]).slice(0, limit), status: 'live', diagnostics: [...new Set(diagnostics)], expiresAt: Math.min(...live.map(p => p.expiresAt!)) };
   return { images: fallback, status: fallback.length ? 'curated' : 'unavailable', expiresAt: Date.now() + 60_000,
     diagnostics: [...new Set([...diagnostics, 'fallback_used'])],

@@ -14,7 +14,7 @@ vi.mock('../src/data/learning', () => ({ byId: new Map(), words: [] }));
 const rows = JSON.parse(readFileSync('public/data/cedict.json', 'utf8')) as RawRow[];
 const entries = (text: string) => rows.filter(row => row[1] === text).map(fromRow);
 beforeEach(clearImageCache);
-const live = () => ({ ok: true, json: async () => ({ hits: Array.from({ length: 8 }, (_, i) => ({ id: i + 1, pageURL: `https://pixabay.com/photos/expression-${i + 1}/`, webformatURL: `https://pixabay.com/get/expression-${i + 1}_640.jpg`, imageWidth: 900, imageHeight: 700, tags: 'person, expression' })) }) });
+const live = (meaning: string) => ({ ok: true, json: async () => ({ hits: Array.from({ length: 8 }, (_, i) => ({ id: i + 1, pageURL: `https://pixabay.com/photos/expression-${i + 1}/`, webformatURL: `https://pixabay.com/get/expression-${i + 1}_640.jpg`, imageWidth: 900, imageHeight: 700, tags: meaning })) }) });
 
 describe('English meaning to visuals without curated metadata', () => {
   const emotions = '恐慌 惊讶 高兴 快乐 伤心 生气 害怕 紧张 兴奋 失望 困惑 担心'.split(' ');
@@ -27,29 +27,29 @@ describe('English meaning to visuals without curated metadata', () => {
     const sense = word!.senses.find(s => visualQuery(s))!;
     expect(sense.visualOrigin).toBe('inferred');
     if (emotions.includes(text)) expect(sense.visualType).toBe('emotion');
-    const fetcher = vi.fn().mockResolvedValue(live());
+    const fetcher = vi.fn().mockResolvedValue(live(sense.english));
     const result = await getImages(word!.id, sense.id, { pixabayKey: 'meaning-test-key', fetcher });
     expect(result.status).toBe('live'); expect(result.images).toHaveLength(8);
     expect(fetcher).toHaveBeenCalledTimes(1);
     const params = new URL(fetcher.mock.calls[0][0]).searchParams;
-    expect(params.get('q')).toBe(sense.visualQuery);
+    expect(params.get('q')).toBe(imageSearchPlan(word!, sense)!.primary.query);
     expect(params.get('q')).toMatch(/^[a-z -]+$/);
     expect(params.get('safesearch')).toBe('true'); expect(params.get('lang')).toBe('en');
   });
   it.each([
-    ['恐慌', 'panic', 'panicked person facial expression'],
-    ['惊讶', 'amazed', 'surprised person facial expression'],
-    ['生气', 'to get angry; to be furious', 'angry person facial expression'],
-    ['害怕', 'to be afraid; to be scared', 'scared person facial expression'],
-    ['冷', 'cold', 'person feeling cold winter'],
-    ['跑', 'to run', 'person running']
-  ])('%s preserves the exact selected meaning %s', async (text, meaning, query) => {
+    ['恐慌', 'panic', 'panicked person facial expression', 'panicked person'],
+    ['惊讶', 'amazed', 'surprised person facial expression', 'amazed person'],
+    ['生气', 'to get angry; to be furious', 'angry person facial expression', 'angry person'],
+    ['害怕', 'to be afraid; to be scared', 'scared person facial expression', 'afraid person'],
+    ['冷', 'cold', 'person feeling cold winter', 'person feeling cold winter'],
+    ['跑', 'to run', 'person running', 'person running']
+  ])('%s preserves the exact selected meaning %s', async (text, meaning, query, visualSearch) => {
     const word = entries(text).find(w => w.senses.some(s => s.english === meaning))!;
     const sense = word.senses.find(s => s.english === meaning)!;
     expect(sense.visualQuery).toBe(query);
-    const fetcher = vi.fn().mockResolvedValue(live());
+    const fetcher = vi.fn().mockResolvedValue(live(sense.english));
     await getImages(word.id, sense.id, { pixabayKey: 'meaning-test-key', fetcher });
-    expect(new URL(fetcher.mock.calls[0][0]).searchParams.get('q')).toBe(query);
+    expect(new URL(fetcher.mock.calls[0][0]).searchParams.get('q')).toBe(visualSearch);
   });
   it.each('因为 但是 虽然 如果 所以 而且 已经 然而 以及'.split(' '))('%s still skips image providers', async text => {
     const fetcher = vi.fn();
@@ -65,12 +65,12 @@ describe('English meaning to visuals without curated metadata', () => {
   it.each(['to be surprised / astonished', '(of a person) amazed', 'astonishment', 'surprise'])('canonicalizes surprise: %s', meaning => {
     expect(inferVisualIntent(meaning)?.query).toBe('surprised person facial expression');
   });
-  it('uses only one conservative fallback and keeps a human context', async () => {
+  it('bounds emotion searches to three specific expressions and keeps a human context', async () => {
     const word = entries('恐慌')[0]; const sense = word.senses[0];
     const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [] }) });
     await getImages(word.id, sense.id, { pixabayKey: 'meaning-test-key', fetcher });
-    expect(fetcher).toHaveBeenCalledTimes(2);
-    expect(fetcher.mock.calls.map(call => new URL(call[0]).searchParams.get('q'))).toEqual(['panicked person facial expression', 'panicked person']);
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(fetcher.mock.calls.map(call => new URL(call[0]).searchParams.get('q'))).toEqual(['panicked person', 'scared person', 'panicked face']);
     expect(imageSearchPlan(word, sense)?.supporting.imageType).toBe('all');
   });
   it('does not borrow a query from another selected sense', () => {
@@ -82,7 +82,7 @@ describe('English meaning to visuals without curated metadata', () => {
     const word = entries(text).find(w => w.senses.some(s => visualQuery(s)));
     expect(word).toBeDefined();
     const sense = word!.senses.find(s => visualQuery(s))!;
-    const fetcher = vi.fn().mockResolvedValue(live());
+    const fetcher = vi.fn().mockResolvedValue(live(sense.english));
     expect((await getImages(word!.id, sense.id, { pixabayKey: 'meaning-test-key', mode: 'thumbnail', fetcher })).images).toHaveLength(1);
     expect(fetcher).toHaveBeenCalledTimes(1);
   });

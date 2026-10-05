@@ -35,7 +35,7 @@ globalThis.fetch = async url => {
   assert.equal(query.origin, 'https://pixabay.com');
   assert.equal(query.searchParams.get('safesearch'), 'true');
   assert.equal(query.searchParams.get('lang'), 'en');
-  return { ok: true, json: async () => ({ hits: [{ id: 1, pageURL: 'https://pixabay.com/photos/example-1/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 600, tags: 'example' }] }) };
+  return { ok: true, json: async () => ({ hits: [{ id: 1, pageURL: 'https://pixabay.com/photos/example-1/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 600, tags: query.searchParams.get('q') }] }) };
 };
 async function request(word, sense = 'sense-0') {
   let body; const headers = {};

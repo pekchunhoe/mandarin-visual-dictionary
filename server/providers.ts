@@ -34,16 +34,18 @@ export function normalizePixabay(hits: unknown[], query: string): Photo[] {
     const thumbnail = medium.replace(/_640(?=\.[a-z]+(?:\?|$))/i, '_340');
     const photo: Photo = { id: `pixabay-${id}`, provider: 'pixabay', thumbnailUrl: thumbnail, displayUrl: medium, largeUrl: large, width, height, alt: tags.length ? tags.join(', ') : query, tags, photographer, photographerUrl: photographer && userId > 0 ? `https://pixabay.com/users/${encodeURIComponent(photographer)}-${userId}/` : undefined, source: 'Pixabay', sourceUrl: page, queryContext: query };
     const popularity = Math.min(2, Math.log10(1 + dimension(hit.downloads) + dimension(hit.likes)) / 3);
+    if (['photo', 'illustration', 'vector'].includes(text(hit.type))) photo.imageType = hit.type as Photo['imageType'];
     return [{ photo, score: relevance * 10 + (aspect > 0.7 && aspect < 2 ? 1 : 0) + popularity }];
   }).sort((a, b) => b.score - a.score);
-  return deduplicateImages(ranked.map(item => item.photo));
+  // Keep the whole provider page until selected-sense reranking has run.
+  return deduplicateImages(ranked.map(item => item.photo), 32);
 }
 export function normalizePexels(photos: unknown[], query: string): Photo[] {
   return deduplicateImages(photos.flatMap(value => {
     const p = record(value); const src = record(p.src); const page = sourceUrl(p.url, ['www.pexels.com']); const id = dimension(p.id);
     if (!id || !page || !isImageUrl(text(src.medium)) || !isImageUrl(text(src.large))) return [];
-    return [{ id: `pexels-${id}`, provider: 'pexels' as const, thumbnailUrl: text(src.medium), displayUrl: text(src.large), largeUrl: text(src.large), width: dimension(p.width), height: dimension(p.height), alt: text(p.alt) || query, photographer: text(p.photographer) || undefined, photographerUrl: sourceUrl(p.photographer_url, ['www.pexels.com']) || undefined, source: 'Pexels', sourceUrl: page, queryContext: query }];
-  }));
+    return [{ id: `pexels-${id}`, provider: 'pexels' as const, imageType: 'photo' as const, thumbnailUrl: text(src.medium), displayUrl: text(src.large), largeUrl: text(src.large), width: dimension(p.width), height: dimension(p.height), alt: text(p.alt) || query, tags: text(p.alt) ? [text(p.alt)] : [], photographer: text(p.photographer) || undefined, photographerUrl: sourceUrl(p.photographer_url, ['www.pexels.com']) || undefined, source: 'Pexels', sourceUrl: page, queryContext: query }];
+  }), 24);
 }
 export const providers: Record<ImageProvider, ProviderAdapter> = {
   pixabay: { id: 'pixabay', request: pixabayRequest, normalize(body, query) { const hits = record(body).hits; if (!Array.isArray(hits)) throw new Error('Invalid image response'); return normalizePixabay(hits, query); } },

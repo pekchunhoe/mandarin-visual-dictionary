@@ -32,7 +32,7 @@ describe('non-curated dictionary visual coverage', () => {
     expect(word, JSON.stringify(candidates.map(w => w.senses.map(s => s.english)))).toBeDefined();
     const sense = word!.senses.find(s => visualQuery(s))!;
     expect(resolveImageWord(word!.id)?.senses.find(s => s.id === sense.id)?.visualQuery).toBe(sense.visualQuery);
-    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [{ id: 123, pageURL: 'https://pixabay.com/photos/example-123/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 700, tags: 'example' }] }) });
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [{ id: 123, pageURL: 'https://pixabay.com/photos/example-123/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 700, tags: sense.english }] }) });
     const result = await getImages(word!.id, sense.id, { pixabayKey: 'coverage-fixture-key', fetcher, mode: 'thumbnail' });
     expect(result.status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(1);
   });

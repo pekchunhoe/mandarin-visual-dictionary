@@ -81,9 +81,9 @@ describe('non-curated dictionary visual coverage', () => {
   });
   it('uses one simplified all-image fallback after an empty enriched query', async () => {
     const word = fromRow(rows.find(r => r[1] === '冰箱')!);
-    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [] }) });
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [], results: [] }) });
     const result = await getImages(word.id, 'sense-0', { pixabayKey: 'fixture-key', fetcher });
-    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(fetcher).toHaveBeenCalledTimes(4);
     const primary = new URL(fetcher.mock.calls[0][0]).searchParams; const fallback = new URL(fetcher.mock.calls[1][0]).searchParams;
     expect(primary.get('q')).toBe('refrigerator appliance'); expect(primary.get('image_type')).toBe('photo');
     expect(fallback.get('q')).toBe('refrigerator'); expect(fallback.get('image_type')).toBe('all'); expect(fallback.get('safesearch')).toBe('true'); expect(fallback.get('lang')).toBe('en');

@@ -77,6 +77,7 @@ test('idiom senses use the shared semantic planner and retain loading, error, em
     const result = await service.getImages(params.get('word')!, sense, {
       pixabayKey: 'browser-idiom-fixture',
       fetcher: async url => {
+        if (new URL(String(url)).hostname === 'api.openverse.org') return new Response(JSON.stringify({ results: [] }));
         const query = new URL(String(url)).searchParams.get('q')!; queries.push(query);
         const tags = query === 'frightened person' ? 'generic person portrait' : query;
         const hits = sense === 'sense-3' && terrorAttempts === 2 ? [] : Array.from({ length: 6 }, (_, i) => ({ id: i + 1, tags, pageURL: `https://pixabay.com/photos/idiom-${i + 1}/`, webformatURL: `https://pixabay.com/get/idiom-${i + 1}_640.jpg`, imageWidth: 900, imageHeight: 700 }));

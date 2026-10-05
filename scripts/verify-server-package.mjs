@@ -25,16 +25,33 @@ const canonical = text => { const row = rows.find(r => r[1] === text); return [r
 const secret = 'packaging-fixture-not-a-real-key';
 process.env.PIXABAY_API_KEY = secret;
 process.env.PEXELS_API_KEY = '';
+process.env.OPENVERSE_CLIENT_ID = scenario === 'openverse-auth' ? 'packaging-openverse-client' : '';
+process.env.OPENVERSE_CLIENT_SECRET = scenario === 'openverse-auth' ? 'packaging-openverse-secret' : '';
 let calls = 0;
+let openverseCalls = 0; let tokenCalls = 0;
 const logs = [];
 console.error = (...args) => logs.push(args.join(' '));
-globalThis.fetch = async url => {
+globalThis.fetch = async (url, init) => {
+  const query = new URL(url);
+  if (query.hostname === 'api.openverse.org') {
+    openverseCalls++;
+    if (scenario !== 'openverse-auth') return { ok: true, json: async () => ({ results: [] }) };
+    if (query.pathname.includes('auth_tokens')) {
+      tokenCalls++;
+      assert.equal(init.method, 'POST');
+      assert.equal(init.body.get('client_secret'), 'packaging-openverse-secret');
+      return { ok: true, json: async () => ({ access_token: 'packaging-openverse-token', token_type: 'Bearer', expires_in: 3600 }) };
+    }
+    assert.equal(init.headers.Authorization, 'Bearer packaging-openverse-token');
+    assert.equal(query.searchParams.get('mature'), 'false');
+    return { ok: true, json: async () => ({ results: [{ id: 'test-image', title: query.searchParams.get('q'), url: 'https://images.example.com/apple.jpg', width: 900, height: 700, foreign_landing_url: 'https://example.com/apple', license: 'by', license_version: '4.0', license_url: 'https://creativecommons.org/licenses/by/4.0/' }] }) };
+  }
   calls++;
   if (scenario === 'provider-failure') throw new Error('https://pixabay.com/api/?key=' + secret);
-  const query = new URL(url);
   assert.equal(query.origin, 'https://pixabay.com');
   assert.equal(query.searchParams.get('safesearch'), 'true');
   assert.equal(query.searchParams.get('lang'), 'en');
+  if (scenario === 'openverse-auth') return { ok: true, json: async () => ({ hits: [] }) };
   return { ok: true, json: async () => ({ hits: [{ id: 1, pageURL: 'https://pixabay.com/photos/example-1/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 600, tags: query.searchParams.get('q') }] }) };
 };
 async function request(word, sense = 'sense-0') {
@@ -44,10 +61,18 @@ async function request(word, sense = 'sense-0') {
   assert.equal(headers['Content-Type'], 'application/json; charset=utf-8');
   assert.equal(headers['Cache-Control'], 'no-store');
   assert(!JSON.stringify(body).includes(secret));
+  for (const credential of ['packaging-openverse-client', 'packaging-openverse-secret', 'packaging-openverse-token']) assert(!JSON.stringify(body).includes(credential));
   assert(!JSON.stringify(body).includes('stack'));
   return { status: response.statusCode, body };
 }
-if (scenario === 'missing-service' || scenario === 'broken-service') {
+if (scenario === 'openverse-auth') {
+  for (const word of ['苹果', '猫']) {
+    const result = await request(word);
+    assert.equal(result.status, 200); assert.equal(result.body.images[0].provider, 'openverse');
+    assert.equal(result.body.images[0].license, 'by');
+  }
+  assert.equal(tokenCalls, 1); assert.equal(openverseCalls, 3);
+} else if (scenario === 'missing-service' || scenario === 'broken-service') {
   const path = new URL('./server/image-service.mjs', import.meta.url);
   if (scenario === 'missing-service') renameSync(path, new URL('./server/saved-service.mjs', import.meta.url));
   else writeFileSync(path, 'throw new Error(' + JSON.stringify(secret) + ');');
@@ -73,6 +98,7 @@ if (scenario === 'missing-service' || scenario === 'broken-service') {
   assert.equal(generic.body.images.length, 0);
   assert(curated.body.diagnostics.includes(scenario === 'missing-key' ? 'pixabay_not_configured' : 'pixabay_upstream_failure'));
   assert(calls === (scenario === 'missing-key' ? 0 : 2));
+  assert(openverseCalls > 0);
 } else {
   // Intentionally not the function root: file reads must be module-relative.
   process.chdir(fileURLToPath(new URL('./different-cwd', import.meta.url)));
@@ -95,7 +121,7 @@ assert(!logs.join(' ').includes(secret));
 console.log('PASS: isolated deployment artifact — ' + scenario);
 `;
 await writeFile(join(root, 'verify.mjs'), runner);
-for (const scenario of ['normal', 'missing-key', 'provider-failure', 'missing-dictionary', 'missing-service', 'broken-service']) {
+for (const scenario of ['normal', 'openverse-auth', 'missing-key', 'provider-failure', 'missing-dictionary', 'missing-service', 'broken-service']) {
   // Restore the two assets that the deliberate failure scenarios can alter.
   for (const file of ['server/image-service.mjs', 'public/data/cedict.json']) await copyFile(file, join(root, file));
   const result = spawnSync(process.execPath, [join(root, 'verify.mjs'), scenario], { cwd: root, encoding: 'utf8', timeout: 30000 });

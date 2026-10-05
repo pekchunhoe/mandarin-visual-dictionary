@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Word } from '../types';
 import { localPhoto } from '../data/photos';
-import { visualQuery } from '../lib/visual';
+import { photoLicense, visualQuery } from '../lib/visual';
 import { useImages } from '../lib/useImages';
 import { Photo } from './Photo';
 export function WordThumbnail({ word }: { word: Word }) {
@@ -17,5 +17,5 @@ export function WordThumbnail({ word }: { word: Word }) {
   const fallback = word.photo ? localPhoto(word.photo, word.senses[0].english) : undefined;
   const candidate = result?.images[0] ?? fallback;
   const photo = candidate?.thumbnailUrl === failedUrl ? fallback : candidate;
-  return <span ref={target} className="word-thumbnail">{photo ? <Photo key={photo.thumbnailUrl} photo={photo} onUnavailable={() => setFailedUrl(photo.thumbnailUrl)}/> : <span className="word-art" lang="zh-Hans">{word.simplified}</span>}{photo?.provider && <span className="thumbnail-credit">{photo.photographer ? `${photo.photographer} · ` : ''}{photo.source}</span>}</span>;
+  return <span ref={target} className="word-thumbnail">{photo ? <Photo key={photo.thumbnailUrl} photo={photo} onUnavailable={() => setFailedUrl(photo.thumbnailUrl)}/> : <span className="word-art" lang="zh-Hans">{word.simplified}</span>}{photo?.provider && <span className="thumbnail-credit" title={photo.attribution}>{photo.photographer ? `${photo.photographer} · ` : ''}{photo.source}{photo.license ? ` · ${photoLicense(photo)}` : ''}</span>}</span>;
 }

@@ -41,6 +41,6 @@ export function imageSearchPlan(word: Word, sense: Sense): VisualSearchPlan | nu
   const supporting = /financial institution|apple fruit/.test(primary.query) ? primary.query.replace(/ building$/, '') : subject;
   return visualSearchPlan(sense, primary, { ...primary, query: normalizeVisualQuery(supporting), category: undefined, imageType: 'all' });
 }
-export function providerCacheKey(provider: 'pixabay' | 'pexels', search: ImageSearch) {
+export function providerCacheKey(provider: 'pixabay' | 'openverse' | 'pexels', search: ImageSearch) {
   return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, provider, search.wordId, search.senseId, normalizeVisualQuery(search.query), search.category ?? '', search.imageType, 'safe=true', 'en', 'popular', 32, 300, 200]);
 }

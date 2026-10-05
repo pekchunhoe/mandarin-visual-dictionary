@@ -20,7 +20,9 @@ No key is needed for dictionary search or the curated pictures. To enable live i
 PIXABAY_API_KEY=your_actual_key_here
 ```
 
-Optionally set `PEXELS_API_KEY` for fallback searches. Pixabay is tried first, then configured Pexels, bundled curated photos, and finally the existing text/diagram explanation. This key is server-only; never name it with a `VITE_` prefix or place it in React code.
+Pixabay is tried first, then Openverse when more suitable results are needed, then optional configured Pexels, bundled curated photos, and the existing text/diagram explanation. Openverse works anonymously; set `OPENVERSE_CLIENT_ID` and `OPENVERSE_CLIENT_SECRET` for OAuth client-credentials access. Optionally retain `PEXELS_API_KEY` for the final provider fallback. All credentials stay server-side; never use a `VITE_` prefix or place credentials in React code.
+
+Openverse tokens are cached in server memory, shared across concurrent searches and reacquired shortly before expiry. Token failures temporarily use anonymous search; rejected bearer tokens receive one anonymous retry. See [OPENVERSE_INTEGRATION_REPORT.md](OPENVERSE_INTEGRATION_REPORT.md) for exact fallback conditions, tests and remaining limitations. The implementation follows the [Openverse API reference](https://api.openverse.org/v1/).
 
 ## What works
 
@@ -63,7 +65,8 @@ src/lib/search.ts                 Core search and result cache
 src/lib/dictionary-client.ts      Shared worker messages and obsolete-request cancellation
 src/lib/images.ts                 Shared thumbnail/gallery requests and expiring sense-aware cache
 server/images.ts                 Provider ordering, request deduplication, bounded caches
-server/providers.ts              Pixabay/Pexels adapters and response normalization
+server/providers.ts              Pixabay/Openverse/Pexels adapters and normalization
+server/openverse-auth.ts         Server-only OAuth token acquisition and reuse
 server/image-plan.ts             Selected-sense semantic queries and provider cache keys
 server/visual-search.ts          Visual query candidates and selected-meaning metadata ranking
 server/dictionary.ts             Lazy, canonical full-dictionary resolution
@@ -90,7 +93,7 @@ Conceptual vocabulary follows the same selected-English-sense pipeline as concre
 
 Idiom and phrase eligibility uses the same shared classifier in the dictionary worker and server. Dictionary labels are normalized only for semantic analysis: displayed definitions and sense IDs remain intact. Recognized emotional constructions, gerunds, action particles, and a small set of shared English expression templates yield a semantic predicate before provider search. For example, `fig. to be frightened stiff` yields `frightened`, then `frightened person` with bounded fear-expression alternatives. The predicate also supplies the existing metadata reranker, so literal words such as `stiff` or generic `person` do not outweigh fear evidence. Explicit literal senses keep their own interpretation; unresolved figurative/idiomatic meanings and grammar retain the explanation fallback. Dynamic picture eligibility does not require editorial examples or a reviewed visual explanation. See `IDIOM_VISUAL_REPORT.md` for the runtime audit and regression evidence.
 
-Concept searches use Pixabay `image_type=all` from the first request, allowing photos, illustrations and vectors with `safesearch=true` and `lang=en`. The server makes at most one simpler Pixabay fallback before the existing Pexels fallback. Sufficient primary results, caching and thumbnail reuse avoid extra calls. Images are illustrative search results, not reviewed definitions; availability and relevance vary.
+Concept searches use Pixabay `image_type=all` from the first request, allowing photos, illustrations and vectors with `safesearch=true` and `lang=en`. After the existing simpler Pixabay query, Openverse can reuse the same English semantic alternatives before the optional Pexels fallback. Openverse searches exclude mature content and accept CC BY, CC BY-SA, CC0 and Public Domain Mark results with license/source links. Actual titles and tags enter the unchanged semantic reranker. Captions retain creator, title, source and license links; thumbnail credits include the license. No upstream attribution HTML is rendered. Sufficient primary results, caching and thumbnail reuse avoid extra calls. Images are illustrative search results, not reviewed definitions; availability and relevance vary.
 
 Obsolete dictionary requests detach their listeners and never update the current search. Image calls are deduplicated; shared in-flight requests finish into the cache, while unmounted galleries ignore their results. This avoids cancelling a request that another component still needs. Explicit retry bypasses the browser result cache while respecting provider and HTTP 429 cooldowns. Live expiry is inherited from the server, so reading an old server result never starts a new 24-hour lifetime. Mounted galleries/cards refresh at expiry. Server entries are capped at 500 and browser entries at 100; failures use a short 60-second cache. API responses use `Cache-Control: no-store` to prevent HTTP/edge caches from extending signed URL lifetime.
 
@@ -103,13 +106,13 @@ GET /api/images?word=苹果&sense=sense-0&mode=thumbnail
 
 - Only GET, known canonical dictionary entries (or starter-word aliases), existing sense IDs, and `gallery`/`thumbnail` modes are accepted. Duplicate parameters are rejected. Arbitrary `q`, proxy URLs, extra parameters, and oversized inputs are rejected.
 - The server builds the provider query from the selected sense. User input never becomes a free-form provider search.
-- `PIXABAY_API_KEY` stays in the server-to-Pixabay request; the optional Pexels key stays in its server Authorization header. Neither is exposed through Vite, API responses, errors, logs, or React. Upstream requests abort after at most 3.5 seconds each, within an 8-second overall search budget. Redirects are rejected. Provider failures leave dictionary data and available local photos usable.
+- `PIXABAY_API_KEY` stays in the server-to-Pixabay request; the optional Pexels key and Openverse bearer token stay in server Authorization headers. Openverse client credentials are sent only in the server OAuth form POST. None are exposed through Vite, API responses, errors, logs, or React. Upstream searches abort after at most 3.5 seconds each, within an 8-second overall budget, with the last 3 seconds reserved after Pixabay for fallback. OAuth has a 1-second timeout. Redirects are rejected. Provider failures leave dictionary data and available local photos usable.
 - Pixabay always receives `safesearch=true`, English, approved category/image-type values, and a server-derived semantic query. The client cannot override these. Abstract/function words skip providers.
-- Galleries request 32 candidate Pixabay hits. Visible emotions have at most three specific queries; other meanings have at most two. Searches stop at six semantically supported gallery results (one for thumbnails), on provider failure, or within the existing eight-second deadline. Conceptual searches retain their existing two-query domain path and accept illustrative domain results. Cards request three candidates and permit at most two queries. Pexels remains a single configured fallback, requesting 24 gallery candidates or one thumbnail candidate. Cached and pending searches are reused; image diversity never triggers another request by itself.
-- Provider image URLs are restricted to approved Pixabay/Pexels HTTPS hosts; duplicates, undersized pictures, and malformed responses are filtered. React renders all text without raw HTML.
+- Galleries request 32 candidates from Pixabay or Openverse. Searches stop at six semantically supported gallery results (one for thumbnails), on provider failure, or at the deadline. Conceptual searches retain their existing domain path and stopping rule. Pixabay retains up to three semantic gallery queries or two thumbnail queries. Openverse uses distinct English queries within the remaining four-search Pixabay/Openverse budget, up to three gallery queries or two thumbnail queries. Identical Openverse queries differing only in Pixabay type/category are not repeated. Pexels retains its final configured fallback (including its existing idiom retries when Pixabay is unconfigured). Cached and pending searches are reused; image diversity never triggers another request by itself.
+- Pixabay/Pexels image URLs remain restricted to their approved HTTPS hosts. Normalized Openverse images may use public HTTPS domain hosts because Openverse aggregates multiple repositories; literal IPs, local hostnames, credentials and custom ports are rejected. Matching image URLs and source pages are deduplicated; undersized, malformed, mature or unlicensed Openverse results are filtered. React renders all text without raw HTML.
 - Bounded in-memory per-client limits permit 30 calls/minute per server instance. Vercel's trusted client-IP header is preferred. For a large multi-instance deployment, add Vercel Firewall limits or a shared rate-limit store; process-local limits are not globally coordinated.
-- Pexels does **not document a safe-search switch**. Approved educational queries restrict the search surface, but automated provider results are not a guarantee of child-suitable content. An unmoderated Wikimedia fallback is deliberately not enabled. Deployments needing editorial approval of every photo should use an approved-photo catalogue.
-- Security headers restrict scripts, connections, and fonts to this origin and allow images only from this origin or the approved Pixabay/Pexels hosts. API responses are not edge-cached.
+- Pexels does **not document a safe-search switch**. Openverse sends `mature=false` and rejects mature results. Approved educational queries restrict the search surface, but automated provider results are not a guarantee of child-suitable content. Deployments needing editorial approval of every photo should use an approved-photo catalogue.
+- Security headers restrict scripts, connections, and fonts to this origin. The image-only CSP permits HTTPS hosts so Openverse thumbnails and original images from aggregated repositories can display. API responses are not edge-cached.
 
 ## Checks
 
@@ -123,7 +126,7 @@ npm run check:source     # Browser/server boundary, environment, CSP and built a
 npm run check:whitespace # Includes tracked and untracked source/config files
 ```
 
-Browser tests use installed Microsoft Edge on Windows; elsewhere run `npx playwright install chromium` first. `PLAYWRIGHT_CHANNEL` can explicitly select an installed browser. External image API responses are mocked in automated tests; tests do not depend on live Pixabay or Pexels accounts. No lint script is configured; TypeScript and source/whitespace checks cover the configured static checks.
+Browser tests use installed Microsoft Edge on Windows; elsewhere run `npx playwright install chromium` first. `PLAYWRIGHT_CHANNEL` can explicitly select an installed browser. External image API responses are mocked in automated tests; tests do not depend on live Pixabay, Openverse or Pexels accounts. No lint script is configured; TypeScript and source/whitespace checks cover the configured static checks.
 
 To test production offline support:
 
@@ -147,10 +150,10 @@ To regenerate English semantic data, run `python scripts/import-visual-lexicon.p
 
 1. Import this project into Vercel (or run the Vercel CLI from this directory).
 2. Use the Vite framework preset, `npm run build`, and `dist` output. Vercel discovers `api/images.js` automatically. The build regenerates and verifies `server/image-service.mjs`; `vercel.json` explicitly packages `public/data/cedict.json`. Keep the generated bundle in the deployment source. The dictionary is resolved relative to the server module, independent of the function's working directory. No external npm dependency or loose WordNet file is needed at runtime.
-3. Open **Settings → Environment Variables → PIXABAY_API_KEY**, enter your key for the intended deployment environments, then **Redeploy**. Optionally also set **PEXELS_API_KEY** for fallback. Never use a `VITE_` prefix.
+3. Open **Settings → Environment Variables → PIXABAY_API_KEY**, enter your key for the intended deployment environments, then **Redeploy**. Set **OPENVERSE_CLIENT_ID** and **OPENVERSE_CLIENT_SECRET** for authenticated secondary search; without them, Openverse uses anonymous access. Optionally retain **PEXELS_API_KEY** for the final provider fallback. Never use a `VITE_` prefix.
 4. After redeploying, check the photo endpoint with a known word/sense, pronunciation on a device with a Mandarin voice, and an offline reload after the service worker installs.
 
-No commit, push, or deployment is performed by the implementation task. The API implementation is mock-tested; live authenticated Pixabay/Pexels operation has not been verified here because no keys were configured.
+No commit, push, or deployment is performed by the implementation task. Provider and OAuth behavior is mock-tested; live authenticated operation with the Vercel credentials has not been verified locally.
 
 ## Initial audit and deliberate limits
 

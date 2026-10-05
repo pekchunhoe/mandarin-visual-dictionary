@@ -35,6 +35,24 @@ test('preview closes with Escape and returns focus; saves persist', async ({ pag
   await page.goto('/#word=苹果'); const enlarge = page.getByRole('button', { name: /Enlarge picture/ }).first(); await enlarge.click(); await expect(page.getByRole('dialog')).toBeVisible(); await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).not.toBeVisible(); await expect(enlarge).toBeFocused();
   await page.getByRole('button', { name: 'Save word', exact: true }).click(); await page.reload(); await expect(page.getByRole('button', { name: 'Saved', exact: true })).toBeVisible(); await page.goto('/#saved='); await expect(page.getByRole('heading', { name: '苹果', exact: true })).toBeVisible();
 });
+
+test('Openverse attribution and mixed gallery fit phone, tablet and desktop', async ({ page }) => {
+  await page.route('https://media.example.com/openverse-fixture.jpg', route => route.fulfill({ path: 'public/photos/apple.jpg', contentType: 'image/jpeg' }));
+  await page.route('**/api/images?**', route => route.fulfill({ json: { status: 'live', images: [
+    { id: 'openverse-fixture', provider: 'openverse', thumbnailUrl: 'https://media.example.com/openverse-fixture.jpg', largeUrl: 'https://media.example.com/openverse-fixture.jpg', width: 900, height: 700, alt: 'Apple fruit in a sunny orchard', title: 'Apple fruit in a sunny orchard', photographer: 'Example Openverse Photographer', photographerUrl: 'https://example.com/creator', source: 'Openverse', originalSource: 'flickr', sourceUrl: 'https://example.com/apple', license: 'by-sa', licenseVersion: '4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+    { id: 'pixabay-fixture', provider: 'pixabay', thumbnailUrl: '/photos/apple.jpg', largeUrl: '/photos/apple.jpg', width: 900, height: 700, alt: 'Apple fruit', source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/apple-1/' }
+  ] } }));
+  for (const width of [320, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 }); await page.goto('/#word=苹果');
+    await expect(page.locator('.gallery-grid figure')).toHaveCount(2);
+    await expect(page.locator('.gallery-grid').getByRole('link', { name: 'CC BY-SA 4.0' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await page.locator('.gallery-grid img').first().evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await page.getByRole('button', { name: 'Enlarge picture: Apple fruit in a sunny orchard' }).click();
+    await expect(page.getByRole('dialog').getByRole('link', { name: 'CC BY-SA 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-sa/4.0/');
+    await page.keyboard.press('Escape');
+  }
+});
 test('separate senses and abstract explanation', async ({ page }) => {
   await page.goto('/#word=开'); await expect(page.getByText('Please open the door.')).toBeVisible(); await page.getByRole('button', { name: /2. to turn on/ }).click(); await expect(page.getByText('Please turn on the light.')).toBeVisible(); await expect(page.getByText('Please open the door.')).not.toBeVisible();
   await page.goto('/#word=因为'); await expect(page.getByText('An idea you can picture.')).toBeVisible(); await expect(page.locator('.gallery-section')).toHaveCount(0);

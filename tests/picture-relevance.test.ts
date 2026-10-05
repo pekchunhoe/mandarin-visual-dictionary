@@ -109,7 +109,7 @@ it('does not mistake a concrete word category for enough subject matches', async
 it('bounds weak-result searches and refuses to fill an emotion gallery with generic portraits', async () => {
   const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, 'person, portrait'))));
   const result = await getImages(fear.id, 'sense-0', { pixabayKey: 'fixture-relevance-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(3);
+  expect(fetcher).toHaveBeenCalledTimes(4); // Three primary queries, then Openverse.
   expect(result.images).toEqual([]);
   expect(result.status).toBe('unavailable');
 });

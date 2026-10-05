@@ -73,6 +73,7 @@ it.each(['pixabay', 'pexels'] as const)('tries three bounded semantic queries wi
   const word = fromRow(rows.find(row => row[1] === '狼吞虎咽')!);
   const queries: string[] = [];
   const fetcher = vi.fn(async (url: string | URL | Request) => {
+    if (new URL(String(url)).hostname === 'api.openverse.org') return new Response(JSON.stringify({ results: [] }));
     const params = new URL(String(url)).searchParams;
     const query = params.get('q') ?? params.get('query')!; queries.push(query);
     const ready = queries.length === 3;
@@ -82,15 +83,16 @@ it.each(['pixabay', 'pexels'] as const)('tries three bounded semantic queries wi
   const result = await getImages(word.id, 'sense-0', options);
   expect(result.status).toBe('live'); expect(result.images[0].provider).toBe(provider);
   expect(queries).toEqual(['person eating ravenously', 'person eating quickly', 'person eating food']);
-  await getImages(word.id, 'sense-0', options); expect(fetcher).toHaveBeenCalledTimes(3);
+  await getImages(word.id, 'sense-0', options);
+  expect(fetcher.mock.calls.filter(([url]) => new URL(String(url)).hostname !== 'api.openverse.org')).toHaveLength(3);
 });
 
-it('keeps combined-provider empty attempts within the existing four-request budget', async () => {
+it('bounds primary and Openverse searches to four, with one legacy Pexels fallback', async () => {
   clearImageCache();
   const word = fromRow(rows.find(row => row[1] === '人山人海')!);
-  const fetcher = vi.fn(async () => new Response(JSON.stringify({ hits: [], photos: [] })));
+  const fetcher = vi.fn(async () => new Response(JSON.stringify({ hits: [], photos: [], results: [] })));
   await getImages(word.id, 'sense-0', { pixabayKey: 'pixabay-fixture', pexelsKey: 'pexels-fixture', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(5);
 });
 
 it('gives EVERY idiom-tagged corpus sense a bounded English query plan', () => {

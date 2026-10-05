@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearImageCache, getImages, normalizePexels } from '../server/images';
+import { clearImageCache, getImages as resolveImages, normalizePexels } from '../server/images';
 import { byId } from '../src/data/learning';
 const makePhoto = (id: number) => ({ id, width: 900, height: 700, alt: 'Red apple fruit', photographer: 'Test fixture photographer', photographer_url: 'https://www.pexels.com/@fixture', url: `https://www.pexels.com/photo/${id}/`, src: { medium: `https://images.pexels.com/photos/${id}/medium.jpg`, large: `https://images.pexels.com/photos/${id}/large.jpg` } });
 const sense = byId.get('苹果')!.senses[0].id;
+// Isolate legacy Pexels behavior behind an explicitly empty Openverse fallback.
+const getImages: typeof resolveImages = (word, sense, opts = {}) => resolveImages(word, sense, { ...opts, fetcher: (url, init) => String(url).startsWith('https://api.openverse.org/') ? Promise.resolve(new Response(JSON.stringify({ results: [] }))) : (opts.fetcher ?? fetch)(url, init) });
 beforeEach(clearImageCache);
 describe('image provider boundary', () => {
   it('honestly reports a missing key with a real local fallback', async () => { const result = await getImages('苹果', sense); expect(result.status).toBe('curated'); expect(result.message).toContain('curated'); expect(result.images[0].thumbnailUrl).toBe('/photos/apple.jpg'); });

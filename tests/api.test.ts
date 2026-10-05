@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import handler from '../server/image-handler';
 import { clearImageCache } from '../server/images';
-beforeEach(() => { clearImageCache(); vi.stubEnv('PIXABAY_API_KEY', ''); vi.stubEnv('PEXELS_API_KEY', ''); });
+beforeEach(() => { clearImageCache(); vi.stubEnv('PIXABAY_API_KEY', ''); vi.stubEnv('PEXELS_API_KEY', ''); vi.stubEnv('OPENVERSE_CLIENT_ID', ''); vi.stubEnv('OPENVERSE_CLIENT_SECRET', ''); });
 afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
 async function request(url: string, method = 'GET', ip = 'test') {
   let body = ''; const headers: Record<string, string> = {};
@@ -12,6 +12,17 @@ async function request(url: string, method = 'GET', ip = 'test') {
   await handler(req, res); return { status: res.statusCode, headers, body: JSON.parse(body) };
 }
 describe('server API safeguards', () => {
+  it('keeps Openverse credentials and OAuth tokens out of API responses and logs, including provider echoes', async () => {
+    vi.stubEnv('OPENVERSE_CLIENT_ID', 'api-fixture-client'); vi.stubEnv('OPENVERSE_CLIENT_SECRET', 'api-fixture-secret');
+    const logs = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockImplementation(async url => new Response(JSON.stringify(String(url).includes('auth_tokens') ? { access_token: 'api-fixture-token', token_type: 'Bearer', expires_in: 3600 } : { results: [], echo: 'api-fixture-client api-fixture-secret api-fixture-token' })));
+    const result = await request('/?word=苹果&sense=sense-0', 'GET', 'openverse-secret-client');
+    expect(result.status).toBe(200); expect(result.body.status).toBe('curated');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    for (const value of ['api-fixture-client', 'api-fixture-secret', 'api-fixture-token']) {
+      expect(JSON.stringify(result)).not.toContain(value); expect(JSON.stringify(logs.mock.calls)).not.toContain(value);
+    }
+  });
   it('normalizes malformed request URLs', async () => expect((await request('http://[')).status).toBe(400));
   it('rejects unsupported methods', async () => expect((await request('/?word=苹果&sense=sense-0', 'POST')).status).toBe(405));
   it('rejects arbitrary image queries and URL proxies', async () => { expect((await request('/?q=anything')).status).toBe(400); expect((await request('/?word=苹果&sense=sense-0&url=https://example.com')).status).toBe(400); });

@@ -4,6 +4,7 @@ import type { Photo as PhotoType, Sense, Word } from '../types';
 import { useImages } from '../lib/useImages';
 import { offlineGallery } from '../data/photos';
 import { Photo } from './Photo';
+import { photoLicense } from '../lib/visual';
 export function VisualGallery({ word, sense }: { word: Word; sense: Sense }) {
   const [attempt, setAttempt] = useState(0); const [preview, setPreview] = useState<number | null>(null);
   const { result, loading, error } = useImages(word, sense, 'gallery', true, attempt);
@@ -20,7 +21,7 @@ export function VisualGallery({ word, sense }: { word: Word; sense: Sense }) {
     {photos.length > 2 && <div className="context-section"><div><span className="eyebrow">LEARN WITH PICTURES</span><h3>看图学词</h3><p>Find the same idea in different real-world scenes.</p></div><div className="context-cards">{photos.slice(0, 3).map((photo, i) => <button key={photo.id} onClick={() => setPreview(i)}><Photo key={photo.thumbnailUrl} photo={photo}/><span>{photo.alt || sense.english}</span></button>)}</div></div>}
   </section>;
 }
-export function Attribution({ photo }: { photo: PhotoType }) { return <figcaption>{photo.photographer ? <>Photo by <a href={photo.photographerUrl} target="_blank" rel="noreferrer">{photo.photographer}</a> · </> : 'Photo · '}<a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.source}</a></figcaption>; }
+export function Attribution({ photo }: { photo: PhotoType }) { return <figcaption title={photo.attribution}>{photo.provider === 'openverse' && photo.title && <><a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.title}</a> · </>}{photo.photographer ? <>Photo by <a href={photo.photographerUrl} target="_blank" rel="noreferrer">{photo.photographer}</a> · </> : 'Photo · '}<a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.source}{photo.originalSource ? ` / ${photo.originalSource}` : ''}</a>{photo.license && <> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photoLicense(photo)}</a></>}</figcaption>; }
 function ImagePreview({ photos, index, onChange, onClose }: { photos: PhotoType[]; index: number; onChange: (index: number) => void; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => { const previous = document.activeElement as HTMLElement; const modal = dialog.current; modal?.showModal(); const overflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { modal?.close(); document.body.style.overflow = overflow; previous?.focus(); }; }, []);

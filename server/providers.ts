@@ -1,8 +1,8 @@
 import type { ImageMode, Photo } from '../src/types';
-import { deduplicateImages, isImageUrl } from '../src/lib/visual';
+import { deduplicateImages, isImageUrl, isPublicHttpsUrl } from '../src/lib/visual';
 import { normalizeVisualQuery, PIXABAY_CATEGORIES } from './image-plan';
 import type { ImageSearch } from './image-plan';
-export type ImageProvider = 'pixabay' | 'pexels';
+export type ImageProvider = 'pixabay' | 'openverse' | 'pexels';
 export interface ProviderAdapter { id: ImageProvider; request: (search: ImageSearch, key: string, mode: ImageMode) => { url: string; headers?: Record<string, string> }; normalize: (body: unknown, query: string) => Photo[] }
 function record(value: unknown): Record<string, unknown> { return value && typeof value === 'object' ? value as Record<string, unknown> : {}; }
 function text(value: unknown): string { return typeof value === 'string' ? value : ''; }
@@ -47,7 +47,27 @@ export function normalizePexels(photos: unknown[], query: string): Photo[] {
     return [{ id: `pexels-${id}`, provider: 'pexels' as const, imageType: 'photo' as const, thumbnailUrl: text(src.medium), displayUrl: text(src.large), largeUrl: text(src.large), width: dimension(p.width), height: dimension(p.height), alt: text(p.alt) || query, tags: text(p.alt) ? [text(p.alt)] : [], photographer: text(p.photographer) || undefined, photographerUrl: sourceUrl(p.photographer_url, ['www.pexels.com']) || undefined, source: 'Pexels', sourceUrl: page, queryContext: query }];
   }), 24);
 }
+export function openverseRequest(search: ImageSearch, token: string, mode: ImageMode = 'gallery') {
+  const params = new URLSearchParams({ q: normalizeVisualQuery(search.query), page_size: mode === 'thumbnail' ? '3' : '32', mature: 'false', license: 'by,by-sa,cc0,pdm' });
+  return { url: `https://api.openverse.org/v1/images/?${params}`, headers: token ? { Authorization: `Bearer ${token}` } : undefined };
+}
+export function normalizeOpenverse(results: unknown[], query: string): Photo[] {
+  const url = (value: unknown) => isPublicHttpsUrl(text(value)) ? text(value) : '';
+  return deduplicateImages(results.flatMap(value => {
+    const p = record(value); const id = text(p.id); const large = url(p.url); const page = url(p.foreign_landing_url);
+    const width = dimension(p.width); const height = dimension(p.height); const aspect = width / height;
+    const license = text(p.license).toLowerCase(); const licenseUrl = url(p.license_url);
+    if (!/^[a-z0-9-]+$/i.test(id) || !large || !page || p.mature === true || width < 300 || height < 200 || aspect > 5 || aspect < 0.2 || !['by', 'by-sa', 'cc0', 'pdm'].includes(license) || !licenseUrl) return [];
+    const title = text(p.title).trim();
+    const tags = [title, ...(Array.isArray(p.tags) ? p.tags.map(tag => text(record(tag).name)) : [])].filter(Boolean).slice(0, 32);
+    // Apply the same known selected-subject exclusions as the primary adapter.
+    if (/\bapple\b/.test(query) && tags.some(tag => /\b(logo|iphone|macbook|computer|technology)\b/i.test(tag))) return [];
+    if (/financial institution/.test(query) && tags.some(tag => /\b(river|riverbank|piggy)\b/i.test(tag))) return [];
+    return [{ id: `openverse-${id}`, provider: 'openverse' as const, thumbnailUrl: url(p.thumbnail) || large, displayUrl: large, largeUrl: large, width, height, alt: title || query, title: title || undefined, tags, photographer: text(p.creator) || undefined, photographerUrl: url(p.creator_url) || undefined, source: 'Openverse', sourceUrl: page, originalProvider: text(p.provider) || undefined, originalSource: text(p.source) || undefined, license, licenseVersion: text(p.license_version) || undefined, licenseUrl, attribution: text(p.attribution) || undefined, queryContext: query }];
+  }), 32);
+}
 export const providers: Record<ImageProvider, ProviderAdapter> = {
+  openverse: { id: 'openverse', request: openverseRequest, normalize(body, query) { const results = record(body).results; if (!Array.isArray(results)) throw new Error('Invalid image response'); return normalizeOpenverse(results, query); } },
   pixabay: { id: 'pixabay', request: pixabayRequest, normalize(body, query) { const hits = record(body).hits; if (!Array.isArray(hits)) throw new Error('Invalid image response'); return normalizePixabay(hits, query); } },
   pexels: { id: 'pexels', request: (search, key, mode) => ({ url: `https://api.pexels.com/v1/search?query=${encodeURIComponent(search.query)}&per_page=${mode === 'thumbnail' ? 1 : 24}&locale=en-US`, headers: { Authorization: key } }), normalize(body, query) { const photos = record(body).photos; if (!Array.isArray(photos)) throw new Error('Invalid image response'); return normalizePexels(photos, query); } }
 };

@@ -82,13 +82,13 @@ describe('conceptual content through the selected English meaning', () => {
       expect(categories.some(([, terms]) => terms.split('|').includes(lemma)), lemma).toBe(true);
     }
   });
-  it.each([['政治', 'politics'], ['经济', 'economy']])('uses only one simpler fallback for %s, then Pexels', async (text, meaning) => {
+  it.each([['政治', 'politics'], ['经济', 'economy']])('uses one simpler fallback for %s, then Openverse and legacy Pexels', async (text, meaning) => {
     const { word, sense } = selected(text, meaning);
-    const fetcher = vi.fn().mockImplementation(async url => ({ ok: true, json: async () => new URL(url).hostname === 'pixabay.com' ? { hits: [] } : { photos: [] } }));
+    const fetcher = vi.fn().mockImplementation(async url => ({ ok: true, json: async () => new URL(url).hostname === 'pixabay.com' ? { hits: [] } : new URL(url).hostname === 'api.openverse.org' ? { results: [] } : { photos: [] } }));
     const result = await getImages(word.id, sense.id, { pixabayKey: 'concept-fixture-key', pexelsKey: 'pexels-fixture-key', fetcher });
-    expect(result.status).toBe('unavailable'); expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(result.status).toBe('unavailable'); expect(fetcher).toHaveBeenCalledTimes(5);
     const urls = fetcher.mock.calls.map(call => new URL(call[0]));
-    expect(urls.map(url => url.hostname)).toEqual(['pixabay.com', 'pixabay.com', 'api.pexels.com']);
+    expect(urls.map(url => url.hostname)).toEqual(['pixabay.com', 'pixabay.com', 'api.openverse.org', 'api.openverse.org', 'api.pexels.com']);
     expect(urls.slice(0, 2).map(url => url.searchParams.get('q'))).toEqual([sense.visualQuery, meaning]);
     expect(urls.slice(0, 2).every(url => url.searchParams.get('image_type') === 'all')).toBe(true);
   });

@@ -21,7 +21,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   const bucket = buckets.get(ip) ?? { count: 0, until: now + 60_000 }; buckets.set(ip, bucket);
   if (++bucket.count > 30) { res.setHeader('Retry-After', '60'); return send(429, { error: 'Please try again in a minute.' }); }
   try {
-    const result = await getImages(word, sense, { pixabayKey: process.env.PIXABAY_API_KEY, pexelsKey: process.env.PEXELS_API_KEY, mode: mode as 'gallery' | 'thumbnail' });
+    const result = await getImages(word, sense, { pixabayKey: process.env.PIXABAY_API_KEY, pexelsKey: process.env.PEXELS_API_KEY, openverseClientId: process.env.OPENVERSE_CLIENT_ID, openverseClientSecret: process.env.OPENVERSE_CLIENT_SECRET, mode: mode as 'gallery' | 'thumbnail' });
     // Explicit expiry travels with the result. No additional HTTP cache may extend URL lifetime.
     res.setHeader('Cache-Control', 'no-store');
     send(200, result);

@@ -70,8 +70,8 @@ describe('English meaning to visuals without curated metadata', () => {
     const word = entries('恐慌')[0]; const sense = word.senses[0];
     const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [] }) });
     await getImages(word.id, sense.id, { pixabayKey: 'meaning-test-key', fetcher });
-    expect(fetcher).toHaveBeenCalledTimes(3);
-    expect(fetcher.mock.calls.map(call => new URL(call[0]).searchParams.get('q'))).toEqual(['panicked person', 'scared person', 'panicked face']);
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(fetcher.mock.calls.map(call => new URL(call[0]).searchParams.get('q'))).toEqual(['panicked person', 'scared person', 'panicked face', 'panicked person']);
     expect(imageSearchPlan(word, sense)?.supporting.imageType).toBe('all');
   });
   it('does not borrow a query from another selected sense', () => {

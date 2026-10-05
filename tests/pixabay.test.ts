@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearImageCache, getImages } from '../server/images';
+import { clearImageCache, getImages as resolveImages } from '../server/images';
 import { normalizePixabay, pixabayRequest } from '../server/providers';
 import { imageSearchPlan, normalizeVisualQuery, providerCacheKey } from '../server/image-plan';
 import { byId } from '../src/data/learning';
@@ -8,6 +8,9 @@ import { IMAGE_TTL } from '../src/lib/visual';
 export const hit = (id = 1, tags = 'apple, fruit, food') => ({ id, tags, pageURL: `https://pixabay.com/photos/apple-${id}/`, webformatURL: `https://pixabay.com/get/apple-${id}_640.jpg`, largeImageURL: `https://pixabay.com/get/apple-${id}_1280.jpg`, webformatWidth: 640, webformatHeight: 480, imageWidth: 1600, imageHeight: 1200, user: 'Example Contributor', user_id: 123, downloads: 12, likes: 2 });
 const success = (hits = Array.from({ length: 12 }, (_, i) => hit(i + 1))) => ({ ok: true, json: async () => ({ hits }) });
 const options = (fetcher: typeof fetch) => ({ pixabayKey: 'test-pixabay-secret-12345', pexelsKey: 'test-pexels-secret-12345', fetcher });
+// These legacy tests count Pixabay/Pexels requests. Openverse is explicitly
+// empty here; its request counts, auth and fallback are covered in openverse.test.
+const getImages: typeof resolveImages = (word, sense, opts = {}) => resolveImages(word, sense, { ...opts, fetcher: (url, init) => String(url).startsWith('https://api.openverse.org/') ? Promise.resolve(new Response(JSON.stringify({ results: [] }))) : (opts.fetcher ?? fetch)(url, init) });
 beforeEach(clearImageCache);
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 describe('Pixabay integration', () => {
@@ -104,7 +107,7 @@ describe('Pixabay integration', () => {
     const fetcher = vi.fn((_url, init) => new Promise<Response>((_resolve, reject) => { init.signal.addEventListener('abort', () => reject(new Error('timed out'))); }));
     expect((await getImages('苹果', 'sense-0', { pixabayKey: 'test-key', fetcher })).status).toBe('curated'); expect(timeout).toHaveBeenCalledWith(3500);
   });
-  it('does not request anything without keys and keeps text fallback available', async () => {
+  it('skips unconfigured stock providers and keeps text fallback after empty anonymous Openverse', async () => {
     const fetcher = vi.fn(); expect((await getImages('银行', 'sense-0', { fetcher })).status).toBe('unavailable'); expect(fetcher).not.toHaveBeenCalled();
   });
   it('validates query lengths and approved parameter values', () => {

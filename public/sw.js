@@ -1,4 +1,4 @@
-const CACHE = 'kanjian-dictionary-visual-v4';
+const CACHE = 'kanjian-dictionary-visual-v5';
 const RUNTIME_ASSETS = [];
 const IMMUTABLE_ASSETS = new Set([]);
 self.addEventListener('install', event => { event.waitUntil((async () => {

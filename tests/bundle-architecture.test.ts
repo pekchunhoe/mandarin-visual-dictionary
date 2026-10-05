@@ -13,30 +13,35 @@ it('generates the starter collection without changing any meaning, ID, query or 
   expect(generatedCategories).toEqual(sourceCategories);
 });
 
-it('preserves every classification in the unchanged 125,173-row dictionary', () => {
+it('preserves dictionary presentation and snapshots phrase-aware classification for all 125,173 rows', () => {
   const bytes = readFileSync('public/data/cedict.json');
   expect(createHash('sha256').update(bytes).digest('hex')).toBe('29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a');
   const rows = JSON.parse(bytes.toString()) as RawRow[];
   expect(rows).toHaveLength(125173);
   const hash = createHash('sha256');
   const intents = createHash('sha256');
+  const presentation = createHash('sha256');
   const inference = createVisualInference(JSON.parse(readFileSync('src/data/visual-lexicon.json', 'utf8')));
   const worker = createDictionaryEntries(inference.buildVisualQuery);
   for (const row of rows) {
-    hash.update(JSON.stringify(worker.fromRow(row)) + '\n');
+    const word = worker.fromRow(row);
+    hash.update(JSON.stringify(word) + '\n');
+    presentation.update(JSON.stringify({ ...word, senses: word.senses.map(({ id, english }) => ({ id, english })) }) + '\n');
     for (const englishMeaning of row[3]) intents.update(JSON.stringify(inference.buildVisualQuery({ englishMeaning })) + '\n');
   }
-  // Captured from the pre-optimization classifier, not a bundle-byte budget.
-  expect(hash.digest('hex')).toBe('ea77c225a7eddda8c623c4b340e768863b2523d099586e7d4b90fbded42cb480');
-  // Independently compared with the pre-optimization source for all 199,713
-  // meanings, including fallback queries and concept domains absent from Word.
-  expect(intents.digest('hex')).toBe('fc466297f9ad2027585e3bf9330d701ba0af9566ee5978379cc75c22e017bbb8');
+  // Captured independently from the previous classifier: labels, displayed
+  // meanings, pinyin, headwords, and stable sense IDs must remain unchanged.
+  expect(presentation.digest('hex')).toBe('e60e3644bbd33c8d19040fab277681a3daa6759ede7a38c53afa75145bb18d63');
+  // Updated only after the full 199,713-meaning before/after audit. Phrase and
+  // label eligibility intentionally change; preserve the complete new snapshot.
+  expect(hash.digest('hex')).toBe('99879252b28a6bc03e1108058c738c5f9c117d9a9470a976b0c28bcf5e1600af');
+  expect(intents.digest('hex')).toBe('1dcacfd9936b060782df5b98348e79062fb2215e3477d5fb98f9730c2597a0ac');
 }, 20000);
 
 it('worker-loaded JSON and server imports produce identical representative words', () => {
   const data = JSON.parse(readFileSync('src/data/visual-lexicon.json', 'utf8'));
   const worker = createDictionaryEntries(createVisualInference(data).buildVisualQuery);
   const rows = JSON.parse(readFileSync('public/data/cedict.json', 'utf8')) as RawRow[];
-  const wanted = new Set('苹果 猫 跑 惊讶 恐慌 冷 政治 经济 金融 数学 科学 长颈鹿 瀑布 厨师 文化 法律 社会 和平 自由 因为 但是 虽然 所以 的 了 吗 呢'.split(' '));
+  const wanted = new Set('魂飞魄散 苹果 猫 跑 惊讶 恐慌 冷 政治 经济 金融 数学 科学 长颈鹿 瀑布 厨师 文化 法律 社会 和平 自由 因为 但是 虽然 所以 的 了 吗 呢'.split(' '));
   for (const row of rows.filter(row => wanted.has(row[1]))) expect(worker.fromRow(row)).toEqual(fromRow(row));
 });

@@ -16,7 +16,7 @@ await page.reload();
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-dictionary-visual-v2');
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-dictionary-visual-v3');
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-v1');
-expect(await page.evaluate(() => caches.keys())).toEqual([expect.stringMatching(/^kanjian-dictionary-visual-v4-[a-f0-9]+$/)]);
+expect(await page.evaluate(() => caches.keys())).toEqual([expect.stringMatching(/^kanjian-dictionary-visual-v5-[a-f0-9]+$/)]);
 await page.goto('http://127.0.0.1:4173/#search=computer');
 await expect(page.locator('.results-page .word-card').first()).toBeVisible({ timeout: 30000 });
 await context.setOffline(true);

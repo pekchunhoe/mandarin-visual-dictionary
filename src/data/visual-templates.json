@@ -1,9 +1,9 @@
 {
-  "panic": { "visualType": "emotion", "query": "panicked person facial expression", "fallback": "panicked person", "anchors": ["adj:panicked", "noun:panic"] },
+  "panic": { "visualType": "emotion", "query": "panicked person facial expression", "fallback": "panicked person", "anchors": ["adj:panicked", "adj:spooked", "noun:panic"] },
   "surprise": { "visualType": "emotion", "query": "surprised person facial expression", "fallback": "surprised person", "anchors": ["adj:surprised", "noun:astonishment", "noun:surprise", "verb:surprise"] },
-  "happy": { "visualType": "emotion", "query": "happy smiling person", "fallback": "happy person", "anchors": ["adj:happy", "adj:joyful", "adj:glad", "noun:happiness", "noun:joy"] },
+  "happy": { "visualType": "emotion", "query": "happy smiling person", "fallback": "happy person", "anchors": ["adj:happy", "adj:joyful", "adj:glad", "noun:happiness", "noun:joy"], "phrases": ["over the moon"] },
   "sad": { "visualType": "emotion", "query": "sad person facial expression", "fallback": "sad person", "anchors": ["adj:sad", "adj:brokenhearted", "noun:sadness", "noun:grief", "verb:grieve"] },
-  "angry": { "visualType": "emotion", "query": "angry person facial expression", "fallback": "angry person", "anchors": ["adj:angry", "noun:anger"] },
+  "angry": { "visualType": "emotion", "query": "angry person facial expression", "fallback": "angry person", "anchors": ["adj:angry", "noun:anger"], "phrases": ["lose one's temper"] },
   "afraid": { "visualType": "emotion", "query": "scared person facial expression", "fallback": "scared person", "anchors": ["adj:afraid", "noun:fear"] },
   "nervous": { "visualType": "emotion", "query": "nervous person facial expression", "fallback": "nervous person", "anchors": ["adj:nervous", "noun:nervousness"] },
   "worried": { "visualType": "emotion", "query": "worried person facial expression", "fallback": "worried person", "anchors": ["adj:worried", "adj:anxious", "noun:worry", "noun:anxiety:1", "verb:worry"] },

@@ -99,7 +99,7 @@ describe('conceptual content through the selected English meaning', () => {
     expect(refreshed.id).toBe(stale.id); expect(refreshed.senses[0].english).toBe('politics');
     expect(refreshed.senses[0].examples).toEqual(stale.senses[0].examples);
     expect(refreshed.senses[0].visualQuery).toBe('government parliament politics');
-    expect(VISUAL_SCHEMA).toBe('dictionary-visual-v4');
+    expect(VISUAL_SCHEMA).toBe('dictionary-visual-v5');
     expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain(VISUAL_SCHEMA);
     expect(providerCacheKey('pixabay', imageSearchPlan(refreshed, refreshed.senses[0])!.primary)).toContain(VISUAL_SCHEMA);
   });

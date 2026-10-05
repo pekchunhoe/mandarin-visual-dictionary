@@ -29,7 +29,7 @@ describe('bounded browser image requests', () => {
     const refreshed = refreshWordVisuals(stale);
     expect(refreshed.senses[0].visualType).toBe('emotion');
     expect(visualQuery(refreshed.senses[0])).toBe('panicked person facial expression');
-    expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v4');
+    expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v5');
     expect(imageCacheKey(refreshed, refreshed.senses[0])).not.toContain('dictionary-visual-v2');
     expect(refreshWordVisuals(apple).senses[0].visualQuery).toBe(apple.senses[0].visualQuery);
     const missingQuery = { ...word, senses: [{ ...stale.senses[0], visualOrigin: 'curated' as const, visualType: 'emotion' as const }] };
@@ -74,6 +74,14 @@ describe('bounded browser image requests', () => {
   });
 });
 describe('lazy cards and gallery lifecycle', () => {
+  it.each(['', 'however', 'used as a particle'])('uses the existing explanation when meaning %j has no eligible visual query', meaning => {
+    const fetcher = vi.spyOn(globalThis, 'fetch');
+    const word = fromRow(['測試', '测试', 'ce4 shi4', [meaning]]);
+    render(<WordDetail word={word} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);
+    expect(screen.getByText('Let’s understand this meaning.')).toBeVisible();
+    expect(screen.queryByRole('status', { name: 'Loading pictures' })).not.toBeInTheDocument();
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it.each([
     ['恐慌', '恐慌', 'kong3 huang1', 'panic'],
     ['驚訝', '惊讶', 'jing1 ya4', 'amazed']

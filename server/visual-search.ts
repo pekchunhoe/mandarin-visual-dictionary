@@ -32,6 +32,8 @@ function verbRoot(value: string) {
 /** Only remove recognized grammatical wrappers, never arbitrary relative clauses. */
 export function normalizeVisualSearchMeaning(meaning: string): string | null {
   const clean = normalizeVisualMeaning(meaning); if (!clean) return null;
+  const extracted = inferVisualIntent(meaning)?.semanticPredicate;
+  if (extracted) return extracted;
   let value = clean.replace(/^(?:the )?(?:act|state) of /, '');
   const agent = value.match(/^(?:person|one|someone) who ([a-z]+)$/);
   if (agent) {

@@ -29,7 +29,7 @@ describe('bounded browser image requests', () => {
     const refreshed = refreshWordVisuals(stale);
     expect(refreshed.senses[0].visualType).toBe('emotion');
     expect(visualQuery(refreshed.senses[0])).toBe('panicked person facial expression');
-    expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v5');
+    expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain('dictionary-visual-v6');
     expect(imageCacheKey(refreshed, refreshed.senses[0])).not.toContain('dictionary-visual-v2');
     expect(refreshWordVisuals(apple).senses[0].visualQuery).toBe(apple.senses[0].visualQuery);
     const missingQuery = { ...word, senses: [{ ...stale.senses[0], visualOrigin: 'curated' as const, visualType: 'emotion' as const }] };

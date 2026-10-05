@@ -46,7 +46,7 @@ it('preserves literal apple disambiguation and the conceptual domain paths', () 
   for (const [meaning, query] of [['politics', 'government parliament politics'], ['economy', 'economy business finance'], ['science', 'science laboratory research'], ['culture', 'culture traditions people'], ['education', 'students learning classroom']]) {
     expect(planFor(meaning).primary).toMatchObject({ query, tier: 'D', imageType: 'all' });
   }
-  for (const meaning of ['because', 'already', 'not happy', '(fig.) cold', 'used as a particle']) expect(planFor(meaning)).toBeNull();
+  for (const meaning of ['because', 'already', 'not happy', 'used as a particle']) expect(planFor(meaning)).toBeNull();
   expect(planFor('nervous (physiology)').primary.tier).toBe('D');
   expect(planFor('cold (of water)').primary.query).toBe('cold water');
 });

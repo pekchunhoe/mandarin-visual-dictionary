@@ -34,8 +34,8 @@ it('preserves dictionary presentation and snapshots phrase-aware classification 
   expect(presentation.digest('hex')).toBe('e60e3644bbd33c8d19040fab277681a3daa6759ede7a38c53afa75145bb18d63');
   // Updated only after the full 199,713-meaning before/after audit. Phrase and
   // label eligibility intentionally change; preserve the complete new snapshot.
-  expect(hash.digest('hex')).toBe('99879252b28a6bc03e1108058c738c5f9c117d9a9470a976b0c28bcf5e1600af');
-  expect(intents.digest('hex')).toBe('1dcacfd9936b060782df5b98348e79062fb2215e3477d5fb98f9730c2597a0ac');
+  expect(hash.digest('hex')).toBe('a281d875b2e018216976b136507beff760eb5d20822d9e2d853c4d56ec7b422d');
+  expect(intents.digest('hex')).toBe('b910e68e10227856dec1552636519d355438d91593d75c77492afd46fa394210');
 }, 20000);
 
 it('worker-loaded JSON and server imports produce identical representative words', () => {

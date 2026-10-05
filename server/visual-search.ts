@@ -9,7 +9,7 @@ export type QueryTier = 'A' | 'B' | 'C' | 'D' | 'E';
 export interface VisualCandidate extends ImageSearch { tier: QueryTier }
 export interface VisualSearchPlan {
   primary: VisualCandidate; supporting: VisualCandidate; candidates: VisualCandidate[];
-  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean };
+  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean; idiom?: boolean };
 }
 const verbs = new Set(lexicon.verbs.split('|'));
 const people = new Set(lexicon.nouns.person.split('|'));
@@ -21,7 +21,7 @@ for (const [family, template] of Object.entries(templates)) for (const anchor of
 // These two existing WordNet families express the same visible fear response.
 // Do not combine unrelated families (e.g. anger and happiness) for variety.
 const relatedFamilies: Partial<Record<keyof typeof templates, (keyof typeof templates)[]>> = { panic: ['afraid'], afraid: ['panic'] };
-const generic = new Set('a an the to of in on at for and or with be person people man woman child face facial expression portrait human emotion feeling concept object scene photo illustration vector'.split(' '));
+const generic = new Set('a an the to of in on at for and or with be person people someone somebody man woman child face facial expression portrait human emotion feeling concept object scene photo illustration vector'.split(' '));
 function words(value: string) { return value.toLowerCase().match(/[a-z]+/g) ?? []; }
 function terms(value: string) { return words(value).filter(word => !generic.has(word)); }
 function verbRoot(value: string) {
@@ -31,9 +31,9 @@ function verbRoot(value: string) {
 
 /** Only remove recognized grammatical wrappers, never arbitrary relative clauses. */
 export function normalizeVisualSearchMeaning(meaning: string): string | null {
-  const clean = normalizeVisualMeaning(meaning); if (!clean) return null;
   const extracted = inferVisualIntent(meaning)?.semanticPredicate;
   if (extracted) return extracted;
+  const clean = normalizeVisualMeaning(meaning); if (!clean) return null;
   let value = clean.replace(/^(?:the )?(?:act|state) of /, '');
   const agent = value.match(/^(?:person|one|someone) who ([a-z]+)$/);
   if (agent) {
@@ -56,11 +56,11 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
   // Keep domain and physical-subject annotations; only normalized wrappers may
   // change a generic concept into a more directly depictable intent.
   const normalizedIntent = buildVisualQuery({ englishMeaning: normalized, partOfSpeech: /^(?:the )?act of /i.test(sense.english) ? 'verb' : sense.partOfSpeech });
-  let inferred = /[()]/.test(sense.english) || original?.visualType !== 'conceptual' ? original : normalizedIntent ?? original;
+  let inferred = original?.planSource || /[()]/.test(sense.english) || original?.visualType !== 'conceptual' ? original : normalizedIntent ?? original;
   // Bare action lemmas such as run/sleep also have abstract event/state noun
   // entries in WordNet. Prefer their visible action; explicit domains and
   // physical nouns (school, fire, rain) retain their existing interpretation.
-  if (!/[()]/.test(sense.english) && inferred?.visualType === 'conceptual' && ['act', 'state', 'event', 'process', 'general'].includes(inferred.conceptDomain ?? '') && verbs.has(normalized)) {
+  if (!original?.planSource && !/[()]/.test(sense.english) && inferred?.visualType === 'conceptual' && ['act', 'state', 'event', 'process', 'general'].includes(inferred.conceptDomain ?? '') && verbs.has(normalized)) {
     const action = buildVisualQuery({ englishMeaning: normalized, partOfSpeech: 'verb' });
     if (action?.visualType === 'action') inferred = action;
   }
@@ -74,7 +74,17 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     if (!candidates.some(item => item.query === query && item.imageType === candidate.imageType && item.category === candidate.category)) candidates.push(candidate);
   };
   const related: string[] = [];
-  if (emotion && family) {
+  if (inferred?.fallbackQueries) {
+    add(inferred.query, conceptual ? 'D' : 'A', true);
+    for (const query of inferred.fallbackQueries.slice(0, 3)) add(query, 'B');
+    if (emotion && family) {
+      const familyNames = [family, ...relatedFamilies[family] ?? []];
+      for (const name of familyNames) {
+        related.push(...terms(templates[name].fallback), ...templates[name].anchors.map(anchor => anchor.split(':')[1].replaceAll('-', ' ')));
+      }
+      if (familyNames.includes('panic')) related.push(...lexicon.descriptors.panic.split('|'));
+    }
+  } else if (emotion && family) {
     const template = templates[family];
     const familyNames = [family, ...relatedFamilies[family] ?? []];
     const noun = template.anchors.some(anchor => anchor.startsWith('noun:') && anchor.split(':')[1] === normalized);
@@ -109,12 +119,12 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     add(query, conceptual ? 'D' : 'A', true);
     add(query === primary.query ? supporting.query : inferred!.subject, conceptual ? 'E' : 'B');
   }
-  if (candidates.length === 1) add(candidates[0].query, 'B');
+  if (candidates.length === 1 && inferred?.planSource !== 'idiom-last-resort') add(candidates[0].query, 'B');
   const exact = terms(normalized);
   // The complete query context is useful for domains, but generic words such
   // as person/expression cannot count as evidence for a visible emotion.
-  return { primary: candidates[0], supporting: candidates[1], candidates,
-    relevance: { exact, related: [...new Set(related.flatMap(terms))], context: terms(primary.query), emotion, conceptual } };
+  return { primary: candidates[0], supporting: candidates[1] ?? candidates[0], candidates,
+    relevance: { exact, related: [...new Set(related.flatMap(terms))], context: terms(primary.query), emotion, conceptual, idiom: !!original?.planSource } };
 }
 
 function forms(term: string) {
@@ -137,7 +147,7 @@ export function imageRelevance(photo: Photo, plan: VisualSearchPlan) {
   const score = (exact ? 300 : related ? 200 : context ? 30 : 0) + Math.min(9, exact + related + context) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority));
   // For emotions, people/portrait/expression or an unrelated emotion is not an
   // illustration of the selected meaning. Missing metadata stays uncertain.
-  return { score, semantic, excluded: profile.emotion && metadata.size > 0 && !semantic };
+  return { score, semantic, excluded: (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
 }
 
 export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan): Photo[] {

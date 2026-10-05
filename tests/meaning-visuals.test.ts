@@ -90,7 +90,7 @@ describe('English meaning to visuals without curated metadata', () => {
   it.each(['to be panicky', 'to feel panicked', 'to get panic-stricken'])('recognizes the state in %s before filtering the copula', meaning => {
     expect(buildVisualQuery({ englishMeaning: meaning, partOfSpeech: 'verb' })?.query).toBe('panicked person facial expression');
   });
-  it.each(['because of', 'classifier for happy people', '(fig.) cold; hot', 'not happy / sad', 'used as an adjective for tall people'])('does not turn nonliteral/grammatical %s into stock photography', meaning => {
+  it.each(['because of', 'classifier for happy people', 'not happy / sad', 'used as an adjective for tall people'])('does not turn nonliteral/grammatical %s into stock photography', meaning => {
     expect(inferVisualIntent(meaning)).toBeNull();
   });
   it.each(['cold (of personality)', 'short (of duration)', 'nervous (physiology)'])('keeps the domain of %s instead of using a literal photo template', meaning => {

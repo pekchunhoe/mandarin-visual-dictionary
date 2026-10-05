@@ -80,9 +80,11 @@ export async function getImages(wordId: string, senseId: string, options: Option
   for (const provider of ['pixabay', 'pexels'] as const) {
     const secret = (provider === 'pixabay' ? options.pixabayKey : options.pexelsKey)?.trim();
     if (!secret) { diagnostics.push(`${provider}_not_configured`); continue; }
-    // Three bounded attempts for visible emotions, two for other meanings and
-    // thumbnails. Stop on enough relevant results or any transient failure.
-    const searches = provider === 'pixabay' ? plan.candidates.slice(0, options.mode === 'thumbnail' ? 2 : 3) : [plan.primary];
+    // Preserve the four-request gallery budget (three primary-provider searches
+    // plus one secondary provider). A sole Pexels provider gets semantic retries
+    // too. Stop on enough relevant results or any transient failure.
+    const searches = provider === 'pixabay' || plan.relevance.idiom && !options.pixabayKey?.trim()
+      ? plan.candidates.slice(0, options.mode === 'thumbnail' ? 2 : 3) : [plan.primary];
     for (const search of searches) {
       const result = await searchProvider(provider, search, secret, options, deadline);
       images.push(...result.images); failed ||= !!result.failed;

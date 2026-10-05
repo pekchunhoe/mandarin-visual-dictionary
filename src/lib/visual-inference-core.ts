@@ -1,7 +1,9 @@
 import templateData from '../data/visual-templates.json';
 import conceptData from '../data/concept-templates.json';
 import type { VisualType } from '../types';
-export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string; conceptDomain?: string; semanticPredicate?: string }
+import { idiomAlternatives, idiomGloss } from './idiom-gloss';
+import { idiomSemanticFallback, idiomVisualScore, lastResortIdiom } from './idiom-fallback';
+export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string; conceptDomain?: string; semanticPredicate?: string; planSource?: 'normal' | 'idiom-semantic' | 'idiom-last-resort'; fallbackQueries?: string[] }
 interface VisualTemplate { visualType: VisualType; query: string; fallback: string; anchors: string[]; phrases?: string[] }
 
 /** Shared sense classifier; callers own how the optional data is loaded. */
@@ -212,6 +214,22 @@ export function createVisualInference(lexicon: unknown) {
 
   /** Build one deterministic query from the selected English sense only. */
   function buildVisualQuery({ englishMeaning, partOfSpeech }: { englishMeaning: string; partOfSpeech?: string }): VisualIntent | null {
+    const idiom = idiomGloss(englishMeaning);
+    if (idiom.tagged && /[a-z]/i.test(idiom.normalized)) {
+      let alternatives = idiomAlternatives(englishMeaning);
+      // A semantic alternative in this same sense outranks an explicitly literal
+      // explanation. A separate literal sense keeps its own independent plan.
+      const nonliteral = alternatives.filter(text => !/^\(?lit(?:eral(?:ly)?)?\.?\)?\s/i.test(text));
+      if (nonliteral.length) alternatives = nonliteral;
+      const candidates = alternatives.map(text => {
+        const normal = inferCandidate(text, partOfSpeech, true, /^\(?lit\./i.test(text));
+        const intent: VisualIntent = normal ? { ...normal, semanticPredicate: normal.semanticPredicate ?? normalizeVisualMeaning(text)?.replace(/^to /, ''), planSource: 'normal' }
+          : idiomSemanticFallback(text, value => inferCandidate(value, partOfSpeech)) ?? lastResortIdiom(text);
+        return { text, intent };
+      })
+        .sort((a, b) => idiomVisualScore(b.text, b.intent) - idiomVisualScore(a.text, a.intent));
+      return candidates[0]?.intent ?? lastResortIdiom(idiom.normalized);
+    }
     if (/^(?:particle|conjunction|preposition|pronoun|determiner|auxiliary|connector)\b/i.test(partOfSpeech ?? '')) return null;
     if (!englishMeaning || englishMeaning.length > 1000 || unsuitable.test(englishMeaning) || /\((?:euph\.?|derog\.?)\)/i.test(englishMeaning)) return null;
     if (/^(?:CL:|see\b|variant of\b|old variant of\b|abbr\.|abbreviation|used (?:as|in|to)|classifier\b|a (?:particle|suffix|prefix)|grammatical|(?:to )?not\b)/i.test(stripLabels(englishMeaning))) return null;

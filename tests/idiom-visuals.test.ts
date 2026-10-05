@@ -104,7 +104,7 @@ it('reclassifies saved inferred idiom senses while preserving editorial explanat
   expect(refreshWordVisuals(editorial).senses[0]).toEqual(editorial.senses[0]);
 });
 
-it.each(['', '没有英文', 'however', 'therefore', 'although', 'fig. however', 'CL:个[ge4]', 'classifier for people', 'grammatical use of 了', 'used as a particle', 'not happy', '(fig.) cold', '(fig.) tiger', 'colloquial fig. cold', 'fig. to kick the bucket', 'kicking the bucket (idiom)', 'unknown opaque expression (idiom)', 'to kill'])('keeps non-imageable or unsupported meaning %j out of provider search', meaning => {
+it.each(['', '没有英文', 'however', 'therefore', 'although', 'CL:个[ge4]', 'classifier for people', 'grammatical use of 了', 'used as a particle', 'not happy', 'to kill'])('keeps non-imageable or unsupported meaning %j out of provider search', meaning => {
   expect(planFor(meaning)).toBeNull();
 });
 

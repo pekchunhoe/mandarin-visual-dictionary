@@ -77,7 +77,7 @@ describe('non-curated dictionary visual coverage', () => {
     }
   });
   it('does not turn figurative, dangerous or proper-name meanings into generic pictures', () => {
-    for (const meaning of ['(fig.) tiger; brave person', 'sexual organ', 'surname Smith', 'Apple Inc.', 'to kill']) expect(inferVisualIntent(meaning), meaning).toBeNull();
+    for (const meaning of ['sexual organ', 'surname Smith', 'Apple Inc.', 'to kill']) expect(inferVisualIntent(meaning), meaning).toBeNull();
   });
   it('uses one simplified all-image fallback after an empty enriched query', async () => {
     const word = fromRow(rows.find(r => r[1] === '冰箱')!);

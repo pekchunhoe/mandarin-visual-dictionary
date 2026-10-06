@@ -48,7 +48,7 @@ export function normalizePexels(photos: unknown[], query: string): Photo[] {
   }), 24);
 }
 export function openverseRequest(search: ImageSearch, token: string, mode: ImageMode = 'gallery') {
-  const params = new URLSearchParams({ q: normalizeVisualQuery(search.query), page_size: mode === 'thumbnail' ? '3' : '32', mature: 'false', license: 'by,by-sa,cc0,pdm' });
+  const params = new URLSearchParams({ q: normalizeVisualQuery(search.query), page_size: mode === 'thumbnail' ? '3' : token ? '32' : '20', mature: 'false', license: 'by,by-sa,cc0,pdm' });
   return { url: `https://api.openverse.org/v1/images/?${params}`, headers: token ? { Authorization: `Bearer ${token}` } : undefined };
 }
 export function normalizeOpenverse(results: unknown[], query: string): Photo[] {

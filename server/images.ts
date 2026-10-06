@@ -83,21 +83,32 @@ export async function getImages(wordId: string, senseId: string, options: Option
   const word = resolveImageWord(wordId); const sense = word?.senses.find(s => s.id === senseId);
   if (!word || !sense) throw Object.assign(new Error('Choose a known dictionary word and meaning.'), { status: 400, diagnostic: !word ? 'dictionary_word_not_found' : 'sense_not_found' });
   const plan = imageSearchPlan(word, sense);
-  if (!plan) return { images: [], status: 'unavailable', diagnostics: ['non_visual_word'], message: 'This meaning is explained with words and diagrams.' };
+  if (!plan) return { images: [], status: 'unavailable', diagnostics: ['non_visual_word', 'no_plan', 'openverse_not_called'], message: 'This meaning is explained with words and diagrams.' };
   const limit = options.mode === 'thumbnail' ? 1 : 12;
   const fallback = word.photo && sense === word.senses[0] ? offlineGallery(word.photo, word.simplified + ' · ' + sense.english).slice(0, limit) : [];
-  const images: Photo[] = []; let failed = false; const diagnostics: string[] = [];
+  const images: Photo[] = []; let failed = false; const diagnostics: string[] = plan.relevance.englishFallback ? ['english_definition_plan'] : [];
   const deadline = Date.now() + 8000;
   const ranked = () => rankImageCandidates(images, plan);
-  const enough = () => ranked().filter(photo => plan.relevance.conceptual || imageRelevance(photo, plan).semantic).length >= (options.mode === 'thumbnail' ? 1 : 6);
+  const enough = () => ranked().filter(photo => imageRelevance(photo, plan).semantic).length >= (options.mode === 'thumbnail' ? 1 : 6);
   let searchesUsed = 0;
-  for (const provider of ['pixabay', 'openverse', 'pexels'] as const) {
+  const providerOrder = ['pixabay', 'openverse', 'pexels'] as const;
+  // Definition fallback plans try each ranked query on the primary provider,
+  // then the secondary, before advancing. Bound to three pairs (two on cards).
+  // This gives Openverse meaningful alternatives even after weak Pixabay hits.
+  const sequence = plan.relevance.englishFallback
+    ? [...plan.candidates.filter((c, i, all) => all.findIndex(item => item.query === c.query) === i)
+      .slice(0, options.mode === 'thumbnail' ? 2 : 3).flatMap(search => providerOrder.slice(0, 2).map(provider => ({ provider, search }))), { provider: 'pexels' as const, search: plan.primary }]
+    : providerOrder.map(provider => ({ provider, search: undefined }));
+  const failedProviders = new Set<ImageProvider>();
+  let openverseAttempted = false;
+  for (const { provider, search: plannedSearch } of sequence) {
+    if (failedProviders.has(provider)) continue;
     const secret = (provider === 'pixabay' ? options.pixabayKey : provider === 'pexels' ? options.pexelsKey : '')?.trim() ?? '';
     if (provider !== 'openverse' && !secret) { diagnostics.push(`${provider}_not_configured`); continue; }
     // Preserve primary semantic retries and the six-result stopping threshold.
     // Openverse uses remaining semantic queries within a four-search budget;
     // optional legacy Pexels still gets its final fallback opportunity.
-    const searches = provider === 'openverse'
+    const searches = plannedSearch ? [{ ...plannedSearch, ...(provider === 'openverse' ? { category: undefined, imageType: 'all' as const } : {}) }] : provider === 'openverse'
       // Pixabay category/type variants do not change an Openverse query.
       ? plan.candidates.filter((candidate, index, all) => all.findIndex(item => item.query === candidate.query) === index)
         .slice(0, Math.min(options.mode === 'thumbnail' ? 2 : 3, Math.max(1, 4 - searchesUsed)))
@@ -107,8 +118,11 @@ export async function getImages(wordId: string, senseId: string, options: Option
     for (const search of searches) {
       // Reserve three seconds for the secondary provider even if Pixabay stalls.
       const result = await searchProvider(provider, search, secret, options, provider === 'pixabay' ? deadline - 3000 : deadline);
+      if (provider === 'openverse') openverseAttempted = true;
       searchesUsed++;
       images.push(...result.images); failed ||= !!result.failed;
+      if (result.failed) failedProviders.add(provider);
+      if (result.images.length && !rankImageCandidates(result.images, plan).some(photo => imageRelevance(photo, plan).semantic)) diagnostics.push(`${provider}_relevance_rejected`);
       if (result.diagnostic) diagnostics.push(result.diagnostic);
       if (result.failed || enough()) break;
     }
@@ -116,9 +130,11 @@ export async function getImages(wordId: string, senseId: string, options: Option
   }
   const ordered = ranked();
   const relevant = ordered.filter(photo => imageRelevance(photo, plan).semantic);
+  if (!openverseAttempted) diagnostics.push('openverse_not_called');
+  if (images.length && !relevant.length) diagnostics.push('all_results_below_threshold');
   // Do not pad a clear subject with broad-category hits just to reach twelve.
   // Sparse/absent metadata remains a small last resort, not semantic evidence.
-  const live = (plan.relevance.conceptual ? ordered : relevant.length ? relevant : ordered.slice(0, 2)).slice(0, limit);
+  const live = (relevant.length ? relevant : ordered.filter(photo => !photo.tags?.length).slice(0, 2)).slice(0, limit);
   if (live.length) return { images: deduplicateImages([...live, ...fallback]).slice(0, limit), status: 'live', diagnostics: [...new Set(diagnostics)], expiresAt: Math.min(...live.map(p => p.expiresAt!)) };
   return { images: fallback, status: fallback.length ? 'curated' : 'unavailable', expiresAt: Date.now() + 60_000,
     diagnostics: [...new Set([...diagnostics, 'fallback_used'])],

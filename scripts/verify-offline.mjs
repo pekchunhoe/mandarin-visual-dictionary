@@ -16,7 +16,7 @@ context.on('response', response => { if (new URL(response.url()).pathname === '/
 // storage reset should be needed when the newly hashed app bundle is deployed.
 await page.goto('http://127.0.0.1:4173/favicon.svg');
 await page.evaluate(async ({ dictionary, saved, entries }) => {
-  for (const name of ['kanjian-v1', 'kanjian-dictionary-visual-v2', 'kanjian-dictionary-visual-v3', 'kanjian-dictionary-visual-v5', 'kanjian-dictionary-visual-v5-123abc']) {
+  for (const name of ['kanjian-v1', 'kanjian-dictionary-visual-v2', 'kanjian-dictionary-visual-v3', 'kanjian-dictionary-visual-v5', 'kanjian-dictionary-visual-v5-123abc', 'kanjian-dictionary-visual-v6', 'kanjian-dictionary-visual-v6-123abc']) {
     const cache = await caches.open(name);
     await cache.put('/api/images?word=politics&sense=sense-0', new Response(JSON.stringify({ images: [], status: 'unavailable' })));
   }
@@ -33,7 +33,7 @@ await page.reload();
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-dictionary-visual-v2');
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-dictionary-visual-v3');
 expect(await page.evaluate(() => caches.keys())).not.toContain('kanjian-v1');
-expect(await page.evaluate(() => caches.keys())).toEqual([expect.stringMatching(/^kanjian-dictionary-visual-v6-[a-f0-9]+$/)]);
+expect(await page.evaluate(() => caches.keys())).toEqual([expect.stringMatching(/^kanjian-dictionary-visual-v7-[a-f0-9]+$/)]);
 expect(await page.evaluate(async () => (await caches.match('/data/cedict.json'))?.text())).toBe(dictionary);
 expect(await page.evaluate(async () => Boolean(await caches.match('/assets/obsolete-v5.js')))).toBe(false);
 expect(await page.evaluate(async () => Boolean(await caches.match('/api/images?word=politics&sense=sense-0')))).toBe(false);
@@ -83,5 +83,5 @@ for (const text of ['政治', '经济', '文化', '科学', '法律']) {
   await expect(page.locator('.gallery-section')).toBeVisible();
   await expect(page.locator('.abstract-card')).toHaveCount(0);
 }
-console.log('PASS: v5-to-v6 migration preserves saved words and dictionary bytes without redownloading, refreshes all three saved idioms, removes obsolete visuals/shell, and retains offline photos, classification and image API cache bypass.');
+console.log('PASS: v5/v6-to-v7 migration preserves saved words and dictionary bytes without redownloading, refreshes all three saved idioms, removes obsolete visuals/shell, and retains offline photos, classification and image API cache bypass.');
 await browser.close();

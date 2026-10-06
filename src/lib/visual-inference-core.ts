@@ -3,7 +3,12 @@ import conceptData from '../data/concept-templates.json';
 import type { VisualType } from '../types';
 import { idiomAlternatives, idiomGloss } from './idiom-gloss';
 import { idiomSemanticFallback, idiomVisualScore, lastResortIdiom } from './idiom-fallback';
-export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string; conceptDomain?: string; semanticPredicate?: string; planSource?: 'normal' | 'idiom-semantic' | 'idiom-last-resort'; fallbackQueries?: string[] }
+import { englishVisualFallback, positiveAction } from './english-visual-fallback';
+import { semanticEnglish, withoutParentheses } from './visual-gloss-normalization';
+import { metadataExclusion } from './visual-exclusions';
+import { expressionVisual } from './visual-expressions';
+import { reviewedVisual, reviewedExclusion } from './visual-reviewed-glosses';
+export interface VisualIntent { visualType: VisualType; query: string; subject: string; fallback?: string; conceptDomain?: string; semanticPredicate?: string; planSource?: 'normal' | 'idiom-semantic' | 'idiom-last-resort' | 'english-definition'; fallbackQueries?: string[]; relevanceTerms?: string[] }
 interface VisualTemplate { visualType: VisualType; query: string; fallback: string; anchors: string[]; phrases?: string[] }
 
 /** Shared sense classifier; callers own how the optional data is loaded. */
@@ -82,10 +87,10 @@ export function createVisualInference(lexicon: unknown) {
     if (/\((?:euph\.?|derog\.?)\)/i.test(meaning)) return null;
     // Preserve nouns in parenthetical disambiguators rather than confusing e.g. a
     // river bank with a financial institution. Drop pronunciation/grammar notes.
-    const context = [...meaning.matchAll(/\(([^)]+)\)/g)].map(m => m[1]).filter(note => /\b(?:animal|fruit|vegetable|food|river|financial|building|person|appliance|vehicle)\b/i.test(note)).join(' ');
-    const clean = meaning.replace(/\([^)]*\)/g, ' ').replace(/\[[^\]]*\]/g, ' ').replace(/\bCL:.*$/i, '').split(/[;/]/)[0]
+    const context = [...meaning.matchAll(/\(([^)]+)\)/g)].map(m => m[1]).filter(note => /\b(?:animal|fruit|vegetable|food|river|financial|building|person|appliance|vehicle)\b/i.test(note) && !/\b(?:i\.e\.|e\.g\.|coined|modern)\b|[^a-zA-Z\s'-]/.test(note)).join(' ');
+    const clean = withoutParentheses(meaning).replace(/\[[^\]]*\]/g, ' ').replace(/\bCL:.*$/i, '').split(/[;/]/)[0]
       .trim().replace(/^(?:a |an |the )/i, '').replace(/\b(?:esp\.|e\.g\.|i\.e\.).*$/i, '').replace(/[,].*$/, '').trim();
-    if (!clean || /[^a-zA-Z\s'-]/.test(clean) || grammatical.test(clean) || /^(probable|probably|likely)$/i.test(clean)) return null;
+    if (!clean || !/[a-z]/i.test(clean) || /[^a-zA-Z0-9\s'.:-]/.test(clean) || /[!?]/.test(clean) || grammatical.test(clean) || /^(probable|probably|likely)$/i.test(clean)) return null;
     return `${clean} ${context}`.trim().toLowerCase().replace(/\s+/g, ' ');
   }
   function participle(verb: string): string {
@@ -212,8 +217,15 @@ export function createVisualInference(lexicon: unknown) {
     return { visualType: category as VisualType, subject, query: `${subject} ${context}`.replace(/\s+/g, ' ').slice(0, 100) };
   }
 
+  const englishFallback = (text: string, literalSubjects = true) => englishVisualFallback(text, {
+      classify: value => inferCandidate(value), participle,
+      verb: value => {
+        const candidates = [value, value.replace(/ies$/, 'y'), value.replace(/es$/, ''), value.replace(/s$/, ''), value.replace(/ing$/, ''), value.replace(/ing$/, 'e')];
+        return candidates.find(v => !excludedVerbs.test(v) && (verbs.has(v) || /^(?:ask|learn|teach|help|cooperate|think|warn|repair|whisper|carry|cook|write|celebrate|wait)$/.test(v)));
+      }
+    }, literalSubjects);
   /** Build one deterministic query from the selected English sense only. */
-  function buildVisualQuery({ englishMeaning, partOfSpeech }: { englishMeaning: string; partOfSpeech?: string }): VisualIntent | null {
+  function buildVisualQuery({ englishMeaning, partOfSpeech }: { englishMeaning: string; partOfSpeech?: string }, normalized = false): VisualIntent | null {
     const idiom = idiomGloss(englishMeaning);
     if (idiom.tagged && /[a-z]/i.test(idiom.normalized)) {
       let alternatives = idiomAlternatives(englishMeaning);
@@ -224,24 +236,75 @@ export function createVisualInference(lexicon: unknown) {
       const candidates = alternatives.map(text => {
         const normal = inferCandidate(text, partOfSpeech, true, /^\(?lit\./i.test(text));
         const intent: VisualIntent = normal ? { ...normal, semanticPredicate: normal.semanticPredicate ?? normalizeVisualMeaning(text)?.replace(/^to /, ''), planSource: 'normal' }
-          : idiomSemanticFallback(text, value => inferCandidate(value, partOfSpeech)) ?? lastResortIdiom(text);
+          : idiomSemanticFallback(text, value => inferCandidate(value, partOfSpeech)) ?? englishFallback(text, false) ?? lastResortIdiom(text);
         return { text, intent };
       })
         .sort((a, b) => idiomVisualScore(b.text, b.intent) - idiomVisualScore(a.text, a.intent));
       return candidates[0]?.intent ?? lastResortIdiom(idiom.normalized);
     }
+    const metadata = metadataExclusion(englishMeaning);
+    // A reference clause can accompany an independent semantic gloss within
+    // this sense. Never use this path for negation or grammatical alternatives.
+    if (metadata && /^(?:CROSS_REFERENCE_ONLY|VARIANT_REFERENCE_ONLY|ORTHOGRAPHIC_NOTE|PRONUNCIATION_NOTE|TRANSLITERATION_ONLY)$/.test(metadata) && !normalized) {
+      const semanticClauses = englishMeaning.replace(/\([^)]*\)/g, note => note.replace(/;/g, ',')).split(';').slice(1);
+      for (const clause of semanticClauses) {
+        const intent = buildVisualQuery({ englishMeaning: clause.trim(), partOfSpeech }, true);
+        if (intent) return { ...intent, planSource: 'english-definition', fallbackQueries: intent.fallbackQueries ?? [intent.fallback ?? intent.query] };
+      }
+    }
+    const reviewed = reviewedVisual(englishMeaning); if (reviewed) return reviewed;
+    if (reviewedExclusion(englishMeaning)) return null;
+    if (metadata && !expressionVisual(englishMeaning)) return null;
     if (/^(?:particle|conjunction|preposition|pronoun|determiner|auxiliary|connector)\b/i.test(partOfSpeech ?? '')) return null;
     if (!englishMeaning || englishMeaning.length > 1000 || unsuitable.test(englishMeaning) || /\((?:euph\.?|derog\.?)\)/i.test(englishMeaning)) return null;
-    if (/^(?:CL:|see\b|variant of\b|old variant of\b|abbr\.|abbreviation|used (?:as|in|to)|classifier\b|a (?:particle|suffix|prefix)|grammatical|(?:to )?not\b)/i.test(stripLabels(englishMeaning))) return null;
+    if (grammarNote.test(englishMeaning)) return null;
+    const expression = expressionVisual(englishMeaning); if (expression) return expression;
+    const unlabelled = stripLabels(englishMeaning);
+    if (/^(?:to )?(?:not|never|without)\b/i.test(unlabelled))
+      return positiveAction(unlabelled) === unlabelled ? null : englishFallback(unlabelled);
+    if (/^(?:CL:|see\b|variant of\b|old variant of\b|abbr\.|abbreviation|used (?:as|in|to)|classifier\b|a (?:particle|suffix|prefix)|grammatical)/i.test(stripLabels(englishMeaning))) return null;
     // Protect annotations while splitting alternatives within this sense. Never
     // combine their words, and never consult a different Mandarin sense.
     const candidates = englishMeaning.replace(/\([^)]*\)/g, note => note.replace(/[;/]/g, ',')).split(/[;/]/).slice(0, 4);
     const labels = glossLabels(englishMeaning);
     for (const candidate of candidates) {
-      const intent = inferCandidate(candidate, partOfSpeech, labels.figurative, labels.literal); if (intent) return intent;
+      const intent = inferCandidate(candidate, partOfSpeech, labels.figurative, labels.literal);
+      // Refine generic sentence queries and lost action objects, while retaining
+      // known noun/descriptor/domain templates and curated decisions downstream.
+      const definitionClause = /\b(?:who|that|which|used for|used to)\b/.test(candidate);
+      const knownDomain = concepts[normalizeVisualMeaning(candidate)?.replace(/^to /, '') ?? ''];
+      const fallback = !knownDomain && !nonliteralContext.test(candidate) && (!intent || ['action', 'conceptual'].includes(intent.visualType) || definitionClause) ? englishFallback(candidate) : null;
+      if (fallback) return fallback;
+      if (intent) return intent;
+    }
+    if (!normalized) {
+      let cleaned = semanticEnglish(englishMeaning);
+      // Parenthesis-only semantic glosses are content; metadata has already
+      // been rejected above. Keep the complete gloss for another normal pass.
+      if (/^\([^()]+\)$/.test(cleaned)) cleaned = cleaned.slice(1, -1).replace(/^(?:a kind of|name of|the name of|poetic depiction of) /i, '');
+      if (cleaned !== englishMeaning) {
+        const intent = buildVisualQuery({ englishMeaning: cleaned, partOfSpeech }, true);
+        if (intent) return { ...intent, planSource: 'english-definition', fallbackQueries: intent.fallbackQueries ?? [intent.fallback ?? intent.query] };
+      }
     }
     return null;
   }
   function inferVisualIntent(meaning: string): VisualIntent | null { return buildVisualQuery({ englishMeaning: meaning }); }
-  return { normalizeVisualMeaning, participle, buildVisualQuery, inferVisualIntent };
+  /** Offline diagnostics expose actual intermediate results, never provider calls. */
+  function diagnoseVisualMeaning(meaning: string) {
+    const labels = glossLabels(meaning); const idiom = idiomGloss(meaning);
+    const normalized = normalizeVisualMeaning(meaning);
+    const tokens = [...new Set(labels.text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g) ?? [])];
+    const normal = inferCandidate(meaning); const fallback = englishFallback(meaning);
+    const reason = grammarNote.test(meaning) ? 'GRAMMAR_ONLY' : unsuitable.test(meaning) ? 'EXISTING_CONTENT_POLICY'
+      : functionPhrase.test(labels.text) || grammatical.test(labels.text) ? 'FUNCTION_WORD'
+      : !normalized ? 'NORMALIZATION_REJECTED' : 'NO_SUPPORTED_SEMANTIC_CONSTRUCTION';
+    return { result: inferVisualIntent(meaning), labels: { ...labels, idiom: idiom.tagged }, normalized, tokens,
+      verbs: tokens.filter(token => verbs.has(token)), nouns: tokens.filter(token => nouns[token]).map(token => ({ token, category: nouns[token] })),
+      adjectives: tokens.filter(token => descriptors[token]).map(token => ({ token, family: descriptors[token] })),
+      normal: { result: normal, failure: normal ? null : reason },
+      idiom: { tagged: idiom.tagged, failure: idiom.tagged ? 'NO_VALID_IDIOM_PLAN' : 'NO_IDIOM_LABEL' },
+      englishFallback: { result: fallback, failure: fallback ? null : 'NO_SUPPORTED_PREDICATE_OR_CONCRETE_HEAD' }, rejection: reason };
+  }
+  return { normalizeVisualMeaning, participle, buildVisualQuery, inferVisualIntent, diagnoseVisualMeaning };
 }

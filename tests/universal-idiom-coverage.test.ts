@@ -96,7 +96,7 @@ it('bounds primary and Openverse searches to four, with one legacy Pexels fallba
 });
 
 it('gives EVERY idiom-tagged corpus sense a bounded English query plan', () => {
-  const totals = { dictionaryRows: rows.length, meaningRecords: rows.reduce((n, row) => n + row[3].length, 0), TOTAL_IDIOM_SENSES: 0, IDIOM_WITH_VISUAL_PLAN: 0, IDIOM_WITHOUT_VISUAL_PLAN: 0, normal: 0, 'idiom-semantic': 0, 'idiom-last-resort': 0 };
+  const totals = { dictionaryRows: rows.length, meaningRecords: rows.reduce((n, row) => n + row[3].length, 0), TOTAL_IDIOM_SENSES: 0, IDIOM_WITH_VISUAL_PLAN: 0, IDIOM_WITHOUT_VISUAL_PLAN: 0, normal: 0, 'idiom-semantic': 0, 'idiom-last-resort': 0, 'english-definition': 0 };
   const failures: unknown[] = [];
   for (const row of rows) {
     // Independent minimum inventory prevents a broken detector from shrinking
@@ -122,5 +122,5 @@ it('gives EVERY idiom-tagged corpus sense a bounded English query plan', () => {
   expect(failures, JSON.stringify(failures, null, 2)).toEqual([]);
   expect(totals.TOTAL_IDIOM_SENSES).toBe(8583);
   expect(totals.IDIOM_WITH_VISUAL_PLAN).toBe(totals.TOTAL_IDIOM_SENSES);
-  expect(totals.normal + totals['idiom-semantic'] + totals['idiom-last-resort']).toBe(totals.TOTAL_IDIOM_SENSES);
+  expect(totals.normal + totals['idiom-semantic'] + totals['idiom-last-resort'] + totals['english-definition']).toBe(totals.TOTAL_IDIOM_SENSES);
 }, 30000);

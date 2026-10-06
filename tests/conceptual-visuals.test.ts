@@ -55,7 +55,7 @@ describe('conceptual content through the selected English meaning', () => {
     expect(sense.visualType).toBe('conceptual');
     expect(inferVisualIntent(meaning)?.conceptDomain).toBe(domain);
     expect(visualQuery(sense)).toBe(query);
-    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits }) });
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: hits.map(hit => ({ ...hit, tags: query })) }) });
     const result = await getImages(word.id, sense.id, { pixabayKey: 'concept-fixture-key', fetcher });
     expect(result.status).toBe('live'); expect(result.images).toHaveLength(6);
     expect(fetcher).toHaveBeenCalledTimes(1);
@@ -99,7 +99,7 @@ describe('conceptual content through the selected English meaning', () => {
     expect(refreshed.id).toBe(stale.id); expect(refreshed.senses[0].english).toBe('politics');
     expect(refreshed.senses[0].examples).toEqual(stale.senses[0].examples);
     expect(refreshed.senses[0].visualQuery).toBe('government parliament politics');
-    expect(VISUAL_SCHEMA).toBe('dictionary-visual-v6');
+    expect(VISUAL_SCHEMA).toBe('dictionary-visual-v7');
     expect(imageCacheKey(refreshed, refreshed.senses[0])).toContain(VISUAL_SCHEMA);
     expect(providerCacheKey('pixabay', imageSearchPlan(refreshed, refreshed.senses[0])!.primary)).toContain(VISUAL_SCHEMA);
   });

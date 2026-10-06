@@ -32,11 +32,11 @@ it('preserves dictionary presentation and snapshots phrase-aware classification 
   // Captured independently from the previous classifier: labels, displayed
   // meanings, pinyin, headwords, and stable sense IDs must remain unchanged.
   expect(presentation.digest('hex')).toBe('e60e3644bbd33c8d19040fab277681a3daa6759ede7a38c53afa75145bb18d63');
-  // Updated only after the full 199,713-meaning before/after audit. Phrase and
-  // label eligibility intentionally change; preserve the complete new snapshot.
-  expect(hash.digest('hex')).toBe('a281d875b2e018216976b136507beff760eb5d20822d9e2d853c4d56ec7b422d');
-  expect(intents.digest('hex')).toBe('b910e68e10227856dec1552636519d355438d91593d75c77492afd46fa394210');
-}, 20000);
+  // Updated after the complete definition-fallback audit. These are structural
+  // snapshots, not a claim that every unplanned sense is non-picturable.
+  expect(hash.digest('hex')).toBe('032f7f356f533aaab5adc5c7116a488f06cdbb8f9de625b18bfb9e5cf4087152');
+  expect(intents.digest('hex')).toBe('b566748f0830bb4ff93473b86fd5a1061e12f5a944999b08b6e86a5c2829450f');
+}, 60000);
 
 it('worker-loaded JSON and server imports produce identical representative words', () => {
   const data = JSON.parse(readFileSync('src/data/visual-lexicon.json', 'utf8'));

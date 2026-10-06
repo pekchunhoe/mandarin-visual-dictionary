@@ -20,6 +20,13 @@ const mockProviders = (pixabay = [] as ReturnType<typeof px>[], openverse = [ov(
 });
 const callsFor = (fetcher: ReturnType<typeof vi.fn>, host: string) => fetcher.mock.calls.filter(([url]) => new URL(String(url)).hostname === host);
 beforeEach(clearImageCache);
+it.each([
+  ['', 'gallery', '20'], [token, 'gallery', '32'], ['', 'thumbnail', '3'], [token, 'thumbnail', '3']
+] as const)('respects Openverse page limits for token=%s mode=%s', (accessToken, mode, size) => {
+  const request = openverseRequest({ wordId: 'apple', senseId: 'sense-0', query: 'apple', imageType: 'all' }, accessToken, mode);
+  expect(new URL(request.url).searchParams.get('page_size')).toBe(size);
+  expect(request.headers).toEqual(accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined);
+});
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 
 describe('secondary provider flow', () => {
@@ -55,6 +62,12 @@ describe('secondary provider flow', () => {
     const fetcher = mockProviders([px(1, 'apple iphone technology')]);
     const result = await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher });
     expect(result.images[0].provider).toBe('openverse');
+  });
+  it('does not count generic concept illustrations as acceptable primary results', async () => {
+    const fetcher = mockProviders(Array.from({ length: 6 }, (_, i) => px(i + 1, 'generic concept illustration')), [ov(99, 'government parliament politics')]);
+    const result = await getImages('政治|政治|zheng4 zhi4', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher });
+    expect(callsFor(fetcher, 'api.openverse.org').length).toBeGreaterThan(0);
+    expect(result.images.map(photo => photo.id)).toEqual(['openverse-image-99']);
   });
   it('keeps curated and text fallbacks when neither provider has usable results', async () => {
     const fetcher = mockProviders([], []);
@@ -134,6 +147,7 @@ describe('server OAuth', () => {
     const result = await getImages('苹果', 'sense-0', { ...auth, fetcher });
     expect(result.images[0].provider).toBe('openverse');
     expect((fetcher.mock.calls as unknown[][]).at(-1)?.[1]).toMatchObject({ headers: undefined });
+    expect(new URL(String(fetcher.mock.calls.at(-1)![0])).searchParams.get('page_size')).toBe('20');
     await getImages('猫', 'sense-0', { ...auth, fetcher, mode: 'thumbnail' });
     expect(fetcher.mock.calls.filter(([url]) => String(url).includes('auth_tokens')).length).toBeLessThanOrEqual(1);
   });
@@ -143,6 +157,7 @@ describe('server OAuth', () => {
     const result = await getImages('苹果', 'sense-0', { ...credentials, fetcher });
     expect(result.images[0].provider).toBe('openverse'); expect(fetcher).toHaveBeenCalledTimes(3);
     expect((fetcher.mock.calls as unknown[][])[2][1]).toMatchObject({ headers: undefined });
+    expect(fetcher.mock.calls.slice(1, 3).map(([url]) => new URL(String(url)).searchParams.get('page_size'))).toEqual(['32', '20']);
     await getImages('猫', 'sense-0', { ...credentials, fetcher, mode: 'thumbnail' });
     expect(fetcher.mock.calls.filter(([url]) => String(url).includes('auth_tokens'))).toHaveLength(1);
   });

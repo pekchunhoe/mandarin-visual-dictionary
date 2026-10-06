@@ -19,7 +19,7 @@ it.each([
   ['to be frightened', 'frightened'], ['to be happy', 'happy'], ['to become angry', 'angry'],
   ['to run quickly', 'run'], ['the act of swimming', 'swimming'], ['the state of being happy', 'happy'],
   ['a person who teaches', 'teacher'], ['one who teaches', 'teacher'], ['someone who teaches', 'teacher'],
-  ['something used for cutting', 'cutting tool'], ['someone who teaches children', 'someone who teaches children']
+  ['something used for cutting', 'cutting tool'], ['someone who teaches children', 'teach']
 ])('normalizes only meaning-preserving wrappers: %s', (meaning, normalized) => expect(normalizeVisualSearchMeaning(meaning)).toBe(normalized));
 
 it('keeps the exact frightened predicate before related fear expressions', () => {

@@ -9,7 +9,7 @@ export type QueryTier = 'A' | 'B' | 'C' | 'D' | 'E';
 export interface VisualCandidate extends ImageSearch { tier: QueryTier }
 export interface VisualSearchPlan {
   primary: VisualCandidate; supporting: VisualCandidate; candidates: VisualCandidate[];
-  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean; idiom?: boolean };
+  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean; idiom?: boolean; englishFallback?: boolean };
 }
 const verbs = new Set(lexicon.verbs.split('|'));
 const people = new Set(lexicon.nouns.person.split('|'));
@@ -73,7 +73,7 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     const candidate = { ...primary, query, tier, category: first ? primary.category : undefined, imageType: first ? primary.imageType : 'all' as const };
     if (!candidates.some(item => item.query === query && item.imageType === candidate.imageType && item.category === candidate.category)) candidates.push(candidate);
   };
-  const related: string[] = [];
+  const related: string[] = inferred?.relevanceTerms ? [...inferred.relevanceTerms] : [];
   if (inferred?.fallbackQueries) {
     add(inferred.query, conceptual ? 'D' : 'A', true);
     for (const query of inferred.fallbackQueries.slice(0, 3)) add(query, 'B');
@@ -124,7 +124,7 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
   // The complete query context is useful for domains, but generic words such
   // as person/expression cannot count as evidence for a visible emotion.
   return { primary: candidates[0], supporting: candidates[1] ?? candidates[0], candidates,
-    relevance: { exact, related: [...new Set(related.flatMap(terms))], context: terms(primary.query), emotion, conceptual, idiom: !!original?.planSource } };
+    relevance: { exact, related: [...new Set(related.flatMap(terms))], context: terms(primary.query), emotion, conceptual, idiom: !!original?.planSource && original.planSource !== 'english-definition', englishFallback: original?.planSource === 'english-definition' } };
 }
 
 function forms(term: string) {
@@ -147,7 +147,7 @@ export function imageRelevance(photo: Photo, plan: VisualSearchPlan) {
   const score = (exact ? 300 : related ? 200 : context ? 30 : 0) + Math.min(9, exact + related + context) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority));
   // For emotions, people/portrait/expression or an unrelated emotion is not an
   // illustration of the selected meaning. Missing metadata stays uncertain.
-  return { score, semantic, excluded: (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
+  return { score, semantic, excluded: !!profile.englishFallback && !semantic || (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
 }
 
 export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan): Photo[] {

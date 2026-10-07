@@ -34,7 +34,7 @@ describe('non-curated dictionary visual coverage', () => {
     expect(resolveImageWord(word!.id)?.senses.find(s => s.id === sense.id)?.visualQuery).toBe(sense.visualQuery);
     const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [{ id: 123, pageURL: 'https://pixabay.com/photos/example-123/', webformatURL: 'https://pixabay.com/get/example_640.jpg', imageWidth: 900, imageHeight: 700, tags: sense.english === 'to go to bed' ? 'sleeping person bed' : sense.english }] }) });
     const result = await getImages(word!.id, sense.id, { pixabayKey: 'coverage-fixture-key', fetcher, mode: 'thumbnail' });
-    expect(result.status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(result.status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(2);
   });
   it.each('长颈鹿 瀑布 冰箱 厨师 鳄鱼 企鹅 松鼠 骆驼 菠萝 木瓜 榴莲 救护车 直升机 牙刷 洗衣机 电风扇 邮局 博物馆 消防员 理发师 沙滩'.split(' '))('%s remains outside curated Mandarin metadata', text => expect(byId.has(text)).toBe(false));
   it.each([['游泳', 'swimming'], ['唱歌', 'singing'], ['跑', 'running'], ['写', 'writing'], ['读', 'reading'], ['吃', 'eating'], ['喝', 'drinking'], ['睡觉', 'sleeping']])('%s infers person %s directly from dictionary definitions', (text, action) => {
@@ -84,7 +84,7 @@ describe('non-curated dictionary visual coverage', () => {
     const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ hits: [], results: [] }) });
     const result = await getImages(word.id, 'sense-0', { pixabayKey: 'fixture-key', fetcher });
     expect(fetcher).toHaveBeenCalledTimes(4);
-    const primary = new URL(fetcher.mock.calls[0][0]).searchParams; const fallback = new URL(fetcher.mock.calls[1][0]).searchParams;
+    const primary = new URL(fetcher.mock.calls[0][0]).searchParams; const fallback = new URL(fetcher.mock.calls[2][0]).searchParams;
     expect(primary.get('q')).toBe('refrigerator appliance'); expect(primary.get('image_type')).toBe('photo');
     expect(fallback.get('q')).toBe('refrigerator'); expect(fallback.get('image_type')).toBe('all'); expect(fallback.get('safesearch')).toBe('true'); expect(fallback.get('lang')).toBe('en');
     expect(result.message).toContain('Try another meaning'); expect(result.diagnostics).toContain('pixabay_empty_results');

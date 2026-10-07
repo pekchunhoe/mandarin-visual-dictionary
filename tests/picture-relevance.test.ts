@@ -12,7 +12,7 @@ const rows = JSON.parse(readFileSync('public/data/cedict.json', 'utf8')) as RawR
 const fear = fromRow(rows.find(row => row[1] === '恐惧')!);
 const planFor = (meaning: string) => { const word = fromRow(['測試', '测试', 'ce4 shi4', [meaning]]); return imageSearchPlan(word, word.senses[0])!; };
 const hit = (id: number, tags: string, type = 'photo') => ({ id, tags, type, pageURL: `https://pixabay.com/photos/test-${id}/`, webformatURL: `https://pixabay.com/get/test-${id}_640.jpg`, imageWidth: 900, imageHeight: 700 });
-const response = (hits: ReturnType<typeof hit>[]) => ({ ok: true, json: async () => ({ hits }) });
+const response = (hits: ReturnType<typeof hit>[]) => ({ ok: true, json: async () => ({ hits, results: [] }) }) as Response;
 beforeEach(clearImageCache);
 
 it.each([
@@ -78,38 +78,47 @@ it('does not turn generated alt text or missing metadata into semantic evidence'
 });
 
 it('runs secondary queries for weak galleries, ranks their strong results first, and reuses cached searches', async () => {
-  const fetcher = vi.fn().mockResolvedValueOnce(response(Array.from({ length: 20 }, (_, i) => hit(i + 1, 'smiling person, crowd, portrait'))))
-    .mockResolvedValueOnce(response(Array.from({ length: 12 }, (_, i) => hit(i + 30, i % 2 ? 'scared person' : 'frightened person', i % 2 ? 'illustration' : 'photo'))));
+  const fetcher = vi.fn(async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    if (url.hostname === 'api.openverse.org') return new Response(JSON.stringify({ results: [] }));
+    return response(url.searchParams.get('q') === 'frightened person'
+      ? Array.from({ length: 20 }, (_, i) => hit(i + 1, 'smiling person portrait'))
+      : Array.from({ length: 12 }, (_, i) => hit(i + 30, i % 2 ? 'scared person trembling body language' : 'frightened person facial expression')));
+  });
   const options = { pixabayKey: 'fixture-relevance-key', fetcher };
   const result = await getImages(fear.id, 'sense-0', options);
-  expect(fetcher).toHaveBeenCalledTimes(2);
-  expect(result.images).toHaveLength(12);
+  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(result.images).toHaveLength(4);
   expect(result.images.every(photo => photo.tags?.some(tag => /frightened|scared/.test(tag)))).toBe(true);
-  expect(result.images[0].tags).toContain('frightened person');
+  expect(result.images[0].tags).toContain('frightened person facial expression');
   await getImages(fear.id, 'sense-0', options);
   await getImages(fear.id, 'sense-0', { ...options, mode: 'thumbnail' });
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher).toHaveBeenCalledTimes(4);
 });
 
 it('stops after sufficient strong results and shares concurrent identical searches', async () => {
-  const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, 'frightened person'))));
+  const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, i % 2 ? 'frightened person facial expression' : 'frightened person trembling body language'))));
   const options = { pixabayKey: 'fixture-relevance-key', fetcher };
   await Promise.all([getImages(fear.id, 'sense-0', options), getImages(fear.id, 'sense-0', options)]);
-  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(fetcher).toHaveBeenCalledTimes(2);
 });
 
 it('does not mistake a concrete word category for enough subject matches', async () => {
-  const fetcher = vi.fn().mockResolvedValueOnce(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, 'fruit, food'))))
-    .mockResolvedValueOnce(response(Array.from({ length: 6 }, (_, i) => hit(i + 30, 'apples, fruit'))));
+  const fetcher = vi.fn(async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    return new Response(JSON.stringify(url.hostname === 'api.openverse.org' ? { results: [] } : { hits: url.searchParams.get('q') === 'apple fruit'
+      ? Array.from({ length: 12 }, (_, i) => hit(i + 1, 'fruit food'))
+      : Array.from({ length: 6 }, (_, i) => hit(i + 30, 'apples, fruit, sliced, market')) }));
+  });
   const result = await getImages('苹果', 'sense-0', { pixabayKey: 'fixture-relevance-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher).toHaveBeenCalledTimes(4);
   expect(result.images.filter(photo => photo.provider === 'pixabay').every(photo => photo.tags?.includes('apples'))).toBe(true);
 });
 
 it('bounds weak-result searches and refuses to fill an emotion gallery with generic portraits', async () => {
   const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, 'person, portrait'))));
   const result = await getImages(fear.id, 'sense-0', { pixabayKey: 'fixture-relevance-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(4); // Three primary queries, then Openverse.
+  expect(fetcher).toHaveBeenCalledTimes(6); // Three concurrent provider pairs.
   expect(result.images).toEqual([]);
   expect(result.status).toBe('unavailable');
 });
@@ -119,6 +128,6 @@ it('caches different senses independently, even when their emotion family is sha
   const options = { pixabayKey: 'fixture-relevance-key', fetcher, mode: 'thumbnail' as const };
   await getImages(fear.id, 'sense-0', options);
   await getImages(fear.id, 'sense-1', options);
-  expect(fetcher).toHaveBeenCalledTimes(2);
-  expect(fetcher.mock.calls.map(([url]) => new URL(String(url)).searchParams.get('q'))).toEqual(['frightened person', 'scared person']);
+  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher.mock.calls.map(([url]) => new URL(String(url)).searchParams.get('q'))).toEqual(['frightened person', 'frightened person', 'scared person', 'scared person']);
 });

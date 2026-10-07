@@ -27,6 +27,7 @@ for (const [text, gloss, query] of [
     const result = await service.getImages(params.get('word')!, params.get('sense')!, {
       pixabayKey: 'universal-idiom-browser-fixture',
       fetcher: async url => {
+        if (new URL(String(url)).hostname === 'api.openverse.org') return new Response(JSON.stringify({ results: [] }));
         const actual = new URL(String(url)).searchParams.get('q')!; queries.push(actual);
         // Empty primary exercises bounded fallback inside the real image service.
         const hits = actual === query ? [] : Array.from({ length: 6 }, (_, i) => ({ id: i + 101, tags: actual, pageURL: `https://pixabay.com/photos/universal-${i}/`, webformatURL: `https://pixabay.com/get/universal-${i}_640.jpg`, imageWidth: 900, imageHeight: 700 }));
@@ -46,7 +47,7 @@ for (const [text, gloss, query] of [
   await expect.poll(() => page.locator('.gallery-grid img').first().evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   await expect(page.locator('.abstract-card')).toHaveCount(0);
   expect(queries[0]).toBe(query);
-  expect(queries).toHaveLength(2);
+  expect(queries).toHaveLength(query === 'large crowd' ? 2 : 3);
   expect(queries.every(value => !/wolf|tiger|head|mountain|sea|[\u3400-\u9fff]/.test(value))).toBe(true);
   expect(requests).toHaveLength(1); expect(requests[0]).toMatch(/\|sense-0$/);
   // A UI round-trip must use the same selected-sense cache without a request loop.
@@ -55,7 +56,7 @@ for (const [text, gloss, query] of [
   await page.goBack();
   await expect(page.locator('.word-header h1')).toHaveText(text);
   await expect(page.locator('.gallery-grid figure')).toHaveCount(6);
-  expect(requests).toHaveLength(1); expect(queries).toHaveLength(2);
+  expect(requests).toHaveLength(1); expect(queries).toHaveLength(query === 'large crowd' ? 2 : 3);
   expect(errors).toEqual([]);
 });
 
@@ -97,14 +98,14 @@ test('idiom senses use the shared semantic planner and retain loading, error, em
   await expect(page.locator('.meaning-panel')).toContainText('fig. to be frightened stiff');
   await expect(page.getByRole('status', { name: 'Loading pictures' })).toBeVisible();
   await expect.poll(() => queries).toContain('frightened person');
-  await expect.poll(() => queries).toContain('scared person');
+  await expect.poll(() => queries).toContain('frightened facial expression');
   await page.getByRole('button', { name: "3. spooked out of one's mind", exact: true }).click();
   await expect(page.getByRole('button', { name: 'Enlarge picture: sense-2: spooked person', exact: true }).first()).toBeVisible();
   const oldResponse = page.waitForResponse(r => new URL(r.url()).searchParams.get('sense') === 'sense-1');
   releaseFear(); await oldResponse;
-  await expect(page.getByRole('button', { name: 'Enlarge picture: sense-1: scared person', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Enlarge picture: sense-1: frightened/ })).toHaveCount(0);
   await fear.click();
-  await expect(page.getByRole('button', { name: 'Enlarge picture: sense-1: scared person', exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: /^Enlarge picture: sense-1: frightened/ }).first()).toBeVisible();
   expect(requests).toEqual(['sense-0', 'sense-1', 'sense-2']);
   await page.getByRole('button', { name: '4. terror-stricken', exact: true }).click();
   await expect(page.locator('.image-notice')).toContainText('Pictures are temporarily unavailable');

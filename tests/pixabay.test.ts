@@ -4,9 +4,10 @@ import { clearImageCache, getImages as resolveImages } from '../server/images';
 import { normalizePixabay, pixabayRequest } from '../server/providers';
 import { imageSearchPlan, normalizeVisualQuery, providerCacheKey } from '../server/image-plan';
 import { byId } from '../src/data/learning';
+import { rankImageCandidates } from '../server/visual-search';
 import { IMAGE_TTL } from '../src/lib/visual';
 export const hit = (id = 1, tags = 'apple, fruit, food') => ({ id, tags, pageURL: `https://pixabay.com/photos/apple-${id}/`, webformatURL: `https://pixabay.com/get/apple-${id}_640.jpg`, largeImageURL: `https://pixabay.com/get/apple-${id}_1280.jpg`, webformatWidth: 640, webformatHeight: 480, imageWidth: 1600, imageHeight: 1200, user: 'Example Contributor', user_id: 123, downloads: 12, likes: 2 });
-const success = (hits = Array.from({ length: 12 }, (_, i) => hit(i + 1))) => ({ ok: true, json: async () => ({ hits }) });
+const success = (hits = Array.from({ length: 12 }, (_, i) => hit(i + 1, i % 3 === 0 ? 'apple, fruit, food' : i % 3 === 1 ? 'apple, fruit, sliced' : 'apple, fruit, market'))) => ({ ok: true, json: async () => ({ hits }) });
 const options = (fetcher: typeof fetch) => ({ pixabayKey: 'test-pixabay-secret-12345', pexelsKey: 'test-pexels-secret-12345', fetcher });
 // These legacy tests count Pixabay/Pexels requests. Openverse is explicitly
 // empty here; its request counts, auth and fallback are covered in openverse.test.
@@ -20,10 +21,10 @@ describe('Pixabay integration', () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
     const url = new URL(fetcher.mock.calls[0][0]);
     expect(url.origin).toBe('https://pixabay.com');
-    expect(Object.fromEntries(url.searchParams)).toMatchObject({ q: 'apple fruit', safesearch: 'true', image_type: 'photo', category: 'food', lang: 'en', per_page: '32' });
+    expect(Object.fromEntries(url.searchParams)).toMatchObject({ q: 'apple fruit', safesearch: 'true', image_type: 'photo', category: 'food', lang: 'en', per_page: '20' });
     expect(fetcher.mock.calls[0][1]).toMatchObject({ redirect: 'error', signal: expect.any(AbortSignal) });
-    expect(result.images).toHaveLength(12);
-    expect(result.images[0]).toMatchObject({ id: 'pixabay-1', provider: 'pixabay', thumbnailUrl: 'https://pixabay.com/get/apple-1_340.jpg', displayUrl: 'https://pixabay.com/get/apple-1_640.jpg', largeUrl: 'https://pixabay.com/get/apple-1_1280.jpg', width: 1600, height: 1200, tags: ['apple', 'fruit', 'food'], photographer: 'Example Contributor', sourceUrl: 'https://pixabay.com/photos/apple-1/', queryContext: 'apple fruit' });
+    expect(result.images).toHaveLength(6);
+    expect(normalizePixabay([hit()], 'apple fruit')[0]).toMatchObject({ id: 'pixabay-1', provider: 'pixabay', thumbnailUrl: 'https://pixabay.com/get/apple-1_340.jpg', displayUrl: 'https://pixabay.com/get/apple-1_640.jpg', largeUrl: 'https://pixabay.com/get/apple-1_1280.jpg', width: 1600, height: 1200, tags: ['apple', 'fruit', 'food'], photographer: 'Example Contributor', sourceUrl: 'https://pixabay.com/photos/apple-1/', queryContext: 'apple fruit' });
     expect(JSON.stringify(result)).not.toContain(options(fetcher).pixabayKey);
   });
   it.each([['苹果', 'apple fruit'], ['银行', 'bank financial institution'], ['猫', 'domestic cat animal'], ['跑', 'person running'], ['医生', 'doctor medical professional']])('uses the reviewed intent for %s', async (word, query) => {
@@ -37,14 +38,15 @@ describe('Pixabay integration', () => {
   });
   it('deduplicates IDs and resized URLs; rejects malformed, tiny, unsafe and known wrong-intent hits without requiring matching tags', () => {
     const result = normalizePixabay([hit(), hit(), { ...hit(2), largeImageURL: hit().largeImageURL }, { ...hit(3), webformatURL: 'javascript:alert(1)' }, { ...hit(4), imageWidth: 10 }, hit(5, 'apple, iphone, technology'), hit(6, 'mountain'), null, {}], 'apple fruit');
-    expect(result.map(p => p.id)).toEqual(['pixabay-1', 'pixabay-6']);
-    expect(normalizePixabay([hit(1, 'bank, riverbank'), hit(2, 'bank, finance')], 'bank financial institution').map(p => p.id)).toEqual(['pixabay-2']);
+    expect(result.map(p => p.id)).toEqual(['pixabay-1', 'pixabay-5', 'pixabay-6']);
+    const word = byId.get('苹果')!; expect(rankImageCandidates(result, imageSearchPlan(word, word.senses[0])!).map(p => p.id)).toEqual(['pixabay-1']);
+    expect(normalizePixabay([hit(1, 'bank, riverbank'), hit(2, 'bank, finance')], 'bank financial institution').map(p => p.id)).toEqual(['pixabay-1', 'pixabay-2']);
   });
-  it('uses at most one supporting search to fill a sparse gallery', async () => {
+  it('uses bounded distinct facet searches to improve a sparse gallery', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(success([hit()])).mockResolvedValueOnce(success(Array.from({ length: 8 }, (_, i) => hit(i + 2))));
     const result = await getImages('苹果', 'sense-0', options(fetcher));
-    expect(fetcher).toHaveBeenCalledTimes(2); expect(result.images.filter(p => p.provider === 'pixabay')).toHaveLength(9);
-    expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('q')).toBe('apple fruit');
+    expect(fetcher).toHaveBeenCalledTimes(3); expect(result.images.filter(p => p.provider === 'pixabay')).toHaveLength(9);
+    expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('q')).toBe('apple fruit sliced');
     expect(new URL(fetcher.mock.calls[1][0]).searchParams.get('image_type')).toBe('all');
   });
   it('returns one thumbnail and uses only the minimum Pixabay page size', async () => {
@@ -74,14 +76,14 @@ describe('Pixabay integration', () => {
     expect(fetcher).toHaveBeenCalledTimes(4); expect(fetcher.mock.calls[0][0]).not.toBe(fetcher.mock.calls[2][0]);
   });
   it('falls through empty Pixabay searches to configured Pexels', async () => {
-    const fetcher = vi.fn().mockResolvedValueOnce(success([])).mockResolvedValueOnce(success([])).mockResolvedValueOnce({ ok: true, json: async () => ({ photos: [{ id: 99, width: 900, height: 700, url: 'https://www.pexels.com/photo/99/', src: { medium: 'https://images.pexels.com/photos/99/medium.jpg', large: 'https://images.pexels.com/photos/99/large.jpg' } }] }) });
+    const fetcher = vi.fn().mockResolvedValueOnce(success([])).mockResolvedValueOnce(success([])).mockResolvedValueOnce(success([])).mockResolvedValueOnce({ ok: true, json: async () => ({ photos: [{ id: 99, alt: 'apple fruit', width: 900, height: 700, url: 'https://www.pexels.com/photo/99/', src: { medium: 'https://images.pexels.com/photos/99/medium.jpg', large: 'https://images.pexels.com/photos/99/large.jpg' } }] }) });
     const result = await getImages('苹果', 'sense-0', options(fetcher));
-    expect(result.images[0].provider).toBe('pexels'); expect(new URL(fetcher.mock.calls[2][0]).hostname).toBe('api.pexels.com');
+    expect(result.images[0].provider).toBe('pexels'); expect(new URL(fetcher.mock.calls[3][0]).hostname).toBe('api.pexels.com');
   });
   it('caches empty searches for 24 hours and falls back to bundled photos', async () => {
     const fetcher = vi.fn().mockResolvedValue(success([]));
     const opts = { pixabayKey: 'test-key', fetcher };
-    expect((await getImages('苹果', 'sense-0', opts)).status).toBe('curated'); await getImages('苹果', 'sense-0', opts); expect(fetcher).toHaveBeenCalledTimes(2);
+    expect((await getImages('苹果', 'sense-0', opts)).status).toBe('curated'); await getImages('苹果', 'sense-0', opts); expect(fetcher).toHaveBeenCalledTimes(3);
   });
   it.each([400, 401, 403, 429, 500, 503])('handles HTTP %s without leaking provider errors or retrying immediately', async status => {
     const fetcher = vi.fn().mockResolvedValue({ ok: false, status, headers: new Headers(), json: vi.fn(() => { throw new Error('test-secret'); }) });

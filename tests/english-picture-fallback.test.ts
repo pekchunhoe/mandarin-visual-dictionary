@@ -76,8 +76,8 @@ it.each(['supplement', 'duplicates', 'openverse-fails'])('keeps acceptable prima
   });
   const result = await getImages(word.id, 'sense-0', { pixabayKey: 'primary-fixture-key', fetcher });
   expect(result.status).toBe('live');
-  expect(result.images.filter(p => p.provider === 'pixabay')).toHaveLength(1);
-  expect(result.images.filter(p => p.provider === 'openverse')).toHaveLength(scenario === 'openverse-fails' ? 0 : 5);
+  expect(result.images.filter(p => p.provider === 'pixabay')).toHaveLength(scenario === 'duplicates' ? 0 : 1);
+  expect(result.images.filter(p => p.provider === 'openverse')).toHaveLength(scenario === 'openverse-fails' ? 0 : scenario === 'duplicates' ? 6 : 2);
   expect(fetcher.mock.calls.some(([url]) => new URL(String(url)).hostname === 'api.openverse.org')).toBe(true);
 });
 it('ranks identical metadata identically regardless of provider identity', () => {
@@ -102,23 +102,23 @@ it.each(['zero', 'irrelevant', 'failure'])('reaches Openverse and a relevant gal
     return response({ results: [photo(99, 'student portrait'), ...Array.from({ length: 6 }, (_, i) => photo(i + 1))] });
   });
   const result = await getImages(word.id, 'sense-0', { pixabayKey: 'primary-fixture-key', fetcher });
-  expect(fetcher.mock.calls.map(([url]) => new URL(String(url)).hostname)).toEqual(['pixabay.com', 'api.openverse.org']);
+  expect(fetcher.mock.calls.slice(0, 2).map(([url]) => new URL(String(url)).hostname)).toEqual(['pixabay.com', 'api.openverse.org']);
   expect(result.status).toBe('live'); expect(result.images).toHaveLength(6);
   expect(result.images.every(p => p.provider === 'openverse')).toBe(true);
   expect(result.images[0]).toMatchObject({ photographer: 'Fixture Creator', license: 'by', licenseVersion: '4.0', attribution: 'Fixture attribution' });
   expect(result.diagnostics).toContain('english_definition_plan');
   if (primary === 'irrelevant') expect(result.diagnostics).toContain('pixabay_relevance_rejected');
   await getImages(word.id, 'sense-0', { pixabayKey: 'primary-fixture-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher).toHaveBeenCalledTimes(primary === 'failure' ? 4 : 6);
 });
 it('tries a second Openverse alternative after weak first searches and stops on sufficient matches', async () => {
   const fetcher = vi.fn(async (input: string | URL | Request) => {
     const url = new URL(String(input));
-    return response(url.hostname === 'pixabay.com' ? { hits: [] } : { results: url.searchParams.get('q') === 'people asking for advice' ? Array.from({ length: 6 }, (_, i) => photo(i + 1, 'advice guidance')) : [photo(99, 'student portrait')] });
+    return response(url.hostname === 'pixabay.com' ? { hits: [] } : { results: url.searchParams.get('q') === 'student asking teacher question classroom' ? Array.from({ length: 6 }, (_, i) => photo(i + 1, i % 2 ? 'student asking teacher classroom' : 'colleague asking advice office')) : [photo(99, 'student portrait')] });
   });
   const result = await getImages(word.id, 'sense-0', { pixabayKey: 'primary-fixture-key', fetcher });
-  expect(result.images).toHaveLength(6); expect(fetcher).toHaveBeenCalledTimes(4);
-  expect(fetcher.mock.calls.map(([url]) => new URL(String(url)).searchParams.get('q'))).toEqual(['person asking question', 'person asking question', 'people asking for advice', 'people asking for advice']);
+  expect(result.images).toHaveLength(4); expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher.mock.calls.map(([url]) => new URL(String(url)).searchParams.get('q'))).toEqual(['person asking question', 'person asking question', 'student asking teacher question classroom', 'student asking teacher question classroom']);
 });
 it('does not return arbitrary images when all alternatives lack predicate evidence', async () => {
   const fetcher = vi.fn(async (url: string | URL | Request) => response(new URL(String(url)).hostname === 'pixabay.com' ? { hits: [] } : { results: [photo(1, 'student portrait')] }));

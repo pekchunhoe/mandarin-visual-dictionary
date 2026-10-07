@@ -1,12 +1,12 @@
 import type { Photo, Sense, Word } from '../types';
-import { VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA } from './visual-schema';
+import { VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, IMAGE_SEARCH_STRATEGY } from './visual-schema';
 export function visualQuery(sense: Sense): string | null {
   if (sense.visualOrigin === 'curated' && sense.visualType === 'abstract') return null;
   if (sense.visualQuery && sense.visualType !== 'abstract') return sense.visualQuery;
   return null; // All UI senses arrive classified by the build or dictionary worker.
 }
 export const IMAGE_TTL = 86_400_000;
-export function imageCacheKey(word: Word, sense: Sense) { return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, 'pixabay>openverse>pexels>curated', word.id, sense.id, visualQuery(sense)?.trim().replace(/\s+/g, ' ').toLowerCase() ?? 'explanation', sense.visualType, word.category ?? '', 'photo+all']); }
+export function imageCacheKey(word: Word, sense: Sense) { return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, IMAGE_SEARCH_STRATEGY, word.id, sense.id, visualQuery(sense)?.trim().replace(/\s+/g, ' ').toLowerCase() ?? 'explanation', sense.visualType, word.category ?? '', 'photo+all']); }
 // Openverse aggregates many hosts. Only its normalized results may use public
 // HTTPS URLs outside the existing stock-provider allowlist; no server URL proxy.
 export function isPublicHttpsUrl(value: string): boolean {
@@ -33,7 +33,15 @@ export function isImageUrl(value: string): boolean {
   } catch { return false; }
 }
 export function imageIdentity(value: string): string {
-  try { const url = new URL(value, 'https://local.invalid'); return `${url.hostname}${url.pathname.replace(/_(?:150|180|340|640|960|1280|1920)(?=\.[a-z]+$)/i, '')}`; } catch { return value; }
+  try {
+    const url = new URL(value, 'https://local.invalid');
+    let path = url.pathname.replace(/_(?:150|180|340|640|960|1280|1920)(?=\.[a-z]+$)/i, '');
+    // Flickr's documented size variants retain the same photo/secret identity.
+    if (/(?:^|\.)staticflickr\.com$/.test(url.hostname)) path = path.replace(/_[sqtmnzwcbhko](?=\.[a-z]+$)/i, '');
+    for (const key of [...url.searchParams.keys()]) if (/^(?:w|h|width|height|fit|crop|auto|quality|q|flip|fm|utm_.*)$/i.test(key)) url.searchParams.delete(key);
+    url.searchParams.sort();
+    return `${url.hostname}${path}${url.search}`;
+  } catch { return value; }
 }
 function sourceIdentity(value: string): string {
   try {
@@ -43,6 +51,10 @@ function sourceIdentity(value: string): string {
     // Keep item IDs in query parameters: many museum source pages use them.
     return `${url.hostname.replace(/^www\./, '')}${url.pathname.replace(/\/$/, '')}${url.search}`;
   } catch { return ''; }
+}
+export function photoIdentityKeys(image: Photo): string[] {
+  const page = sourceIdentity(image.sourceUrl);
+  return [`id:${image.id}`, ...[image.thumbnailUrl, image.displayUrl, image.largeUrl].filter((url): url is string => !!url).map(url => `image:${imageIdentity(url)}`), ...(page ? [`page:${page}`] : [])];
 }
 export function deduplicateImages(images: Photo[], limit = 12): Photo[] {
   const ids = new Set<string>(); const urls = new Set<string>(); const pages = new Set<string>();

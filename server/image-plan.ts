@@ -1,7 +1,7 @@
 import type { Sense, Word } from '../src/types';
 import { visualQuery } from '../src/lib/visual';
 import { inferVisualIntent, VISUAL_SCHEMA } from '../src/lib/visual-inference';
-import { IMAGE_RELEVANCE_SCHEMA } from '../src/lib/visual-schema';
+import { IMAGE_RELEVANCE_SCHEMA, IMAGE_SEARCH_STRATEGY } from '../src/lib/visual-schema';
 import { visualSearchPlan, type VisualSearchPlan } from './visual-search';
 export const PIXABAY_CATEGORIES = ['backgrounds', 'fashion', 'nature', 'science', 'education', 'feelings', 'health', 'people', 'religion', 'places', 'animals', 'industry', 'computer', 'food', 'sports', 'transportation', 'travel', 'buildings', 'business', 'music'] as const;
 export type PixabayCategory = typeof PIXABAY_CATEGORIES[number];
@@ -42,5 +42,5 @@ export function imageSearchPlan(word: Word, sense: Sense): VisualSearchPlan | nu
   return visualSearchPlan(sense, primary, { ...primary, query: normalizeVisualQuery(supporting), category: undefined, imageType: 'all' });
 }
 export function providerCacheKey(provider: 'pixabay' | 'openverse' | 'pexels', search: ImageSearch) {
-  return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, provider, search.wordId, search.senseId, normalizeVisualQuery(search.query), search.category ?? '', search.imageType, 'safe=true', 'en', 'popular', 32, 300, 200]);
+  return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, IMAGE_SEARCH_STRATEGY, provider, search.wordId, search.senseId, normalizeVisualQuery(search.query), search.category ?? '', search.imageType, 'safe=true', 'en', 'popular', 20, 300, 200]);
 }

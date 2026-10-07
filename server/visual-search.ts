@@ -1,17 +1,20 @@
 import lexicon from '../src/data/visual-lexicon.json';
 import templates from '../src/data/visual-templates.json';
 import { buildVisualQuery, inferVisualIntent, normalizeVisualMeaning, participle } from '../src/lib/visual-inference';
-import { deduplicateImages } from '../src/lib/visual';
+import { deduplicateImages, imageIdentity, photoIdentityKeys } from '../src/lib/visual';
 import type { Photo, Sense } from '../src/types';
 import type { ImageSearch } from './image-plan';
+import { semanticFacets, composeGallery, photoEvidence, type SemanticFacet, type CompositionDecision } from './semantic-gallery';
 
 export type QueryTier = 'A' | 'B' | 'C' | 'D' | 'E';
 export interface VisualCandidate extends ImageSearch { tier: QueryTier }
 export interface VisualSearchPlan {
   primary: VisualCandidate; supporting: VisualCandidate; candidates: VisualCandidate[];
-  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean; idiom?: boolean; englishFallback?: boolean };
+  meaning: string; facets: SemanticFacet[]; searches: VisualCandidate[]; humanScenes: boolean;
+  relevance: { exact: string[]; related: string[]; context: string[]; emotion: boolean; conceptual: boolean; idiom?: boolean; englishFallback?: boolean; negative?: string[]; negativePhrases?: string[]; required?: string[][] };
 }
 const verbs = new Set(lexicon.verbs.split('|'));
+const physicalNouns = new Set(Object.entries(lexicon.nouns).filter(([category]) => !category.startsWith('concept:')).flatMap(([, values]) => values.split('|')));
 const people = new Set(lexicon.nouns.person.split('|'));
 const families = new Map<string, keyof typeof templates>();
 for (const [family, lemmas] of Object.entries(lexicon.descriptors)) {
@@ -21,7 +24,7 @@ for (const [family, template] of Object.entries(templates)) for (const anchor of
 // These two existing WordNet families express the same visible fear response.
 // Do not combine unrelated families (e.g. anger and happiness) for variety.
 const relatedFamilies: Partial<Record<keyof typeof templates, (keyof typeof templates)[]>> = { panic: ['afraid'], afraid: ['panic'] };
-const generic = new Set('a an the to of in on at for and or with be person people someone somebody man woman child face facial expression portrait human emotion feeling concept object scene photo illustration vector'.split(' '));
+const generic = new Set('a an the to of in on at for and or with be person people someone somebody man woman child student face facial expression portrait human emotion feeling concept object scene photo illustration vector'.split(' '));
 function words(value: string) { return value.toLowerCase().match(/[a-z]+/g) ?? []; }
 function terms(value: string) { return words(value).filter(word => !generic.has(word)); }
 function verbRoot(value: string) {
@@ -120,49 +123,94 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     add(query === primary.query ? supporting.query : inferred!.subject, conceptual ? 'E' : 'B');
   }
   if (candidates.length === 1 && inferred?.planSource !== 'idiom-last-resort') add(candidates[0].query, 'B');
-  const exact = terms(normalized);
+  const broad = new Set('animal fruit food nature plant building vehicle appliance action outdoor indoors object scene'.split(' '));
+  const rawExact = terms(normalized);
+  const specific = rawExact.filter(t => !broad.has(t));
+  const exact = specific.length ? specific : rawExact;
+  // A generic role remains a real target when it IS the selected standalone
+  // meaning, rather than incidental context for a specific action or state.
+  if (!exact.length && /^[a-z]+$/.test(normalized)) exact.push(normalized);
+  if (/\b(?:help(?:ing)?|assist(?:ance|ing)?)\b/.test(primary.query)) related.push('help', 'assist', 'assistance');
+  const target = `${normalized} ${primary.query}`.toLowerCase();
+  const negative: string[] = []; const negativePhrases: string[] = [];
+  // Small reusable ambiguity domains, applied equally to all provider metadata.
+  if (/\bapple\b/.test(target) && /\b(?:fruit|food)\b/.test(target)) negative.push('iphone', 'macbook', 'computer', 'logo');
+  if (/\bmouse\b/.test(target)) {
+    if (/\b(?:animal|rodent)\b/.test(target)) negative.push('computer', 'keyboard', 'electronics', 'device');
+    else if (/\b(?:computer|device)\b/.test(target)) negative.push('rodent', 'animal');
+  }
+  if (/\bbank\b/.test(target)) {
+    if (/\b(?:financial|finance|institution)\b/.test(target)) negative.push('river', 'riverbank', 'piggy');
+    else if (/\briver\b/.test(target)) negative.push('financial', 'finance', 'atm');
+  }
+  if (/\b(?:person running|runner|jogging)\b/.test(primary.query)) negativePhrases.push('running shoe', 'running shoes', 'running water', 'running engine', 'running software', 'car race', 'motor race');
+  if (/\bcold\b/.test(target) && /\b(?:person|feeling|shivering|temperature)\b/.test(primary.query)) negative.push('medicine', 'coldplay', 'beer');
   // The complete query context is useful for domains, but generic words such
   // as person/expression cannot count as evidence for a visible emotion.
+  if (inferred?.visualType === 'animal' && /^[a-z]+$/.test(normalized))
+    for (const accessory of ['food', 'toy', 'collar', 'accessories']) negativePhrases.push(`${normalized} ${accessory}`);
+  const required: string[][] = [];
+  // Preserve a concrete object already present in the validated action query.
+  // Carrying a box and repairing a clock require both predicate AND object.
+  const actionObject = candidates[0].query.match(/^person [a-z]+ing (.+)$/)?.[1];
+  const last = actionObject?.split(' ').at(-1);
+  if (last && !broad.has(last) && !generic.has(last) && [...forms(last)].some(noun => physicalNouns.has(noun)) && words(sense.english).some(token => forms(last).has(token))) required.push([last]);
+  const gallery = semanticFacets(sense, candidates, emotion);
   return { primary: candidates[0], supporting: candidates[1] ?? candidates[0], candidates,
-    relevance: { exact, related: [...new Set(related.flatMap(terms))], context: terms(primary.query), emotion, conceptual, idiom: !!original?.planSource && original.planSource !== 'english-definition', englishFallback: original?.planSource === 'english-definition' } };
+    meaning: sense.english, facets: gallery.facets, searches: gallery.searches, humanScenes: gallery.human,
+    relevance: { exact, related: [...new Set(related.flatMap(terms))].filter(t => !specific.length || !broad.has(t)), context: terms(primary.query).filter(t => !specific.length || !broad.has(t)), emotion, conceptual, idiom: !!original?.planSource && original.planSource !== 'english-definition', englishFallback: original?.planSource === 'english-definition', negative, negativePhrases, required } };
 }
 
 function forms(term: string) {
   const result = new Set([term, term + 's']);
   if (term.endsWith('s')) result.add(term.slice(0, -1));
   if (term.endsWith('ies')) result.add(term.slice(0, -3) + 'y');
-  if (verbs.has(term)) result.add(participle(term));
+  const root = verbRoot(term);
+  if (root) { result.add(root); result.add(participle(root)); result.add(participle(root).slice(0, -3) + 'er'); }
   return result;
 }
 function matches(metadata: Set<string>, target: string[]) { return target.filter(term => [...forms(term)].some(form => metadata.has(form))).length; }
 export function imageRelevance(photo: Photo, plan: VisualSearchPlan) {
   // Use actual provider descriptions only. A generated alt/query is not proof
   // that an image contains its requested subject.
-  const metadata = new Set(words((photo.tags ?? []).join(' ')));
+  const evidence = photoEvidence(photo);
+  const metadata = new Set(words(evidence));
   const profile = plan.relevance;
   const exact = matches(metadata, profile.exact); const related = matches(metadata, profile.related);
   const context = matches(metadata, profile.context);
-  const semantic = exact > 0 || related > 0 || profile.conceptual && context > 0;
+  const wrongSense = matches(metadata, profile.negative ?? []) > 0 || (profile.negativePhrases ?? []).some(phrase => new RegExp(`\\b${phrase}\\b`).test(evidence));
+  const askingScene = /\b(?:asking|question|advice)\b/.test(plan.primary.query) && /\b(?:raising hand|sharing knowledge|seeking guidance)\b/.test(evidence);
+  const semantic = !wrongSense && (profile.required ?? []).every(group => matches(metadata, group) > 0) && (exact > 0 || related > 0 || profile.conceptual && context > 0 || askingScene);
   const priority = plan.candidates.findIndex(candidate => candidate.query === photo.queryContext);
-  const score = (exact ? 300 : related ? 200 : context ? 30 : 0) + Math.min(9, exact + related + context) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority));
+  const score = (exact ? 300 : related || askingScene ? 200 : context ? 30 : 0) + Math.min(9, new Set([...profile.exact, ...profile.related, ...profile.context].filter(t => matches(metadata, [t]))).size) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority));
   // For emotions, people/portrait/expression or an unrelated emotion is not an
   // illustration of the selected meaning. Missing metadata stays uncertain.
-  return { score, semantic, excluded: !!profile.englishFallback && !semantic || (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
+  return { score: wrongSense ? -1 : score, semantic, excluded: wrongSense || !!profile.englishFallback && !semantic || (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
 }
 
-export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan): Photo[] {
-  const ranked = images.map((photo, order) => ({ photo, order, ...imageRelevance(photo, plan) })).filter(item => !item.excluded);
-  ranked.sort((a, b) => b.score - a.score || a.order - b.order);
-  // Diversity is only a tie-breaker at identical semantic scores, never a
-  // reason to put a weaker scene above a stronger selected-meaning match.
-  const ordered: Photo[] = []; const seen = new Map<string, number>();
-  while (ranked.length) {
-    const score = ranked[0].score;
-    const tied = ranked.filter(item => item.score === score);
-    const identity = (photo: Photo) => `${photo.imageType ?? ''}|${photo.photographerUrl ?? photo.photographer ?? photo.id}`;
-    tied.sort((a, b) => (seen.get(identity(a.photo)) ?? 0) - (seen.get(identity(b.photo)) ?? 0) || a.order - b.order);
-    const next = tied[0]; ranked.splice(ranked.indexOf(next), 1); ordered.push(next.photo);
-    seen.set(identity(next.photo), (seen.get(identity(next.photo)) ?? 0) + 1);
+export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan, limit = 32, onDecision?: (decisions: CompositionDecision[]) => void): Photo[] {
+  // Group identities before competition. Choose the strongest metadata record
+  // within each group, preserving that record's complete attribution/license.
+  const groups: { keys: Set<string>; photos: Photo[] }[] = [];
+  for (const photo of images) {
+    const keys = photoIdentityKeys(photo);
+    const overlaps = groups.filter(group => keys.some(key => group.keys.has(key)));
+    const group = { keys: new Set(keys), photos: [photo] };
+    for (const old of overlaps) { old.keys.forEach(key => group.keys.add(key)); group.photos.push(...old.photos); groups.splice(groups.indexOf(old), 1); }
+    groups.push(group);
   }
-  return deduplicateImages(ordered, 32);
+  // Stable asset identity resolves equal scores independently of provider,
+  // response timing and upstream popularity. No provider quota or score bonus.
+  const stable = (photo: Photo) => {
+    let hash = 2166136261;
+    for (const char of imageIdentity(photo.largeUrl)) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+    return hash >>> 0;
+  };
+  const usability = (photo: Photo) => Math.min(2, Math.log2(Math.max(1, photo.width * photo.height / 60000))) - Math.abs(Math.log2(photo.width / photo.height));
+  const compare = (a: { photo: Photo; score: number }, b: { photo: Photo; score: number }) => b.score - a.score || usability(b.photo) - usability(a.photo) || stable(a.photo) - stable(b.photo) || a.photo.sourceUrl.localeCompare(b.photo.sourceUrl) || photoEvidence(a.photo).localeCompare(photoEvidence(b.photo)) || Number(!!b.photo.licenseUrl) - Number(!!a.photo.licenseUrl) || a.photo.id.replace(/^(?:pixabay|openverse|pexels)-/, '').localeCompare(b.photo.id.replace(/^(?:pixabay|openverse|pexels)-/, ''));
+  const ranked = groups.map(group => group.photos.filter(photo => deduplicateImages([photo]).length).map(photo => ({ photo, ...imageRelevance(photo, plan) })).filter(item => item.semantic).sort(compare)[0]).filter((item): item is NonNullable<typeof item> => !!item);
+  ranked.sort(compare);
+  const composed = composeGallery(ranked, plan, limit);
+  onDecision?.(composed.decisions);
+  return composed.images;
 }

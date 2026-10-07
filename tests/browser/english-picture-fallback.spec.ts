@@ -32,7 +32,7 @@ for (const primary of ['empty', 'rejected', 'partial']) test(`不耻下问 shows
       }
     });
     expect(result.diagnostics).toContain('english_definition_plan');
-    expect(result.images.filter(image => image.provider === 'openverse')).toHaveLength(primary === 'partial' ? 5 : 6);
+    expect(result.images.filter(image => image.provider === 'openverse')).toHaveLength(primary === 'partial' ? 2 : 6);
     await route.fulfill({ json: result });
   });
   await page.goto('/#word=' + encodeURIComponent('不耻下问'));
@@ -41,15 +41,15 @@ for (const primary of ['empty', 'rejected', 'partial']) test(`不耻下问 shows
   await expect(page.locator('.meaning-panel p').first()).toHaveText("not feel ashamed to ask and learn from one's subordinates");
   await expect(page.locator('.definition-card')).toHaveCount(0);
   await expect(page.locator('.example-placeholder')).toBeVisible();
-  await expect(page.locator('.gallery-grid figure')).toHaveCount(6);
+  await expect(page.locator('.gallery-grid figure')).toHaveCount(primary === 'partial' ? 3 : 6);
   const openverse = page.locator('.gallery-grid figure').filter({ hasText: 'Openverse' }).first();
   await expect(openverse).toBeVisible();
   await expect.poll(() => openverse.locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   await expect(openverse.getByRole('link', { name: 'Learning Photographer' })).toHaveAttribute('href', 'https://example.com/creator');
   await expect(openverse.getByRole('link', { name: 'Openverse / flickr' })).toHaveAttribute('href', /https:\/\/example.com\/asking-\d/);
   await expect(openverse.getByRole('link', { name: 'CC BY 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
-  expect(providers).toEqual(['pixabay.com', 'api.openverse.org']);
-  expect(queries).toEqual(['person asking question', 'person asking question']);
+  expect(providers).toEqual(['pixabay.com', 'api.openverse.org', 'pixabay.com', 'api.openverse.org', 'pixabay.com', 'api.openverse.org']);
+  expect(queries).toEqual(['person asking question', 'person asking question', 'student asking teacher question classroom', 'student asking teacher question classroom', 'person asking colleague advice', 'person asking colleague advice']);
   expect(galleryRequests).toBe(1); expect(errors).toEqual([]);
   await page.screenshot({ path: `.tmp/english-fallback-${primary}.png`, fullPage: true });
 });

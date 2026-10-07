@@ -72,25 +72,26 @@ it('ranks the extracted fear predicate above generic portraits and literal idiom
   const plan = imageSearchPlan(idiom, selected)!;
   const weak = ['person portrait', 'smiling person', 'flying object', 'soul spirit art', 'dictionary text', 'scenery', 'stiff board'];
   const photos = normalizePixabay([...weak.map((tags, i) => hit(i + 1, tags)), hit(20, 'scared person'), hit(21, 'frightened person'), hit(22, 'terrified face')], plan.primary.query);
-  expect(rankImageCandidates(photos, plan).map(p => p.id)).toEqual(['pixabay-21', 'pixabay-20', 'pixabay-22']);
+  expect(rankImageCandidates(photos, plan).map(p => p.id)).toEqual(['pixabay-21', 'pixabay-22', 'pixabay-20']);
 });
 
 it('uses the same bounded provider retrieval, combined reranking, and independent sense caches', async () => {
   const queries: string[] = [];
   const fetcher = vi.fn(async (url: string | URL | Request) => {
+    if (new URL(String(url)).hostname === 'api.openverse.org') return new Response(JSON.stringify({ results: [] }));
     const query = new URL(String(url)).searchParams.get('q')!; queries.push(query);
-    const tags = query === 'frightened person' ? 'generic person portrait' : query;
+    const tags = query === 'frightened person' ? 'generic person portrait' : 'scared person facial expression trembling body language';
     return new Response(JSON.stringify({ hits: Array.from({ length: 6 }, (_, i) => hit(i + 1, tags)) }));
   });
   const options = { pixabayKey: 'idiom-fixture-key', fetcher };
   const result = await getImages(idiom.id, selected.id, options);
   expect(result.status).toBe('live');
   expect(result.images).toHaveLength(6);
-  expect(result.images.every(p => p.tags?.includes('scared person'))).toBe(true);
-  expect(queries).toEqual(['frightened person', 'scared person']);
+  expect(result.images.every(p => p.tags?.some(tag => tag.includes('scared person')))).toBe(true);
+  expect(queries).toEqual(['frightened person', 'frightened facial expression']);
   await getImages(idiom.id, 'sense-2', options);
   await getImages(idiom.id, 'sense-3', options);
-  expect(queries).toEqual(['frightened person', 'scared person', 'spooked person', 'scared person']);
+  expect(queries).toEqual(['frightened person', 'frightened facial expression', 'spooked person', 'scared person']);
   for (const sense of idiom.senses.slice(1)) await getImages(idiom.id, sense.id, options);
   expect(queries).toHaveLength(4);
 });

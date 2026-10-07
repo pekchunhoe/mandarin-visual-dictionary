@@ -82,17 +82,17 @@ it.each(['pixabay', 'pexels'] as const)('tries three bounded semantic queries wi
   const options = { [provider === 'pixabay' ? 'pixabayKey' : 'pexelsKey']: 'idiom-fallback-fixture', fetcher };
   const result = await getImages(word.id, 'sense-0', options);
   expect(result.status).toBe('live'); expect(result.images[0].provider).toBe(provider);
-  expect(queries).toEqual(['person eating ravenously', 'person eating quickly', 'person eating food']);
+  expect(queries).toEqual(['person eating ravenously', 'child eating ravenously', 'person eating ravenously together']);
   await getImages(word.id, 'sense-0', options);
   expect(fetcher.mock.calls.filter(([url]) => new URL(String(url)).hostname !== 'api.openverse.org')).toHaveLength(3);
 });
 
-it('bounds primary and Openverse searches to four, with one legacy Pexels fallback', async () => {
+it('bounds dual-provider searches to six, with one legacy Pexels fallback', async () => {
   clearImageCache();
   const word = fromRow(rows.find(row => row[1] === '人山人海')!);
   const fetcher = vi.fn(async () => new Response(JSON.stringify({ hits: [], photos: [], results: [] })));
   await getImages(word.id, 'sense-0', { pixabayKey: 'pixabay-fixture', pexelsKey: 'pexels-fixture', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(5);
+  expect(fetcher).toHaveBeenCalledTimes(7);
 });
 
 it('gives EVERY idiom-tagged corpus sense a bounded English query plan', () => {

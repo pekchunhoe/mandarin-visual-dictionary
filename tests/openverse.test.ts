@@ -21,7 +21,7 @@ const mockProviders = (pixabay = [] as ReturnType<typeof px>[], openverse = [ov(
 const callsFor = (fetcher: ReturnType<typeof vi.fn>, host: string) => fetcher.mock.calls.filter(([url]) => new URL(String(url)).hostname === host);
 beforeEach(clearImageCache);
 it.each([
-  ['', 'gallery', '20'], [token, 'gallery', '32'], ['', 'thumbnail', '3'], [token, 'thumbnail', '3']
+  ['', 'gallery', '20'], [token, 'gallery', '20'], ['', 'thumbnail', '3'], [token, 'thumbnail', '3']
 ] as const)('respects Openverse page limits for token=%s mode=%s', (accessToken, mode, size) => {
   const request = openverseRequest({ wordId: 'apple', senseId: 'sense-0', query: 'apple', imageType: 'all' }, accessToken, mode);
   expect(new URL(request.url).searchParams.get('page_size')).toBe(size);
@@ -29,28 +29,28 @@ it.each([
 });
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 
-describe('secondary provider flow', () => {
-  it('skips Openverse, including OAuth, when Pixabay has six strong gallery results', async () => {
+describe('concurrent provider flow', () => {
+  it('queries Openverse, including OAuth, when Pixabay has six strong gallery results', async () => {
     const fetcher = mockProviders(Array.from({ length: 6 }, (_, i) => px(i + 1)));
     const result = await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', ...credentials, fetcher });
-    expect(fetcher).toHaveBeenCalledTimes(1); expect(result.images[0].provider).toBe('pixabay');
+    expect(callsFor(fetcher, 'pixabay.com')).toHaveLength(3); expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(4); expect(result.images.some(p => p.provider === 'openverse')).toBe(true);
   });
-  it('skips Openverse when one strong thumbnail is available', async () => {
+  it('queries Openverse when one strong thumbnail is available', async () => {
     const fetcher = mockProviders([px()]);
     await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher, mode: 'thumbnail' });
-    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
   it('uses anonymous Openverse after empty Pixabay and reuses gallery cache for thumbnails', async () => {
     const fetcher = mockProviders([], Array.from({ length: 6 }, (_, i) => ov(i + 1)));
     const options = { pixabayKey: 'pixabay-fixture-key', fetcher };
     const result = await getImages('苹果', 'sense-0', options);
     expect(result.images.filter(photo => photo.provider === 'openverse')).toHaveLength(6);
-    const calls = callsFor(fetcher, 'api.openverse.org'); expect(calls).toHaveLength(1);
+    const calls = callsFor(fetcher, 'api.openverse.org'); expect(calls).toHaveLength(3);
     expect(new URL(calls[0][0]).searchParams.get('q')).toBe('apple fruit');
     expect(calls[0][1].headers).toBeUndefined();
     await getImages('苹果', 'sense-0', options);
     expect((await getImages('苹果', 'sense-0', { ...options, mode: 'thumbnail' })).images).toHaveLength(1);
-    expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(1);
+    expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(3);
   });
   it('supplements sparse Pixabay and ranks both providers together without padding with generic matches', async () => {
     const fetcher = mockProviders([px(1, 'apple')], [ov(2, 'apple fruit'), ov(3, 'person portrait')]);
@@ -78,19 +78,14 @@ describe('secondary provider flow', () => {
     const fetcher = mockProviders().mockImplementationOnce(async () => json({}, 503));
     expect((await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher })).images[0].provider).toBe('openverse');
   });
-  it('reserves secondary search time when slow primary queries consume their budget', async () => {
-    vi.useFakeTimers(); const start = Date.now();
+  it('starts Openverse while the primary request is still pending', async () => {
+    let release!: () => void; const primary = new Promise<void>(resolve => { release = resolve; });
     const fetcher = vi.fn(async (input: string | URL | Request) => {
-      const url = new URL(String(input));
-      if (url.hostname === 'pixabay.com') {
-        vi.advanceTimersByTime(fetcher.mock.calls.length === 1 ? 3500 : 1500);
-        return json({ hits: [] });
-      }
-      expect(Date.now() - start).toBe(5000);
-      return json({ results: Array.from({ length: 6 }, (_, i) => ov(i + 1)) });
+      if (new URL(String(input)).hostname === 'pixabay.com') { await primary; return json({ hits: [] }); }
+      release(); return json({ results: Array.from({ length: 6 }, (_, i) => ov(i + 1)) });
     });
     expect((await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher })).images[0].provider).toBe('openverse');
-    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(fetcher).toHaveBeenCalledTimes(6);
   });
   it('retains strong Pixabay images when Openverse fails', async () => {
     const fetcher = vi.fn(async (input: string | URL | Request) => new URL(String(input)).hostname === 'pixabay.com' ? json({ hits: [px()] }) : json({}, 503));
@@ -99,13 +94,13 @@ describe('secondary provider flow', () => {
   it('uses English queries and does not repeat Pixabay type/category variants on Openverse', async () => {
     const fetcher = mockProviders([], []);
     expect((await getImages('苹果', 'sense-0', { fetcher })).status).toBe('curated');
-    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(3);
     expect(fetcher.mock.calls.every(([url]) => /^[a-z ]+$/.test(new URL(String(url)).searchParams.get('q')!))).toBe(true);
   });
   it('shares concurrent searches and separates provider and sense cache keys', async () => {
     const fetcher = mockProviders([], Array.from({ length: 6 }, (_, i) => ov(i + 1)));
     await Promise.all([getImages('苹果', 'sense-0', { ...credentials, fetcher }), getImages('苹果', 'sense-0', { ...credentials, fetcher })]);
-    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(fetcher).toHaveBeenCalledTimes(4);
     const word = byId.get('苹果')!; const search = imageSearchPlan(word, word.senses[0])!.primary;
     const keys = [providerCacheKey('openverse', search), providerCacheKey('pixabay', search), providerCacheKey('openverse', { ...search, senseId: 'sense-1' }), providerCacheKey('openverse', { ...search, query: 'pear fruit' })];
     expect(new Set(keys).size).toBe(4);
@@ -155,9 +150,9 @@ describe('server OAuth', () => {
     const fetcher = mockProviders([], Array.from({ length: 6 }, (_, i) => ov(i + 1)));
     fetcher.mockImplementationOnce(async () => json({ access_token: token, token_type: 'Bearer', expires_in: 3600 })).mockImplementationOnce(async () => json({}, 401));
     const result = await getImages('苹果', 'sense-0', { ...credentials, fetcher });
-    expect(result.images[0].provider).toBe('openverse'); expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(result.images[0].provider).toBe('openverse'); expect(fetcher).toHaveBeenCalledTimes(5);
     expect((fetcher.mock.calls as unknown[][])[2][1]).toMatchObject({ headers: undefined });
-    expect(fetcher.mock.calls.slice(1, 3).map(([url]) => new URL(String(url)).searchParams.get('page_size'))).toEqual(['32', '20']);
+    expect(fetcher.mock.calls.slice(1, 3).map(([url]) => new URL(String(url)).searchParams.get('page_size'))).toEqual(['20', '20']);
     await getImages('猫', 'sense-0', { ...credentials, fetcher, mode: 'thumbnail' });
     expect(fetcher.mock.calls.filter(([url]) => String(url).includes('auth_tokens'))).toHaveLength(1);
   });
@@ -175,7 +170,8 @@ describe('normalization, relevance and failures', () => {
   });
   it('rejects malformed, unsafe, unlicensed, mature, tiny and wrong-subject results; tolerates absent optional metadata', () => {
     const result = normalizeOpenverse([null, {}, ov(), { ...ov(2), thumbnail: null, creator: null, tags: null }, { ...ov(3), mature: true }, { ...ov(4), url: 'javascript:alert(1)' }, { ...ov(5), width: 50 }, { ...ov(6), license: null }, { ...ov(7), license_url: null }, { ...ov(8), title: 'Apple iPhone', tags: [] }], 'apple fruit');
-    expect(result.map(photo => photo.id)).toEqual(['openverse-image-1', 'openverse-image-2']);
+    expect(result.map(photo => photo.id)).toEqual(['openverse-image-1', 'openverse-image-2', 'openverse-image-8']);
+    const word = byId.get('苹果')!; expect(rankImageCandidates(result, imageSearchPlan(word, word.senses[0])!).some(p => p.id === 'openverse-image-8')).toBe(false);
     expect(result[1].thumbnailUrl).toBe(result[1].largeUrl);
     expect(isImageUrl(ov().url)).toBe(false); expect(isPublicHttpsUrl(ov().url)).toBe(true);
     for (const url of ['https://localhost/a', 'https://127.0.0.1/a', 'https://[::1]/a', 'https://user:secret@example.com/a', 'https://example.com:444/a', 'http://example.com/a']) expect(isPublicHttpsUrl(url)).toBe(false);

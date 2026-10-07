@@ -18,7 +18,7 @@ describe('Pixabay integration', () => {
   it('uses Pixabay first with mandatory safe search and normalized metadata', async () => {
     const fetcher = vi.fn().mockResolvedValue(success());
     const result = await getImages('苹果', 'sense-0', options(fetcher));
-    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
     const url = new URL(fetcher.mock.calls[0][0]);
     expect(url.origin).toBe('https://pixabay.com');
     expect(Object.fromEntries(url.searchParams)).toMatchObject({ q: 'apple fruit', safesearch: 'true', image_type: 'photo', category: 'food', lang: 'en', per_page: '20' });
@@ -58,13 +58,13 @@ describe('Pixabay integration', () => {
   it('deduplicates concurrent calls and lets thumbnails reuse gallery results', async () => {
     const fetcher = vi.fn().mockResolvedValue(success());
     await Promise.all([getImages('苹果', 'sense-0', options(fetcher)), getImages('苹果', 'sense-0', options(fetcher)), getImages('苹果', 'sense-0', { ...options(fetcher), mode: 'thumbnail' })]);
-    expect((await getImages('苹果', 'sense-0', { ...options(fetcher), mode: 'thumbnail' })).images).toHaveLength(1); expect(fetcher).toHaveBeenCalledTimes(1);
+    expect((await getImages('苹果', 'sense-0', { ...options(fetcher), mode: 'thumbnail' })).images).toHaveLength(1); expect(fetcher).toHaveBeenCalledTimes(2);
   });
   it('expires server results after exactly 24 hours without extending old URLs', async () => {
     vi.useFakeTimers(); const fetcher = vi.fn().mockResolvedValue(success());
     const first = await getImages('苹果', 'sense-0', options(fetcher));
-    vi.advanceTimersByTime(IMAGE_TTL - 1); expect((await getImages('苹果', 'sense-0', options(fetcher))).expiresAt).toBe(first.expiresAt); expect(fetcher).toHaveBeenCalledTimes(1);
-    vi.advanceTimersByTime(1); await getImages('苹果', 'sense-0', options(fetcher)); expect(fetcher).toHaveBeenCalledTimes(2);
+    vi.advanceTimersByTime(IMAGE_TTL - 1); expect((await getImages('苹果', 'sense-0', options(fetcher))).expiresAt).toBe(first.expiresAt); expect(fetcher).toHaveBeenCalledTimes(2);
+    vi.advanceTimersByTime(1); await getImages('苹果', 'sense-0', options(fetcher)); expect(fetcher).toHaveBeenCalledTimes(4);
   });
   it('separates senses, queries, providers, categories and image types in the cache', async () => {
     const word = byId.get('开')!; const first = imageSearchPlan(word, word.senses[0])!.primary;
@@ -122,12 +122,12 @@ describe('Pixabay integration', () => {
     const opts = { pixabayKey: 'new-fixture-key', fetcher };
     expect((await getImages('苹果', 'sense-0', opts)).diagnostics).toContain('pixabay_upstream_failure');
     vi.advanceTimersByTime(59999); await getImages('苹果', 'sense-0', opts); expect(fetcher).toHaveBeenCalledTimes(1);
-    vi.advanceTimersByTime(1); expect((await getImages('苹果', 'sense-0', opts)).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(2);
+    vi.advanceTimersByTime(1); expect((await getImages('苹果', 'sense-0', opts)).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(3);
   });
   it('uses newly configured credentials without stale missing-key or auth-failure caching', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce({ ok: false, status: 403 }).mockResolvedValue(success());
     expect((await getImages('苹果', 'sense-0', { fetcher })).diagnostics).toContain('pixabay_not_configured');
     await getImages('苹果', 'sense-0', { pixabayKey: 'old-invalid-key', fetcher });
-    expect((await getImages('苹果', 'sense-0', { pixabayKey: 'new-valid-key', fetcher })).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(2);
+    expect((await getImages('苹果', 'sense-0', { pixabayKey: 'new-valid-key', fetcher })).status).toBe('live'); expect(fetcher).toHaveBeenCalledTimes(3);
   });
 });

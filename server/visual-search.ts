@@ -4,7 +4,8 @@ import { buildVisualQuery, inferVisualIntent, normalizeVisualMeaning, participle
 import { deduplicateImages, imageIdentity, photoIdentityKeys } from '../src/lib/visual';
 import type { Photo, Sense } from '../src/types';
 import type { ImageSearch } from './image-plan';
-import { semanticFacets, composeGallery, photoEvidence, type SemanticFacet, type CompositionDecision } from './semantic-gallery';
+import { semanticFacets, composeGallery, photoEvidence, subjectEvidence, type SemanticFacet, type CompositionDecision } from './semantic-gallery';
+import { TARGET_GALLERY_SIZE } from '../src/lib/visual-schema';
 
 export type QueryTier = 'A' | 'B' | 'C' | 'D' | 'E';
 export interface VisualCandidate extends ImageSearch { tier: QueryTier }
@@ -16,6 +17,7 @@ export interface VisualSearchPlan {
 const verbs = new Set(lexicon.verbs.split('|'));
 const physicalNouns = new Set(Object.entries(lexicon.nouns).filter(([category]) => !category.startsWith('concept:')).flatMap(([, values]) => values.split('|')));
 const people = new Set(lexicon.nouns.person.split('|'));
+const feelings = new Set(lexicon.nouns['concept:feeling'].split('|'));
 const families = new Map<string, keyof typeof templates>();
 for (const [family, lemmas] of Object.entries(lexicon.descriptors)) {
   for (const lemma of lemmas.split('|')) if (!families.has(lemma)) families.set(lemma, family as keyof typeof templates);
@@ -67,9 +69,14 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     const action = buildVisualQuery({ englishMeaning: normalized, partOfSpeech: 'verb' });
     if (action?.visualType === 'action') inferred = action;
   }
-  const family = families.get(normalized) ?? (Object.keys(templates) as (keyof typeof templates)[]).find(name => templates[name].query === inferred?.query);
-  const emotion = inferred?.visualType === 'emotion' && !!family;
-  const conceptual = inferred?.visualType === 'conceptual';
+  // General state phrases reuse existing English emotion families. This only
+  // improves server retrieval; dictionary classification/content is untouched.
+  const state = normalized.match(/^(?:with|in) ([a-z]+)(?: and ([a-z]+))?$/);
+  const stateFamily = state && families.get(state[1]);
+  const phraseFamily = stateFamily && templates[stateFamily].visualType === 'emotion' && state.slice(1).filter(Boolean).every(term => feelings.has(term) && (!families.has(term) || families.get(term) === stateFamily || relatedFamilies[stateFamily]?.includes(families.get(term)!))) ? stateFamily : undefined;
+  const family = phraseFamily ?? families.get(normalized) ?? (Object.keys(templates) as (keyof typeof templates)[]).find(name => templates[name].query === inferred?.query);
+  const emotion = !!phraseFamily || inferred?.visualType === 'emotion' && !!family;
+  const conceptual = !emotion && inferred?.visualType === 'conceptual';
   const candidates: VisualCandidate[] = [];
   const add = (query: string, tier: QueryTier, first = false) => {
     query = query.trim().replace(/\s+/g, ' ').slice(0, 100);
@@ -91,7 +98,7 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
     const template = templates[family];
     const familyNames = [family, ...relatedFamilies[family] ?? []];
     const noun = template.anchors.some(anchor => anchor.startsWith('noun:') && anchor.split(':')[1] === normalized);
-    const adjective = noun ? terms(template.fallback)[0] : normalized.replace(/ person$/, '');
+    const adjective = noun || phraseFamily ? terms(template.fallback)[0] : normalized.replace(/ person$/, '');
     add(`${adjective} person`, 'A', true);
     // Prefer a complementary lexical family when one exists; otherwise use the
     // existing canonical expression as the morphological/synonym alternative.
@@ -163,6 +170,7 @@ export function visualSearchPlan(sense: Sense, primary: ImageSearch, supporting:
 
 function forms(term: string) {
   const result = new Set([term, term + 's']);
+  if (families.has(term) && families.get(term + 'ful') === families.get(term)) result.add(term + 'ful');
   if (term.endsWith('s')) result.add(term.slice(0, -1));
   if (term.endsWith('ies')) result.add(term.slice(0, -3) + 'y');
   const root = verbRoot(term);
@@ -180,15 +188,22 @@ export function imageRelevance(photo: Photo, plan: VisualSearchPlan) {
   const context = matches(metadata, profile.context);
   const wrongSense = matches(metadata, profile.negative ?? []) > 0 || (profile.negativePhrases ?? []).some(phrase => new RegExp(`\\b${phrase}\\b`).test(evidence));
   const askingScene = /\b(?:asking|question|advice)\b/.test(plan.primary.query) && /\b(?:raising hand|sharing knowledge|seeking guidance)\b/.test(evidence);
-  const semantic = !wrongSense && (profile.required ?? []).every(group => matches(metadata, group) > 0) && (exact > 0 || related > 0 || profile.conceptual && context > 0 || askingScene);
+  const visibleState = /\b(?:person|people|man|woman|child|children|student|teacher|colleague|mentor|learner|face|facial|expression|eyes|body language|gesture|posture|reaction|reacting|symbol|icon|sign|graphic|illustration)\b/.test(evidence);
+  const explicitStateTag = (photo.tags ?? []).some(tag => {
+    const tokens = words(subjectEvidence({ ...photo, title: undefined, description: undefined, semanticAlt: undefined, tags: [tag] }));
+    return tokens.length > 0 && tokens.length <= 4 && matches(new Set(tokens), [...profile.exact, ...profile.related]) > 0;
+  });
+  const semantic = !wrongSense && (!profile.emotion || visibleState || explicitStateTag) && (profile.required ?? []).every(group => matches(metadata, group) > 0) && (exact > 0 || related > 0 || profile.conceptual && context > 0 || askingScene);
   const priority = plan.candidates.findIndex(candidate => candidate.query === photo.queryContext);
-  const score = (exact ? 300 : related || askingScene ? 200 : context ? 30 : 0) + Math.min(9, new Set([...profile.exact, ...profile.related, ...profile.context].filter(t => matches(metadata, [t]))).size) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority));
+  const direct = new Set(words(subjectEvidence(photo)));
+  const captionOnly = !matches(direct, [...profile.exact, ...profile.related, ...profile.context]) && !askingScene;
+  const score = (exact ? 300 : related || askingScene ? 200 : context ? 30 : 0) + Math.min(9, new Set([...profile.exact, ...profile.related, ...profile.context].filter(t => matches(metadata, [t]))).size) * 3 + Math.max(0, 5 - (priority < 0 ? 5 : priority)) - (captionOnly ? 35 : 0);
   // For emotions, people/portrait/expression or an unrelated emotion is not an
   // illustration of the selected meaning. Missing metadata stays uncertain.
   return { score: wrongSense ? -1 : score, semantic, excluded: wrongSense || !!profile.englishFallback && !semantic || (profile.emotion || profile.idiom) && metadata.size > 0 && !semantic };
 }
 
-export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan, limit = 32, onDecision?: (decisions: CompositionDecision[]) => void): Photo[] {
+export function qualifiedImageCandidates(images: Photo[], plan: VisualSearchPlan) {
   // Group identities before competition. Choose the strongest metadata record
   // within each group, preserving that record's complete attribution/license.
   const groups: { keys: Set<string>; photos: Photo[] }[] = [];
@@ -210,6 +225,11 @@ export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan, lim
   const compare = (a: { photo: Photo; score: number }, b: { photo: Photo; score: number }) => b.score - a.score || usability(b.photo) - usability(a.photo) || stable(a.photo) - stable(b.photo) || a.photo.sourceUrl.localeCompare(b.photo.sourceUrl) || photoEvidence(a.photo).localeCompare(photoEvidence(b.photo)) || Number(!!b.photo.licenseUrl) - Number(!!a.photo.licenseUrl) || a.photo.id.replace(/^(?:pixabay|openverse|pexels)-/, '').localeCompare(b.photo.id.replace(/^(?:pixabay|openverse|pexels)-/, ''));
   const ranked = groups.map(group => group.photos.filter(photo => deduplicateImages([photo]).length).map(photo => ({ photo, ...imageRelevance(photo, plan) })).filter(item => item.semantic).sort(compare)[0]).filter((item): item is NonNullable<typeof item> => !!item);
   ranked.sort(compare);
+  return ranked;
+}
+
+export function rankImageCandidates(images: Photo[], plan: VisualSearchPlan, limit = TARGET_GALLERY_SIZE, onDecision?: (decisions: CompositionDecision[]) => void): Photo[] {
+  const ranked = qualifiedImageCandidates(images, plan);
   const composed = composeGallery(ranked, plan, limit);
   onDecision?.(composed.decisions);
   return composed.images;

@@ -47,7 +47,7 @@ for (const [text, gloss, query] of [
   await expect.poll(() => page.locator('.gallery-grid img').first().evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   await expect(page.locator('.abstract-card')).toHaveCount(0);
   expect(queries[0]).toBe(query);
-  expect(queries).toHaveLength(query === 'large crowd' ? 2 : 3);
+  expect(queries).toHaveLength(3);
   expect(queries.every(value => !/wolf|tiger|head|mountain|sea|[\u3400-\u9fff]/.test(value))).toBe(true);
   expect(requests).toHaveLength(1); expect(requests[0]).toMatch(/\|sense-0$/);
   // A UI round-trip must use the same selected-sense cache without a request loop.
@@ -56,7 +56,7 @@ for (const [text, gloss, query] of [
   await page.goBack();
   await expect(page.locator('.word-header h1')).toHaveText(text);
   await expect(page.locator('.gallery-grid figure')).toHaveCount(6);
-  expect(requests).toHaveLength(1); expect(queries).toHaveLength(query === 'large crowd' ? 2 : 3);
+  expect(requests).toHaveLength(1); expect(queries).toHaveLength(3);
   expect(errors).toEqual([]);
 });
 

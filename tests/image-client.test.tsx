@@ -10,7 +10,7 @@ import { Home } from '../src/pages/Home';
 import type { ImageResult } from '../src/types';
 import { fromRow, refreshWordVisuals } from '../src/lib/dictionary-entry';
 import { VISUAL_SCHEMA } from '../src/lib/visual-inference';
-import { imageCacheKey } from '../src/lib/visual';
+import { imageCacheKey, pictureOverview } from '../src/lib/visual';
 import { visualQuery } from '../src/lib/visual';
 const apple = byId.get('苹果')!;
 const live = (label = 'Live apple', expiresAt = Date.now() + IMAGE_TTL): ImageResult => ({ status: 'live', expiresAt, images: [{ id: label, provider: 'pixabay', thumbnailUrl: 'https://pixabay.com/get/apple_340.jpg', displayUrl: 'https://pixabay.com/get/apple_640.jpg', largeUrl: 'https://pixabay.com/get/apple_1280.jpg', width: 900, height: 700, alt: label, source: 'Pixabay', sourceUrl: 'https://pixabay.com/photos/apple-1/' }] });
@@ -23,6 +23,24 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 function intersect(element: Element) { for (const observer of observers) if (observer.element === element) observer.callback([{ isIntersecting: true, target: element } as IntersectionObserverEntry], {} as IntersectionObserver); }
 describe('bounded browser image requests', () => {
+  it('exposes 20 server results, retains fewer results, and versions small-gallery caches', async () => {
+    const photos = Array.from({ length: 30 }, (_, i) => ({ ...live().images[0], id: `image-${i}`, thumbnailUrl: `https://pixabay.com/get/scene-${i}.jpg`, largeUrl: `https://pixabay.com/get/scene-${i}.jpg` }));
+    const fetcher = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response({ ...live(), images: photos }));
+    expect((await fetchImages(apple, apple.senses[0])).images).toHaveLength(20);
+    expect((await fetchImages(apple, apple.senses[0], false, 'thumbnail')).images).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(imageCacheKey(apple, apple.senses[0])).toContain('dual-provider-360-20-v2');
+    expect(imageCacheKey(apple, apple.senses[0])).not.toContain('dual-provider-360-v1');
+    fetcher.mockResolvedValue(response({ ...live(), images: photos.slice(0, 4) }));
+    expect((await fetchImages(apple, apple.senses[0], true)).images).toHaveLength(4);
+  });
+  it('uses the same gallery for a complementary learning overview with correct preview indices', () => {
+    const photos = Array.from({ length: 20 }, (_, i) => ({ ...live().images[0], id: `image-${i}`, galleryFacets: [i < 8 ? 'expression' : i < 15 ? 'body-language' : 'situation'] }));
+    const overview = pictureOverview(photos);
+    expect(new Set(overview.map(p => p.label)).size).toBe(3);
+    expect(overview.map(p => p.index)).not.toEqual([0, 1, 2]);
+    expect(overview.every(({ photo, index }) => photo === photos[index])).toBe(true);
+  });
   it('reclassifies old saved non-visual words and versions their query caches', () => {
     const word = fromRow(['恐慌', '恐慌', 'kong3 huang1', ['panic', 'panicky', 'panic-stricken']]);
     const stale = { ...word, senses: word.senses.map(s => ({ ...s, visualType: 'abstract' as const, visualQuery: undefined, visualSubject: undefined })) };

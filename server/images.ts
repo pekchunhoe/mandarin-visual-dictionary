@@ -7,12 +7,13 @@ import type { ImageSearch } from './image-plan';
 import { providers } from './providers';
 import type { ImageProvider } from './providers';
 import { createHash } from 'node:crypto';
-import { imageRelevance, rankImageCandidates } from './visual-search';
-import { candidateSemantics, enoughSemanticCoverage, type CompositionDecision, type SemanticFacet } from './semantic-gallery';
+import { imageRelevance, rankImageCandidates, qualifiedImageCandidates } from './visual-search';
+import { candidateSemantics, enoughSemanticCoverage, MAX_GALLERY_ROUNDS, type CompositionDecision, type SemanticFacet } from './semantic-gallery';
+import { TARGET_GALLERY_SIZE } from '../src/lib/visual-schema';
 import { clearOpenverseTokens, openverseConfiguration, openverseToken, rejectOpenverseToken, type OpenverseCredentials } from './openverse-auth';
 export { normalizePexels } from './providers';
 
-interface CachedSearch { images: Photo[]; expiresAt: number; failed?: boolean; diagnostic?: string }
+interface CachedSearch { images: Photo[]; raw?: number; expiresAt: number; failed?: boolean; diagnostic?: string }
 const cache = new Map<string, CachedSearch>();
 const pending = new Map<string, Promise<CachedSearch>>();
 const cooldown = new Map<string, number>();
@@ -22,6 +23,9 @@ export interface CompetitionTrace {
   provider?: ImageProvider; query?: string; cache?: 'hit' | 'pending' | 'miss' | 'cooldown';
   raw?: number; normalized?: number; diagnostic?: string; elapsedMs?: number;
   candidates?: number; duplicates?: number; rejected?: number;
+  target?: number; qualified?: number; deduplicated?: number; clusters?: number; diversityQualified?: number; finalCount?: number;
+  newUnique?: number; newQualified?: number; newClusters?: number; newFacets?: number; newGalleryWorthy?: number;
+  providerCounts?: Partial<Record<ImageProvider, { raw: number; normalized: number }>>;
   facets?: SemanticFacet[]; composition?: CompositionDecision[];
   evaluated?: { id: string; provider?: string; score: number; semantic: boolean; excluded?: boolean; facets: string[]; cluster: string }[];
   providerDistribution?: Record<string, number>; facetDistribution?: Record<string, number>;
@@ -88,8 +92,9 @@ async function searchProvider(provider: ImageProvider, search: ImageSearch, secr
       if (sensitive.some(value => serialized.includes(value) || serialized.includes(encodeURIComponent(value)))) throw new Error('Invalid image response');
       const images = adapter.normalize(body, search.query).map(photo => ({ ...photo, expiresAt }));
       const records = body as { hits?: unknown[]; results?: unknown[]; photos?: unknown[] };
-      observe(options, { stage: 'provider', provider, query: search.query, raw: (records.hits ?? records.results ?? records.photos)?.length ?? 0, normalized: images.length, elapsedMs: Date.now() - started });
-      result = { images, expiresAt, diagnostic: images.length ? undefined : `${provider}_empty_results` };
+      const raw = (records.hits ?? records.results ?? records.photos)?.length ?? 0;
+      observe(options, { stage: 'provider', provider, query: search.query, raw, normalized: images.length, elapsedMs: Date.now() - started });
+      result = { images, raw, expiresAt, diagnostic: images.length ? undefined : `${provider}_empty_results` };
     } catch (error) { result = unavailable(error instanceof Error && /^(TimeoutError|AbortError)$/.test(error.name) ? `${provider}_timeout` : diagnostic); }
     if (result.failed) observe(options, { stage: 'provider', provider, query: search.query, diagnostic: result.diagnostic, elapsedMs: Date.now() - started });
     cache.set(key, result);
@@ -104,14 +109,14 @@ export async function getImages(wordId: string, senseId: string, options: Option
   if (!word || !sense) throw Object.assign(new Error('Choose a known dictionary word and meaning.'), { status: 400, diagnostic: !word ? 'dictionary_word_not_found' : 'sense_not_found' });
   const plan = imageSearchPlan(word, sense);
   if (!plan) return { images: [], status: 'unavailable', diagnostics: ['non_visual_word', 'no_plan', 'openverse_not_called'], message: 'This meaning is explained with words and diagrams.' };
-  const limit = options.mode === 'thumbnail' ? 1 : 12;
+  const limit = options.mode === 'thumbnail' ? 1 : TARGET_GALLERY_SIZE;
   const fallback = word.photo && sense === word.senses[0] ? offlineGallery(word.photo, word.simplified + ' · ' + sense.english).slice(0, limit) : [];
   const images: Photo[] = []; let failed = false; const diagnostics: string[] = plan.relevance.englishFallback ? ['english_definition_plan'] : [];
   const deadline = Date.now() + 8000;
   let composition: CompositionDecision[] = [];
   const ranked = () => rankImageCandidates(images, plan, limit, decisions => { composition = decisions; });
   const enough = () => enoughSemanticCoverage(ranked(), plan, options.mode === 'thumbnail');
-  observe(options, { stage: 'plan', wordId: word.id, senseId: sense.id, english: plan.meaning, facets: plan.facets, queries: plan.searches.map(c => c.query) });
+  observe(options, { stage: 'plan', target: limit, wordId: word.id, senseId: sense.id, english: plan.meaning, facets: plan.facets, queries: plan.searches.map(c => c.query) });
   const failedProviders = new Set<ImageProvider>();
   let openverseAttempted = false;
   const collect = (provider: ImageProvider, result: CachedSearch) => {
@@ -120,7 +125,8 @@ export async function getImages(wordId: string, senseId: string, options: Option
     if (result.images.length && !result.images.some(photo => imageRelevance(photo, plan).semantic)) diagnostics.push(`${provider}_relevance_rejected`);
     if (result.diagnostic) diagnostics.push(result.diagnostic);
   };
-  const snapshot = (stage: 'round' | 'final', selected?: Photo[]) => {
+  let rawCount = 0;
+  const snapshot = (stage: 'round' | 'final', selected?: Photo[], yieldTrace: Partial<CompetitionTrace> = {}) => {
     if (!options.onTrace) return;
     const chosen = selected ?? ranked();
     const providerDistribution: Record<string, number> = {}; const facetDistribution: Record<string, number> = {};
@@ -129,14 +135,21 @@ export async function getImages(wordId: string, senseId: string, options: Option
       for (const facet of decision.facets) facetDistribution[facet] = (facetDistribution[facet] ?? 0) + 1;
     }
     observe(options, {
-      stage, composition, providerDistribution, facetDistribution, candidates: images.length,
+      ...yieldTrace, stage, target: limit, raw: rawCount, composition, providerDistribution, facetDistribution, candidates: images.length,
+      qualified: images.filter(photo => imageRelevance(photo, plan).semantic).length,
+      deduplicated: qualifiedImageCandidates(images, plan).length,
+      clusters: new Set(qualifiedImageCandidates(images, plan).map(item => candidateSemantics(item.photo, plan).cluster)).size,
+      diversityQualified: chosen.length, finalCount: chosen.length,
       duplicates: images.length - deduplicateImages(images, images.length).length,
       rejected: images.filter(photo => !imageRelevance(photo, plan).semantic).length,
       evaluated: images.map(photo => { const semantics = candidateSemantics(photo, plan); return { id: photo.id, provider: photo.provider, ...imageRelevance(photo, plan), facets: semantics.facets, cluster: semantics.cluster }; }),
       selected: chosen.map(photo => ({ id: photo.id, provider: photo.provider, score: imageRelevance(photo, plan).score }))
     });
   };
-  const rounds = plan.searches.slice(0, options.mode === 'thumbnail' ? 2 : 3);
+  const rounds = plan.searches.slice(0, options.mode === 'thumbnail' ? 2 : MAX_GALLERY_ROUNDS);
+  let previousUnique = 0, previousQualified = 0, previousGallery = 0;
+  const seenClusters = new Set<string>(); const seenFacets = new Set<string>();
+  let roundsUsed = 0;
   for (const search of rounds) {
     if (Date.now() >= deadline) break;
     const jobs: { provider: ImageProvider; request: Promise<CachedSearch> }[] = [];
@@ -148,20 +161,43 @@ export async function getImages(wordId: string, senseId: string, options: Option
       jobs.push({ provider: 'openverse', request: searchProvider('openverse', { ...search, category: undefined, imageType: 'all' }, '', options, deadline) });
     }
     const settled = await Promise.allSettled(jobs.map(job => job.request));
-    settled.forEach((result, i) => collect(jobs[i].provider, result.status === 'fulfilled' ? result.value : {
-      images: [], failed: true, expiresAt: Date.now() + 60_000, diagnostic: `${jobs[i].provider}_upstream_failure`
-    }));
-    snapshot('round');
+    const providerCounts: CompetitionTrace['providerCounts'] = {};
+    settled.forEach((result, i) => {
+      const value: CachedSearch = result.status === 'fulfilled' ? result.value : {
+        images: [], failed: true, expiresAt: Date.now() + 60_000, diagnostic: `${jobs[i].provider}_upstream_failure`
+      };
+      providerCounts[jobs[i].provider] = { raw: value.raw ?? 0, normalized: value.images.length };
+      rawCount += value.raw ?? 0;
+      collect(jobs[i].provider, value);
+    });
+    const qualified = qualifiedImageCandidates(images, plan);
+    const unique = deduplicateImages(images, images.length).length;
+    const chosen = ranked();
+    const clusters = new Set(qualified.map(item => candidateSemantics(item.photo, plan).cluster));
+    const facets = new Set(chosen.flatMap(photo => candidateSemantics(photo, plan).facets));
+    const newQualified = qualified.length - previousQualified;
+    const newUnique = unique - previousUnique;
+    const newClusters = [...clusters].filter(cluster => !seenClusters.has(cluster)).length;
+    const newFacets = [...facets].filter(facet => !seenFacets.has(facet)).length;
+    const newGalleryWorthy = Math.max(0, chosen.length - previousGallery);
+    snapshot('round', chosen, { query: search.query, providerCounts, newUnique, newQualified, newClusters, newFacets, newGalleryWorthy });
+    previousUnique = unique; previousQualified = qualified.length; previousGallery = chosen.length;
+    clusters.forEach(cluster => seenClusters.add(cluster)); facets.forEach(facet => seenFacets.add(facet)); roundsUsed++;
     // This decision happens ONLY after both providers have had a chance.
-    if (enough() || !jobs.length) break;
+    // An empty/weak query can still have a meaningful complementary successor.
+    // Stop expansion when a populated round merely repeats existing inventory.
+    if (enough() || !jobs.length || roundsUsed >= 2 && unique > 0 && newUnique <= 0 && newQualified <= 0 && !newClusters && !newGalleryWorthy && settled.some(result => result.status === 'fulfilled' && result.value.images.length > 0)) break;
   }
   // Preserve the optional legacy provider, without making it compete with or
   // displace either normal provider before their shared rounds have completed.
-  if (ranked().length < (options.mode === 'thumbnail' ? 1 : 6) && options.pexelsKey?.trim()) {
+  // Legacy Pexels is a sparse-gallery rescue, not another source of twenty.
+  const legacyMinimum = Math.min(limit, 6);
+  if (ranked().length < legacyMinimum && options.pexelsKey?.trim()) {
     const legacy = plan.relevance.idiom && !options.pixabayKey?.trim() ? rounds : [plan.primary];
     for (const search of legacy) {
       if (Date.now() >= deadline) break;
       const result = await searchProvider('pexels', search, options.pexelsKey.trim(), options, deadline);
+      rawCount += result.raw ?? 0;
       collect('pexels', result);
       if (result.failed || enough()) break;
     }
@@ -171,9 +207,9 @@ export async function getImages(wordId: string, senseId: string, options: Option
   const relevant = ordered.filter(photo => imageRelevance(photo, plan).semantic);
   if (!openverseAttempted) diagnostics.push('openverse_not_called');
   if (images.length && !relevant.length) diagnostics.push('all_results_below_threshold');
-  // Do not pad a clear subject with broad-category hits just to reach twelve.
+  // The target never admits broad-category or wrong-sense filler.
   // Sparse/absent metadata is not semantic evidence.
-  const live = relevant.slice(0, limit);
+  const live = relevant.slice(0, limit).map(photo => ({ ...photo, galleryFacets: candidateSemantics(photo, plan).facets }));
   if (live.length) return { images: live, status: 'live', diagnostics: [...new Set(diagnostics)], expiresAt: Math.min(...live.map(p => p.expiresAt!)) };
   return { images: fallback, status: fallback.length ? 'curated' : 'unavailable', expiresAt: Date.now() + 60_000,
     diagnostics: [...new Set([...diagnostics, 'fallback_used'])],

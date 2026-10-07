@@ -41,8 +41,9 @@ for (const [index, example] of galleryExamples.entries()) for (const width of [3
         expect(final.evaluated!.filter(candidate => result.images.some(photo => photo.id === candidate.id)).every(candidate => candidate.semantic)).toBe(true);
         expect(selected.filter(candidate => candidate.cluster === 'symbol').length).toBeLessThanOrEqual(1);
         expect(new Set(selected.map(candidate => candidate.cluster)).size).toBeGreaterThan(1);
-        for (const cluster of new Set(selected.map(candidate => candidate.cluster)))
-          expect(selected.filter(candidate => candidate.cluster === cluster).length).toBeLessThanOrEqual(2);
+        // Distinct subjects/settings within one facet may now add useful depth.
+        // The repeated description remains bounded, rather than the whole facet.
+        expect(result.images.filter(photo => photo.alt === example.repeated).length).toBeLessThanOrEqual(2);
         expect(selected.some(candidate => candidate.coverageGain > 0)).toBe(true);
         expect(traces.filter(event => event.stage === 'round').length).toBeLessThanOrEqual(3);
         if (index === 0) {
@@ -137,8 +138,8 @@ test('six relevant images survive a single-facet pool, duplicates and reversed p
     await page.goto('/#word=' + encodeURIComponent('跑'));
     if (selections.length) await page.reload();
     await expect(page.locator('.gallery-grid figure')).toHaveCount(6);
-    expect(calls).toHaveLength(6);
-    expect(calls.filter(provider => provider === 'openverse')).toHaveLength(3);
+    expect(calls).toHaveLength(4);
+    expect(calls.filter(provider => provider === 'openverse')).toHaveLength(2);
     selections.push([...selected]);
     const rendered = await page.locator('.gallery-grid img').evaluateAll(images => images.map(image => image.getAttribute('src')));
     expect(new Set(rendered).size).toBe(6);

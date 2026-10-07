@@ -1,6 +1,7 @@
 import type { ImageMode, ImageResult, Sense, Word } from '../types';
 import { offlineGallery } from '../data/photos';
 import { IMAGE_TTL, imageCacheKey, visualQuery } from './visual';
+import { TARGET_GALLERY_SIZE } from './visual-schema';
 const cache = new Map<string, ImageResult>();
 const pending = new Map<string, Promise<ImageResult>>();
 let retryAfter = 0;
@@ -11,7 +12,7 @@ function cached(key: string) {
 }
 export function fetchImages(word: Word, sense: Sense, retry = false, mode: ImageMode = 'gallery'): Promise<ImageResult> {
   if (!visualQuery(sense)) return Promise.resolve({ images: [], status: 'unavailable' });
-  if (typeof navigator !== 'undefined' && !navigator.onLine) return Promise.resolve({ images: word.photo && sense.id === word.senses[0].id ? offlineGallery(word.photo, sense.english).slice(0, mode === 'thumbnail' ? 1 : 12) : [], status: 'curated' });
+  if (typeof navigator !== 'undefined' && !navigator.onLine) return Promise.resolve({ images: word.photo && sense.id === word.senses[0].id ? offlineGallery(word.photo, sense.english).slice(0, mode === 'thumbnail' ? 1 : TARGET_GALLERY_SIZE) : [], status: 'curated' });
   const base = imageCacheKey(word, sense); const key = `${base}|${mode}`;
   const single = (result: ImageResult): ImageResult => ({ ...result, images: result.images.slice(0, 1) });
   if (mode === 'thumbnail') {
@@ -32,7 +33,7 @@ export function fetchImages(word: Word, sense: Sense, retry = false, mode: Image
     const expiry = typeof body.expiresAt === 'number' && Number.isFinite(body.expiresAt) ? body.expiresAt : Date.now() + IMAGE_TTL;
     const expiresAt = Math.min(expiry, Date.now() + (body.status === 'live' ? IMAGE_TTL : 60_000), ...body.images.map(p => typeof p.expiresAt === 'number' && Number.isFinite(p.expiresAt) ? p.expiresAt : Infinity));
     if (expiresAt <= Date.now()) throw new Error('Pictures have expired. Please try again.');
-    const result = { ...body, expiresAt, images: body.images.slice(0, mode === 'thumbnail' ? 1 : 12) };
+    const result = { ...body, expiresAt, images: body.images.slice(0, mode === 'thumbnail' ? 1 : TARGET_GALLERY_SIZE) };
     cache.set(key, result);
     if (cache.size > 100) cache.delete(cache.keys().next().value!);
     return result;

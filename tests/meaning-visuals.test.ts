@@ -15,7 +15,7 @@ const rows = JSON.parse(readFileSync('public/data/cedict.json', 'utf8')) as RawR
 const entries = (text: string) => rows.filter(row => row[1] === text).map(fromRow);
 beforeEach(clearImageCache);
 // Describe the depicted activity for an idiomatic gloss, not its literal words.
-const live = (meaning: string) => ({ ok: true, json: async () => ({ hits: Array.from({ length: 8 }, (_, i) => ({ id: i + 1, pageURL: `https://pixabay.com/photos/expression-${i + 1}/`, webformatURL: `https://pixabay.com/get/expression-${i + 1}_640.jpg`, imageWidth: 900, imageHeight: 700, tags: meaning === 'to go to bed' ? 'sleeping person bed' : meaning })) }) });
+const live = (meaning: string) => ({ ok: true, json: async () => ({ hits: Array.from({ length: 8 }, (_, i) => ({ id: i + 1, pageURL: `https://pixabay.com/photos/expression-${i + 1}/`, webformatURL: `https://pixabay.com/get/expression-${i + 1}_640.jpg`, imageWidth: 900, imageHeight: 700, tags: meaning === 'to go to bed' ? 'sleeping person bed' : `${meaning} person` })) }) });
 
 describe('English meaning to visuals without curated metadata', () => {
   const emotions = '恐慌 惊讶 高兴 快乐 伤心 生气 害怕 紧张 兴奋 失望 困惑 担心'.split(' ');

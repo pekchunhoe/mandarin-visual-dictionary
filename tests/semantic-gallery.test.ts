@@ -132,7 +132,7 @@ it('versions only image strategies, retains rich Openverse metadata, caps authen
   expect(p).toMatchObject({ description: 'Sliced apple on a table', semanticAlt: 'Apple halves', photographer: 'Fixture Creator', photographerUrl: 'https://images.example.org/creator', originalProvider: 'flickr', originalSource: 'flickr', license: 'by', providerRank: 0 });
   const word = byId.get('苹果')!;
   expect(imageCacheKey(word, word.senses[0])).toContain(IMAGE_SEARCH_STRATEGY);
-  expect(IMAGE_SEARCH_STRATEGY).toBe('dual-provider-360-v1'); expect(VISUAL_SCHEMA).toBe('dictionary-visual-v7');
+  expect(IMAGE_SEARCH_STRATEGY).toBe('dual-provider-360-20-v2'); expect(VISUAL_SCHEMA).toBe('dictionary-visual-v7');
   expect(enoughSemanticCoverage([], plan)).toBe(false);
 });
 

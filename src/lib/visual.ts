@@ -6,6 +6,20 @@ export function visualQuery(sense: Sense): string | null {
   return null; // All UI senses arrive classified by the build or dictionary worker.
 }
 export const IMAGE_TTL = 86_400_000;
+const facetLabels: Record<string, string> = { subject: 'Subject', expression: 'Expression', 'body-language': 'Body language', situation: 'Reaction', education: 'Learning', professional: 'Work', interaction: 'Interaction', recipient: 'Helping others', actor: 'People', environment: 'Setting', practice: 'Practice', appearance: 'Appearance', usage: 'Use', behavior: 'Behavior', symbol: 'Symbol', object: 'Object', 'self-directed': 'Personal action' };
+export function pictureOverview(photos: Photo[]) {
+  const covered = new Set<string>(); const chosen = new Set<number>();
+  const samples = Array.from({ length: Math.min(3, photos.length) }, (_, i) => Math.floor((i + .5) * photos.length / Math.min(3, photos.length)));
+  return samples.map(sample => {
+    const indices = photos.map((_, i) => i).filter(i => !chosen.has(i));
+    const facets = (i: number) => (photos[i].galleryFacets ?? ['subject']).filter(f => f !== 'symbol');
+    indices.sort((a, b) => facets(b).filter(f => !covered.has(f)).length - facets(a).filter(f => !covered.has(f)).length || Math.abs(a - sample) - Math.abs(b - sample) || a - b);
+    const index = indices[0]; chosen.add(index);
+    const represented = facets(index); const label = represented.find(f => !covered.has(f)) ?? represented[0] ?? 'symbol';
+    represented.forEach(f => covered.add(f));
+    return { photo: photos[index], index, label: facetLabels[label] ?? 'Another view' };
+  });
+}
 export function imageCacheKey(word: Word, sense: Sense) { return JSON.stringify([VISUAL_SCHEMA, IMAGE_RELEVANCE_SCHEMA, IMAGE_SEARCH_STRATEGY, word.id, sense.id, visualQuery(sense)?.trim().replace(/\s+/g, ' ').toLowerCase() ?? 'explanation', sense.visualType, word.category ?? '', 'photo+all']); }
 // Openverse aggregates many hosts. Only its normalized results may use public
 // HTTPS URLs outside the existing stock-provider allowlist; no server URL proxy.

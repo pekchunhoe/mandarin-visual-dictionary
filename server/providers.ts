@@ -51,7 +51,7 @@ export function normalizeOpenverse(results: unknown[], query: string): Photo[] {
     const license = text(p.license).toLowerCase(); const licenseUrl = url(p.license_url);
     if (!/^[a-z0-9-]+$/i.test(id) || !large || !page || p.mature === true || width < 300 || height < 200 || aspect > 5 || aspect < 0.2 || !['by', 'by-sa', 'cc0', 'pdm'].includes(license) || !licenseUrl) return [];
     const title = text(p.title).trim();
-    const tags = [title, ...(Array.isArray(p.tags) ? p.tags.map(tag => text(record(tag).name)) : [])].filter(Boolean).slice(0, 32);
+    const tags = (Array.isArray(p.tags) ? p.tags.map(tag => text(record(tag).name)) : []).filter(Boolean).slice(0, 32);
     return [{ id: `openverse-${id}`, provider: 'openverse' as const, providerRank, description: text(p.description) || undefined, semanticAlt: text(p.alt_text) || text(p.alt) || undefined, thumbnailUrl: url(p.thumbnail) || large, displayUrl: large, largeUrl: large, width, height, alt: title || query, title: title || undefined, tags, photographer: text(p.creator) || undefined, photographerUrl: url(p.creator_url) || undefined, source: 'Openverse', sourceUrl: page, originalProvider: text(p.provider) || undefined, originalSource: text(p.source) || undefined, license, licenseVersion: text(p.license_version) || undefined, licenseUrl, attribution: text(p.attribution) || undefined, queryContext: query }];
   }), 32);
 }

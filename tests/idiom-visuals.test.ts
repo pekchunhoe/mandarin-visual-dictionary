@@ -88,12 +88,12 @@ it('uses the same bounded provider retrieval, combined reranking, and independen
   expect(result.status).toBe('live');
   expect(result.images).toHaveLength(6);
   expect(result.images.every(p => p.tags?.some(tag => tag.includes('scared person')))).toBe(true);
-  expect(queries).toEqual(['frightened person', 'frightened facial expression']);
+  expect(queries).toEqual(['frightened person', 'frightened facial expression', 'frightened person body language']);
   await getImages(idiom.id, 'sense-2', options);
   await getImages(idiom.id, 'sense-3', options);
-  expect(queries).toEqual(['frightened person', 'frightened facial expression', 'spooked person', 'scared person']);
+  expect(queries).toEqual(['frightened person', 'frightened facial expression', 'frightened person body language', 'spooked person', 'spooked facial expression', 'scared person', 'scared facial expression']);
   for (const sense of idiom.senses.slice(1)) await getImages(idiom.id, sense.id, options);
-  expect(queries).toHaveLength(4);
+  expect(queries).toHaveLength(7);
 });
 
 it('reclassifies saved inferred idiom senses while preserving editorial explanations and definitions', () => {

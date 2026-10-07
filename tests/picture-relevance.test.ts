@@ -87,20 +87,20 @@ it('runs secondary queries for weak galleries, ranks their strong results first,
   });
   const options = { pixabayKey: 'fixture-relevance-key', fetcher };
   const result = await getImages(fear.id, 'sense-0', options);
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(6);
   expect(result.images).toHaveLength(4);
   expect(result.images.every(photo => photo.tags?.some(tag => /frightened|scared/.test(tag)))).toBe(true);
   expect(result.images[0].tags).toContain('frightened person facial expression');
   await getImages(fear.id, 'sense-0', options);
   await getImages(fear.id, 'sense-0', { ...options, mode: 'thumbnail' });
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(6);
 });
 
-it('stops after sufficient strong results and shares concurrent identical searches', async () => {
+it('stops when another round repeats the useful inventory and shares concurrent searches', async () => {
   const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, i % 2 ? 'frightened person facial expression' : 'frightened person trembling body language'))));
   const options = { pixabayKey: 'fixture-relevance-key', fetcher };
   await Promise.all([getImages(fear.id, 'sense-0', options), getImages(fear.id, 'sense-0', options)]);
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher).toHaveBeenCalledTimes(4);
 });
 
 it('does not mistake a concrete word category for enough subject matches', async () => {
@@ -111,14 +111,14 @@ it('does not mistake a concrete word category for enough subject matches', async
       : Array.from({ length: 6 }, (_, i) => hit(i + 30, 'apples, fruit, sliced, market')) }));
   });
   const result = await getImages('苹果', 'sense-0', { pixabayKey: 'fixture-relevance-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(6);
   expect(result.images.filter(photo => photo.provider === 'pixabay').every(photo => photo.tags?.includes('apples'))).toBe(true);
 });
 
 it('bounds weak-result searches and refuses to fill an emotion gallery with generic portraits', async () => {
   const fetcher = vi.fn().mockResolvedValue(response(Array.from({ length: 12 }, (_, i) => hit(i + 1, 'person, portrait'))));
   const result = await getImages(fear.id, 'sense-0', { pixabayKey: 'fixture-relevance-key', fetcher });
-  expect(fetcher).toHaveBeenCalledTimes(6); // Three concurrent provider pairs.
+  expect(fetcher).toHaveBeenCalledTimes(4); // Two pairs: the second repeats rejected inventory.
   expect(result.images).toEqual([]);
   expect(result.status).toBe('unavailable');
 });

@@ -33,7 +33,7 @@ describe('concurrent provider flow', () => {
   it('queries Openverse, including OAuth, when Pixabay has six strong gallery results', async () => {
     const fetcher = mockProviders(Array.from({ length: 6 }, (_, i) => px(i + 1)));
     const result = await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', ...credentials, fetcher });
-    expect(callsFor(fetcher, 'pixabay.com')).toHaveLength(3); expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(4); expect(result.images.some(p => p.provider === 'openverse')).toBe(true);
+    expect(callsFor(fetcher, 'pixabay.com')).toHaveLength(2); expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(3); expect(result.images.some(p => p.provider === 'openverse')).toBe(true);
   });
   it('queries Openverse when one strong thumbnail is available', async () => {
     const fetcher = mockProviders([px()]);
@@ -45,12 +45,12 @@ describe('concurrent provider flow', () => {
     const options = { pixabayKey: 'pixabay-fixture-key', fetcher };
     const result = await getImages('苹果', 'sense-0', options);
     expect(result.images.filter(photo => photo.provider === 'openverse')).toHaveLength(6);
-    const calls = callsFor(fetcher, 'api.openverse.org'); expect(calls).toHaveLength(3);
+    const calls = callsFor(fetcher, 'api.openverse.org'); expect(calls).toHaveLength(2);
     expect(new URL(calls[0][0]).searchParams.get('q')).toBe('apple fruit');
     expect(calls[0][1].headers).toBeUndefined();
     await getImages('苹果', 'sense-0', options);
     expect((await getImages('苹果', 'sense-0', { ...options, mode: 'thumbnail' })).images).toHaveLength(1);
-    expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(3);
+    expect(callsFor(fetcher, 'api.openverse.org')).toHaveLength(2);
   });
   it('supplements sparse Pixabay and ranks both providers together without padding with generic matches', async () => {
     const fetcher = mockProviders([px(1, 'apple')], [ov(2, 'apple fruit'), ov(3, 'person portrait')]);
@@ -85,7 +85,7 @@ describe('concurrent provider flow', () => {
       release(); return json({ results: Array.from({ length: 6 }, (_, i) => ov(i + 1)) });
     });
     expect((await getImages('苹果', 'sense-0', { pixabayKey: 'pixabay-fixture-key', fetcher })).images[0].provider).toBe('openverse');
-    expect(fetcher).toHaveBeenCalledTimes(6);
+    expect(fetcher).toHaveBeenCalledTimes(4);
   });
   it('retains strong Pixabay images when Openverse fails', async () => {
     const fetcher = vi.fn(async (input: string | URL | Request) => new URL(String(input)).hostname === 'pixabay.com' ? json({ hits: [px()] }) : json({}, 503));
@@ -100,7 +100,7 @@ describe('concurrent provider flow', () => {
   it('shares concurrent searches and separates provider and sense cache keys', async () => {
     const fetcher = mockProviders([], Array.from({ length: 6 }, (_, i) => ov(i + 1)));
     await Promise.all([getImages('苹果', 'sense-0', { ...credentials, fetcher }), getImages('苹果', 'sense-0', { ...credentials, fetcher })]);
-    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(fetcher).toHaveBeenCalledTimes(3);
     const word = byId.get('苹果')!; const search = imageSearchPlan(word, word.senses[0])!.primary;
     const keys = [providerCacheKey('openverse', search), providerCacheKey('pixabay', search), providerCacheKey('openverse', { ...search, senseId: 'sense-1' }), providerCacheKey('openverse', { ...search, query: 'pear fruit' })];
     expect(new Set(keys).size).toBe(4);
@@ -150,7 +150,7 @@ describe('server OAuth', () => {
     const fetcher = mockProviders([], Array.from({ length: 6 }, (_, i) => ov(i + 1)));
     fetcher.mockImplementationOnce(async () => json({ access_token: token, token_type: 'Bearer', expires_in: 3600 })).mockImplementationOnce(async () => json({}, 401));
     const result = await getImages('苹果', 'sense-0', { ...credentials, fetcher });
-    expect(result.images[0].provider).toBe('openverse'); expect(fetcher).toHaveBeenCalledTimes(5);
+    expect(result.images[0].provider).toBe('openverse'); expect(fetcher).toHaveBeenCalledTimes(4);
     expect((fetcher.mock.calls as unknown[][])[2][1]).toMatchObject({ headers: undefined });
     expect(fetcher.mock.calls.slice(1, 3).map(([url]) => new URL(String(url)).searchParams.get('page_size'))).toEqual(['20', '20']);
     await getImages('猫', 'sense-0', { ...credentials, fetcher, mode: 'thumbnail' });

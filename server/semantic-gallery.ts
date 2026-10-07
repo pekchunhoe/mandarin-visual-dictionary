@@ -1,5 +1,6 @@
 import type { Photo, Sense } from '../src/types';
 import type { VisualCandidate, VisualSearchPlan } from './visual-search';
+import { TARGET_GALLERY_SIZE } from '../src/lib/visual-schema';
 
 export const MAX_FACETS = 6;
 export const MAX_GALLERY_ROUNDS = 3;
@@ -13,8 +14,20 @@ export function semanticTokens(value: string): string[] {
   return [...new Set((value.toLowerCase().match(/[a-z]+/g) ?? []).filter(t => !stop.has(t)))];
 }
 export function queryIdentity(value: string) { return semanticTokens(value).sort().join(' '); }
+// Provider fields describe subjects only when concise and descriptive. A
+// photographer's story must not become proof of what the image depicts.
+export function descriptiveEvidence(value: string | undefined, maxWords = 24) {
+  if (!value || value.length > 240 || (value.match(/[a-z]+/gi)?.length ?? 0) > maxWords || /\b(?:i|my|mine|me|we|our|ours|us)\b|https?:\/\/|\b(?:photographed|photographer|camera|copyright)\b/i.test(value)) return '';
+  return value.toLowerCase();
+}
+export function subjectEvidence(photo: Photo) {
+  return [descriptiveEvidence(photo.title), descriptiveEvidence(photo.semanticAlt), ...(photo.tags ?? []).map(tag => descriptiveEvidence(tag, 18))].filter(Boolean).join(' ');
+}
 export function photoEvidence(photo: Photo) {
-  return [photo.title, photo.description, photo.semanticAlt, ...(photo.tags ?? [])].filter(Boolean).join(' ').toLowerCase();
+  // Inspect bounded short statements, not an arbitrarily long narrative. A
+  // concise visual description can still supply missing title/tag evidence.
+  const description = (photo.description ?? '').slice(0, 800).split(/[.!?\n]+/).slice(0, 3).map(sentence => descriptiveEvidence(sentence.trim())).filter(Boolean).join(' ');
+  return [subjectEvidence(photo), description].filter(Boolean).join(' ');
 }
 const has = (text: string, cues: string[]) => cues.some(cue => new RegExp(`\\b${cue}\\b`).test(text));
 
@@ -122,11 +135,16 @@ export function composeGallery(pool: { photo: Photo; score: number }[], plan: Vi
       for (let i = remaining.length - 1; i >= 0; i--) if (remaining[i].semantics.symbolic) remaining.splice(i, 1);
       if (!remaining.length) break;
     }
-    // A narrow cluster has diminishing teaching value once several strong
-    // alternatives exist. Keep one-facet galleries intact; otherwise stop
-    // repetitive padding after two examples of a cluster.
+    // Preserve varied depth within important facets, while repeated semantic
+    // descriptions cannot crowd out complementary examples.
     if (complementary) {
-      for (let i = remaining.length - 1; i >= 0; i--) if ((clusters.get(remaining[i].semantics.cluster) ?? 0) >= 2) remaining.splice(i, 1);
+      // Repeated semantic descriptions are narrower than a facet. Different
+      // actors/settings within that facet remain eligible at a larger target.
+      for (let i = remaining.length - 1; i >= 0; i--) {
+        const item = remaining[i];
+        const signature = [...item.semantics.tokens].sort().join(' ');
+        if (selected.filter(other => other.semantics.cluster === item.semantics.cluster && [...other.semantics.tokens].sort().join(' ') === signature).length >= 2) remaining.splice(i, 1);
+      }
       if (!remaining.length) break;
     }
     const evaluated = remaining.map(item => {
@@ -137,7 +155,7 @@ export function composeGallery(pool: { photo: Photo; score: number }[], plan: Vi
         return a.filter(t => b.includes(t)).length / Math.max(1, new Set([...a, ...b]).size);
       }));
       const repetitions = clusters.get(s.cluster) ?? 0;
-      const redundancyPenalty = Math.min(180, repetitions * 65) + similar * 30 + (s.symbolic ? (counts.get('symbol') ?? 0) * 120 : 0);
+      const redundancyPenalty = Math.min(180, repetitions * 18 + repetitions * repetitions * 3) + similar * 30 + (s.symbolic ? (counts.get('symbol') ?? 0) * 120 : 0);
       const realScene = plan.humanScenes && s.human ? 30 : 0;
       const marginalValue = item.score + coverageGain + realScene - redundancyPenalty;
       return { item, coverageGain, redundancyPenalty, marginalValue };
@@ -157,9 +175,9 @@ export function composeGallery(pool: { photo: Photo; score: number }[], plan: Vi
 
 export function enoughSemanticCoverage(images: Photo[], plan: VisualSearchPlan, thumbnail = false) {
   if (thumbnail) return images.length > 0;
-  if (images.length < 4) return false;
+  if (images.length < TARGET_GALLERY_SIZE) return false;
   const profiles = images.map(photo => candidateSemantics(photo, plan));
   const contextual = new Set(profiles.flatMap(p => p.facets).filter(id => id !== 'subject' && id !== 'symbol'));
   const target = Math.min(2, plan.facets.filter(f => f.id !== 'subject' && f.sceneType !== 'symbol').length);
-  return images.length >= (target >= 2 ? 4 : 6) && contextual.size >= target && (!plan.humanScenes || profiles.some(p => p.human));
+  return contextual.size >= target && (!plan.humanScenes || profiles.some(p => p.human));
 }

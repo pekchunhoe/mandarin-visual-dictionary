@@ -48,8 +48,8 @@ for (const primary of ['empty', 'rejected', 'partial']) test(`不耻下问 shows
   await expect(openverse.getByRole('link', { name: 'Learning Photographer' })).toHaveAttribute('href', 'https://example.com/creator');
   await expect(openverse.getByRole('link', { name: 'Openverse / flickr' })).toHaveAttribute('href', /https:\/\/example.com\/asking-\d/);
   await expect(openverse.getByRole('link', { name: 'CC BY 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
-  expect(providers).toEqual(['pixabay.com', 'api.openverse.org', 'pixabay.com', 'api.openverse.org', 'pixabay.com', 'api.openverse.org']);
-  expect(queries).toEqual(['person asking question', 'person asking question', 'student asking teacher question classroom', 'student asking teacher question classroom', 'person asking colleague advice', 'person asking colleague advice']);
+  expect(providers).toEqual(['pixabay.com', 'api.openverse.org', 'pixabay.com', 'api.openverse.org']);
+  expect(queries).toEqual(['person asking question', 'person asking question', 'student asking teacher question classroom', 'student asking teacher question classroom']);
   expect(galleryRequests).toBe(1); expect(errors).toEqual([]);
   await page.screenshot({ path: `.tmp/english-fallback-${primary}.png`, fullPage: true });
 });

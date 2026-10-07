@@ -4,7 +4,7 @@ import type { Photo as PhotoType, Sense, Word } from '../types';
 import { useImages } from '../lib/useImages';
 import { offlineGallery } from '../data/photos';
 import { Photo } from './Photo';
-import { photoLicense } from '../lib/visual';
+import { photoLicense, pictureOverview } from '../lib/visual';
 export function VisualGallery({ word, sense }: { word: Word; sense: Sense }) {
   const [attempt, setAttempt] = useState(0); const [preview, setPreview] = useState<number | null>(null);
   const { result, loading, error } = useImages(word, sense, 'gallery', true, attempt);
@@ -18,7 +18,7 @@ export function VisualGallery({ word, sense }: { word: Word; sense: Sense }) {
     {(error || result?.message) && <div className="image-notice" role="status"><span>{error || result?.message}</span><button onClick={() => setAttempt(a => a + 1)}><RefreshCw size={15}/> Retry pictures</button></div>}
     {!loading && photos.length === 0 && <div className="empty-panel">图片暂时无法载入。<p>You can still explore the meaning and pronunciation below.</p></div>}
     {preview !== null && photos[preview] && <ImagePreview photos={photos} index={preview} onChange={setPreview} onClose={() => setPreview(null)}/>}
-    {photos.length > 2 && <div className="context-section"><div><span className="eyebrow">LEARN WITH PICTURES</span><h3>看图学词</h3><p>Find the same idea in different real-world scenes.</p></div><div className="context-cards">{photos.slice(0, 3).map((photo, i) => <button key={photo.id} onClick={() => setPreview(i)}><Photo key={photo.thumbnailUrl} photo={photo}/><span>{photo.alt || sense.english}</span></button>)}</div></div>}
+    {photos.length > 2 && <div className="context-section"><div><span className="eyebrow">LEARN WITH PICTURES</span><h3>看图学词</h3><p>Compare the same meaning across different scenes.</p></div><div className="context-cards">{pictureOverview(photos).map(({ photo, index, label }) => <button key={photo.id} onClick={() => setPreview(index)}><Photo key={photo.thumbnailUrl} photo={photo}/><span>{label} · {photo.alt || sense.english}</span></button>)}</div></div>}
   </section>;
 }
 export function Attribution({ photo }: { photo: PhotoType }) { return <figcaption title={photo.attribution}>{photo.provider === 'openverse' && photo.title && <><a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.title}</a> · </>}{photo.photographer ? <>Photo by <a href={photo.photographerUrl} target="_blank" rel="noreferrer">{photo.photographer}</a> · </> : 'Photo · '}<a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.source}{photo.originalSource ? ` / ${photo.originalSource}` : ''}</a>{photo.license && <> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photoLicense(photo)}</a></>}</figcaption>; }

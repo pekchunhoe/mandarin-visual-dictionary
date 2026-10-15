@@ -1,0 +1,4463 @@
+{
+  "schema": 1,
+  "license": "CC-BY-SA-4.0 corpus additions, with retained model and lexical-resource notices",
+  "reviewStatus": "All new meanings are machine-generated provisional; no independent human verification.",
+  "modelNotice": "/data/MALAY-OFFLINE-MODELS.json",
+  "lexicalNotice": "/data/MALAY-NOTICE.txt",
+  "definitionMethod": "Bounded dictionary relation translations. Original Chinese citations and tone-number pinyin are preserved literally. Protected mode translates seven fixed relations, then restores per-sense opaque references; this is not independent semantic translation of every cited word.",
+  "maintainerGrammarAttribution": "KANJIAN contributors; assistant-authored Malay grammar normalization and source protection, CC BY-SA 4.0.",
+  "lexicalRecords": [
+    {
+      "key": "424aedd827ab7960e2d2f17b77fb01b6691ede897bad45900eb1fd6e4f2a9169",
+      "chinese": "一会儿",
+      "english": "a moment",
+      "malay": "sekejap",
+      "synset": "15246853-n",
+      "sourcePages": [],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "6cd7e68be45ba4ed550135ce3b299001af594bcd50d0c02b644444402d2a4beb",
+      "chinese": "一口",
+      "english": "a bite",
+      "malay": "Gigitan",
+      "synset": "07579076-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b0d2219035cec887c5e1e5d7927e2d5da5b3625a3cb03c9fbb3f1c327a98b7f5",
+      "chinese": "一夫一妻",
+      "english": "monogamy",
+      "malay": "monogami",
+      "synset": "13966007-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/monogami#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d46546127de882208b9a0bf7c7620aa7999458e24827e6ce6d8ed793ea3a6d7c",
+      "chinese": "七七八八",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7130b4326ab6d698e22c44b92fd218de65fc29f275565cdff31e11a933b312d8",
+      "chinese": "万贯",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "a174b5c3b5a9ded0f302b603d6a4ee5491ef5b5fff5e534f62d70a53da33b6e3",
+      "chinese": "三叉戟",
+      "english": "trident",
+      "malay": "trisula",
+      "synset": "04482975-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/trisula#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "55693e3f9454b3ebf17fe37c97ae386cb860ec23cff2c4ad30def05cb0c6fae7",
+      "chinese": "三板",
+      "english": "sampan",
+      "malay": "sampan",
+      "synset": "04133114-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sampan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e000976e27eb6bb29f02d60d85c6608cb6f42d57cfa5c0c5e4f2f770745686fb",
+      "chinese": "三角学",
+      "english": "trigonometry",
+      "malay": "Trigonometri",
+      "synset": "06012513-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/trigonometri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "00de441f54ed598cf069d9ef82772e64c9c445d583be3bc4bbc932e9e8cd6c65",
+      "chinese": "专制主义",
+      "english": "absolutism",
+      "malay": "absolutisme",
+      "synset": "06213688-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/absolutisme#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1deaceff7ed02f84ddfb374d5ce102533744635d0adefe64c20fb90bd47351ba",
+      "chinese": "丧",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fc7c37be054d1407adfa516440c6157cdc13146d7247a71c1ac57dd8591d13fd",
+      "chinese": "丰度",
+      "english": "abundance",
+      "malay": "Kelimpahan",
+      "synset": "13820000-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kelimpahan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b0e5c5e2fba638c109f234b21b80f38d3ccac8b9e42160e656232d38e2efab7c",
+      "chinese": "乡愁",
+      "english": "nostalgia",
+      "malay": "nostalgia",
+      "synset": "07487375-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/nostalgia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "894bef9791aae82bdf679d387206c3daae9ff9c20af7c0382ec8508c3669aa98",
+      "chinese": "买主",
+      "english": "customer",
+      "malay": "pelanggan",
+      "synset": "09984659-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pelanggan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "416e4ca6024215e63eb2980020b96f63ed9a523e697f82c7b2a4e4e9ee7e689f",
+      "chinese": "事典",
+      "english": "encyclopedia",
+      "malay": "Ensiklopedia",
+      "synset": "06427387-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ensiklopedia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "95e944a026bf976b822ed862d8dfa7fb6864e3aae91f725b0d66886aac38fe3c",
+      "chinese": "互联网",
+      "english": "Internet",
+      "malay": "Internet",
+      "synset": "03580615-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/internet#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ae14fd8a34cefbeabe60aefab6ec33463351351a5b5c35fa6033347608b344dd",
+      "chinese": "亦",
+      "english": "also",
+      "malay": "juga",
+      "synset": "00047534-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/juga#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "6c6692f424d114710a08a50d34fc6a063180eca5ff9b4722beb354ecdc6e644a",
+      "chinese": "亦即",
+      "english": "namely",
+      "malay": "iaitu",
+      "synset": "00188510-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/iaitu#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "2b337047c705061742e76ec551108929c7186f41d2e0e7f3e8a12b627044035f",
+      "chinese": "产科",
+      "english": "obstetrics",
+      "malay": "obstetrik",
+      "synset": "06053439-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/obstetrik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "21463d61286f98dea7d3514edbaa2c3e4c3eb117f769db1e98bdc051c3eebe4b",
+      "chinese": "亲王",
+      "english": "prince",
+      "malay": "putera",
+      "synset": "10472799-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/putera#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ea73135645e580f2d0bbd88beeb28093843101091e78f321a18d1fb3309d8729",
+      "chinese": "仇外心理",
+      "english": "xenophobia",
+      "malay": "xenofobia",
+      "synset": "14386022-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/xenofobia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "dac8890696023b3c095ac5a534d2245388a12dced48db041b07d6ddf18453a5d",
+      "chinese": "仙人掌",
+      "english": "cactus",
+      "malay": "Kaktus",
+      "synset": "11842204-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kaktus#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "b54360f22237568e56673fdd4fc03680ba5b619954a250cff67176324f4a3790",
+      "chinese": "仿真",
+      "english": "simulation",
+      "malay": "Simulasi",
+      "synset": "03777283-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/simulasi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cbdee6b830ec7732cc068f939618b88dd73a02eca5bc09358a1a4eab2afd8dc1",
+      "chinese": "传声器",
+      "english": "microphone",
+      "malay": "Mikrofon",
+      "synset": "03759954-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mikrofon#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "6301c3902e48c18e5d3b103ea950077d0e27f7f6545804d2abb48096dc948c8c",
+      "chinese": "传真",
+      "english": "a fax",
+      "malay": "faks",
+      "synset": "03316105-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e1d6faa2e04ad0e6da75554c00841bb9d6321f7fcee54aa0239d507d037116fe",
+      "chinese": "低体温症",
+      "english": "hypothermia",
+      "malay": "hipotermia",
+      "synset": "14044454-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hipotermia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d621eb0076e1017725cec28a87d52f2fc6fb460ac176fba9c9f618c4442ccc0e",
+      "chinese": "低谷",
+      "english": "valley",
+      "malay": "Lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "bc33b67a769e8018adf5c67c7d043aba27b11aa93de471f3c4fe3f7e5f3e6439",
+      "chinese": "倒反",
+      "english": "on the contrary",
+      "malay": "Sebaliknya",
+      "synset": "00170412-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sebaliknya#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "31d4eec198e7bc5844cea2e7802328232bc3b4b404b894eec4375ad2aa5d252d",
+      "chinese": "借记卡",
+      "english": "debit card",
+      "malay": "kad debit",
+      "synset": "13376764-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kad%20debit#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "d27e8f424595aae1345b86f0b8811620ff3f0e2f416fc3b8d20a239c0c0f3e2c",
+      "chinese": "借词",
+      "english": "loanword",
+      "malay": "kata pinjaman",
+      "synset": "06293460-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kata%20pinjaman#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0307054bea297e024fe32e9d191fa230dd87ce7a8ce82ad4e5e2a82e0cb59e67",
+      "chinese": "值钱",
+      "english": "expensive",
+      "malay": "mahal",
+      "synset": "00933154-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mahal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "61fd3007e97dc1b958190953c2d87222d1867fd4dd7a4d3430278ab4615d0488",
+      "chinese": "倾听者",
+      "english": "listener",
+      "malay": "Pendengar",
+      "synset": "10165448-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pendengar#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7ec7702ea574862665a8bec135070a82c0a942e685c91b0dcfd7a89b512fe8a4",
+      "chinese": "偶一",
+      "english": "once in a while",
+      "malay": "sekali sekala",
+      "synset": "00021212-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sekali-sekala#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0b2b872fc7ef03b3a1ddad0b8beeea2d2c3289bbd1825d1ed78ece96ad1884b7",
+      "chinese": "偶尔",
+      "english": "once in a while",
+      "malay": "sekali sekala",
+      "synset": "00021212-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sekali-sekala#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4e445466dd88953894547c9e414c8ee154cde2f54aa9a396aae307b2dcd41270",
+      "chinese": "偶而",
+      "english": "once in a while",
+      "malay": "sekali sekala",
+      "synset": "00021212-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sekali-sekala#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0d1ad14ca2862282da6a1705c86def161ed3cf5c9ea3898d5b7171f7ba467314",
+      "chinese": "偷子",
+      "english": "thief",
+      "malay": "pencuri",
+      "synset": "10707804-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pencuri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a8e35071dab20a69d28e4f83697544f9b624dc435606bf8b3642dbda8b2ebc58",
+      "chinese": "僯",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "71e3df80e49202c2901aadeeabcf46ed61446224728b25c79b2756d47109fc48",
+      "chinese": "光化作用",
+      "english": "photosynthesis",
+      "malay": "fotosintesis",
+      "synset": "13537429-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/fotosintesis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4a831a2e5c7c8c50f04dca101065b588a381b0e68a27a65482c5c64dc02e6cf7",
+      "chinese": "党",
+      "english": "party",
+      "malay": "parti",
+      "synset": "08256968-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/parti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "171410c9d2b063ba66aab3bf7fe9d2038440eceab6b148e2397393e82c674bfb",
+      "chinese": "党派",
+      "english": "political party",
+      "malay": "parti politik",
+      "synset": "08256968-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/parti%20politik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b8a95a9ca1d5f0b1ff6ab991ed113e709c1ecbce5941bfbfc29ad8135aaff020",
+      "chinese": "入味",
+      "english": "interesting",
+      "malay": "menarik",
+      "synset": "01343918-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/menarik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "57201b7cc10b7afddee8e8517a3cc42d5340417f18d445a9463c9f000c4305db",
+      "chinese": "公丈",
+      "english": "decameter",
+      "malay": "Dekameter",
+      "synset": "13659419-n",
+      "sourcePages": [],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "d1b4a860e0d07e0c60ace975b12a5443e581f736a682d9080ebeeaf6600cb018",
+      "chinese": "公信力",
+      "english": "credibility",
+      "malay": "Kredibiliti",
+      "synset": "04782878-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kredibiliti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c826d0c7097009c00c6f9d469dd9361bb26f5f2a984b4f6c4ee0ad9394675d1b",
+      "chinese": "公里",
+      "english": "kilometer",
+      "malay": "km",
+      "synset": "13659760-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ec50093c89f1a645b28256843f8f47a83061ddb157f7a079b3139e5cf24ba318",
+      "chinese": "共和",
+      "english": "republicanism",
+      "malay": "republikanisme",
+      "synset": "06220299-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/republikanisme#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d276ed80b42a97e5c2f8ef3dbc2dc41c617c0d3c2a23311062f3cd30efd220e0",
+      "chinese": "内室",
+      "english": "bedroom",
+      "malay": "Bilik tidur",
+      "synset": "02821627-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilik%20tidur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e3097e366aa5b62e85af0d4de0185156370d387186a0056aa4301bf4be08f463",
+      "chinese": "内战",
+      "english": "civil war",
+      "malay": "perang saudara",
+      "synset": "00962567-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perang%20saudara#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3690f0a2d349c0543072685d319cbe5b706ffae9bc7b0ac6e799fc372241d3ad",
+      "chinese": "冬",
+      "english": "winter",
+      "malay": "Musim Sejuk",
+      "synset": "15237782-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/musim%20sejuk#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "ab34c57d46a61877a82d1c484d2e927a5fa82f9b854f01b70341fca1a444dfea",
+      "chinese": "冬天",
+      "english": "winter",
+      "malay": "Musim Sejuk",
+      "synset": "15237782-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/musim%20sejuk#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "503cc4fc2d5f612d2a0c0f1113bece04d9f943b38fd3a0c6d8b85a163961c2f8",
+      "chinese": "冬季",
+      "english": "winter",
+      "malay": "Musim Sejuk",
+      "synset": "15237782-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/musim%20sejuk#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "86dec56de7767339cb10e3e5d19fd825a2d7a1ce31c3befc237362bc768e693c",
+      "chinese": "决议",
+      "english": "a resolution",
+      "malay": "resolusi",
+      "synset": "05789089-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5fc72b68a81c7f2fa874c3c99beb2ff7e5169b58d4948578e0372091281d1069",
+      "chinese": "几欲",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4d9d42832dd0884917c06ba065848fd2c27e4798f1ffabee790c7080c1637bb3",
+      "chinese": "几至",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6787cfd6f8c075e37173e904fccc7afbb9e0af80c7fda96ab484951f04dd2d21",
+      "chinese": "出口商",
+      "english": "exporter",
+      "malay": "Pengeksport",
+      "synset": "10073634-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pengeksport#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e27dfd2c5615f89c40ba144a805555e24dc1b4ffa39013565988b82fe0842f42",
+      "chinese": "刀片",
+      "english": "blade",
+      "malay": "Bilah",
+      "synset": "02848216-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "488644b7e31ec5c2d69a43c454b89ef4e68b17285f9e8a7323711873b6693cab",
+      "chinese": "分析师",
+      "english": "analyst",
+      "malay": "Penganalisis",
+      "synset": "09790482-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/penganalisis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "92e6231997defbc045ec316a55f0eea3ae3c3be1ef4d87e2b3d37219b948fff6",
+      "chinese": "分部",
+      "english": "subsection",
+      "malay": "Subseksyen",
+      "synset": "04348548-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/subseksyen#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "313b6548dbd4539fbafd3a6a149f7169722dd07dba984d60f94b9ac960a0723d",
+      "chinese": "剽窃",
+      "english": "to plagiarize",
+      "malay": "plagiat",
+      "synset": "02278061-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/plagiat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5969496710202ee339ca5e84aa557987daa31f8fae8e36afd0624ee60790acda",
+      "chinese": "动能",
+      "english": "kinetic energy",
+      "malay": "tenaga kinetik",
+      "synset": "11470492-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tenaga%20kinetik#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "7d46f3b08ab7fdb349627133ccf9bf37280220c0ffd117fe87a0161af0f57d3f",
+      "chinese": "千米",
+      "english": "kilometer",
+      "malay": "km",
+      "synset": "13659760-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fc106626437b27424139b58e4d9a79dbc2fc36f975c05401aa5b25366dbdeb81",
+      "chinese": "博物院",
+      "english": "museum",
+      "malay": "Muzium",
+      "synset": "03800563-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/muzium#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "55256caa156c372dd394861ec6043f36efb6639a6e1c923f31761074c01ac370",
+      "chinese": "卧内",
+      "english": "bedroom",
+      "malay": "Bilik tidur",
+      "synset": "02821627-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilik%20tidur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "41d1c27098ece85a308bd31a9695cdd9f7a8c7953549fc5b9ffe570953174398",
+      "chinese": "卧房",
+      "english": "bedroom",
+      "malay": "Bilik tidur",
+      "synset": "02821627-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilik%20tidur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "30f0adfe10cdabc92eade8014c60a8d8c16d8f004b62b1cdc33a0bcdd4ebcd85",
+      "chinese": "即",
+      "english": "namely",
+      "malay": "iaitu",
+      "synset": "00188510-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/iaitu#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "28bab88526edf452a68005aff5352564924baa64317012c2c95efcde141eb2ac",
+      "chinese": "即由",
+      "english": "namely",
+      "malay": "iaitu",
+      "synset": "00188510-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/iaitu#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "85995aa95baa7746dd85b5e3e72dee5621a194a006bb1d2e7e999fc7d0697e9f",
+      "chinese": "又",
+      "english": "also",
+      "malay": "juga",
+      "synset": "00047534-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/juga#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "c7dd61e0881854a640d393b80490523334b8ea0f8059fdb50ea34fb5addb3ed8",
+      "chinese": "发现",
+      "english": "a discovery",
+      "malay": "penemuan",
+      "synset": "05808218-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7b605463173450efe408c3d36de6c5055ffd3be7bfb053242a3f5936563b1dc9",
+      "chinese": "变态反应",
+      "english": "allergy",
+      "malay": "Alergi",
+      "synset": "14532816-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/alergi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "64f33dbeb7093eea9b54a64cc4ada57340d9e2d4628a4fa09e0e6792c0a89ea0",
+      "chinese": "古兰经",
+      "english": "the Koran",
+      "malay": "Al-Quran",
+      "synset": "06461609-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3e5445a789e5582f487cd5039dbf528d02c87f265a0001227f2071dead351151",
+      "chinese": "司药",
+      "english": "pharmacist",
+      "malay": "ahli farmasi",
+      "synset": "10421470-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ahli%20farmasi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "5c00c7cd41beb98c5b23ec63b3c692dcef89012233cb2e6802fda748425b4a83",
+      "chinese": "各自",
+      "english": "respective",
+      "malay": "masing-masing",
+      "synset": "00494409-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/masing-masing#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ac3e4c69abcb719197d0dc43d715ef7451c1a2d13a7a2a1336633b07337bc331",
+      "chinese": "合理性",
+      "english": "rationale",
+      "malay": "rasional",
+      "synset": "05793210-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/rasional#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cdabafdd01301acca7ecaf390b842be77cecda449124d622e878a45a2f73d21f",
+      "chinese": "吉它",
+      "english": "a guitar",
+      "malay": "gitar",
+      "synset": "03467517-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/gitar#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4355c7a06277e41969e6e5cb0ce183dd70589bcd90d0921ed4cb2199582793b9",
+      "chinese": "名扬四海",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "186e2cf26fa24677e11d5487fb4b8048dca0d908ea608a0247b3272f99e14371",
+      "chinese": "名闻",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "8c9a2b32568c388b216c9c9c9252836819f47d1bc353dbdd569d84f8e3a1edac",
+      "chinese": "听筒",
+      "english": "stethoscope",
+      "malay": "stetoskop",
+      "synset": "04317175-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/stetoskop#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3a412dfd43d6b04cbd7bf32547794bf605d9347e30b0ba05644a7afd196ccc7f",
+      "chinese": "听者",
+      "english": "listener",
+      "malay": "pendengar",
+      "synset": "10165448-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pendengar#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "65e85fd7c4ac11912cac5e7b6fa42a69bdca583a149fd3e930748f63ca66aa39",
+      "chinese": "听诊器",
+      "english": "stethoscope",
+      "malay": "stetoskop",
+      "synset": "04317175-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/stetoskop#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3032ce3c509c8a99c5bbf31a418389587625bd8589ff295a96ec67f37f220c0d",
+      "chinese": "听随",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "261a519733ec732ad228b186abed6df074efa95e177dfad150815b860106cfe3",
+      "chinese": "呕吐",
+      "english": "to vomit",
+      "malay": "muntah",
+      "synset": "00076400-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/muntah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0fddc7e584de7771c0bc2ee235bbc37db2389c6ce7ae6592b1e94658b0128d6d",
+      "chinese": "周年",
+      "english": "anniversary",
+      "malay": "Ulang Tahun",
+      "synset": "15249799-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ulang%20tahun#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "07b5e0a0f9140c65efacc8a6cfc8c94477562a37d05b6a0cd67315b6546adc16",
+      "chinese": "咖啡室",
+      "english": "coffee shop",
+      "malay": "kedai kopi",
+      "synset": "02935658-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kedai%20kopi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6681815a733f52bb86b9c5015e4af8b7281cbff36d9d9ab802e344c2cd66ae76",
+      "chinese": "响当当",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a15667dc09ad88692e065effea2fac90d72bf31b8fa21147e9c3408be7652bc1",
+      "chinese": "哑语",
+      "english": "sign language",
+      "malay": "Bahasa isyarat",
+      "synset": "06875697-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bahasa%20isyarat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "80229083ba30181954fadc482a132120185f7633352aec9e24eb54e7b639bc95",
+      "chinese": "唐氏综合症",
+      "english": "Down syndrome",
+      "malay": "Sindrom Down",
+      "synset": "14159623-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sindrom%20Down#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "01e21de36754977a1ba1c3d055f04d9c83ce48185ac1b805464ec4e45dfec8aa",
+      "chinese": "啤",
+      "english": "beer",
+      "malay": "bir",
+      "synset": "07886849-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3ae285c40209aeff2644a4cfb261ecfdc75bf93d459d99f2ead83d60a157b2d7",
+      "chinese": "喷发",
+      "english": "an eruption",
+      "malay": "letusan",
+      "synset": "14008567-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7c6b40136f264e053e8c882e5fcd599c38c31342efbee9c15b3fe44af01dccad",
+      "chinese": "嗀",
+      "english": "to vomit",
+      "malay": "muntah",
+      "synset": "00076400-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/muntah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7142f6df97e8875e2d3cd87e0a60176076131a473eb8d09ff60f5f7a6c8fc976",
+      "chinese": "因特网",
+      "english": "Internet",
+      "malay": "Internet",
+      "synset": "03580615-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/internet#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "148f879b779d45beba61c9dcac5b8651b210267a1dda1c4a7f0430b6f4e6e1b1",
+      "chinese": "国内战争",
+      "english": "civil war",
+      "malay": "perang saudara",
+      "synset": "00962567-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perang%20saudara#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a97d8aea0f2948d5e1e25c85d8b7d2f38e208de7b3acc14163598eaa5a9e6a6a",
+      "chinese": "地球",
+      "english": "the earth",
+      "malay": "Bumi",
+      "synset": "09270894-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/Bumi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a56bbdf4616be76b2922b3ed624643a3ec26a12bd2449685cbc0d9441deba319",
+      "chinese": "外来词",
+      "english": "loanword",
+      "malay": "kata pinjaman",
+      "synset": "06293460-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kata%20pinjaman#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b0217070951ed4ca4529f6bd1d23f824152d40d55f7ab8a5dc532154c3ac8f3a",
+      "chinese": "外来语",
+      "english": "loanword",
+      "malay": "kata pinjaman",
+      "synset": "06293460-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kata%20pinjaman#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3dcfa9b1e365338a53b1ed1a3d3e6d12dc236790699f1801435207b316efa88e",
+      "chinese": "多元酯",
+      "english": "polyester",
+      "malay": "poliester",
+      "synset": "14993559-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/poliester#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "80f3f3ac86b808e2e170f3b293600363b27d864bfc0bcdf41bc18fd3a42134ac",
+      "chinese": "大名鼎鼎",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "172211f5308e1cc0541d5848ec786a58613e2a161df416827c4a349914ac913d",
+      "chinese": "大富大贵",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "8586afbfa2ba18134defc5f800ca5d64d54a989a2d2c7aa47a726b087466185b",
+      "chinese": "大纲",
+      "english": "synopsis",
+      "malay": "Sinopsis",
+      "synset": "06468951-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sinopsis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "52864f3e7dbb151bbdb2b4f78cdcbaf0ea6f643c172d1d4c15bf15b8fc168227",
+      "chinese": "大选",
+      "english": "general election",
+      "malay": "Pilihan Raya Umum",
+      "synset": "00182435-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pilihan%20raya%20umum#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "68a0f6501065384ff7afddaad97a68a591a9910e07e05a23b3d78367c925914e",
+      "chinese": "太阳光",
+      "english": "sunlight",
+      "malay": "cahaya matahari",
+      "synset": "11485367-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/cahaya%20matahari#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e209261afc3546cf94a728b8248dd9eb1a666509cd1e521433088085b050b5f3",
+      "chinese": "失温症",
+      "english": "hypothermia",
+      "malay": "hipotermia",
+      "synset": "14044454-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hipotermia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "425ed41731e25c14e16561899dc63f241d0cdc545d15d962155419c6165cb09b",
+      "chinese": "头盖",
+      "english": "skull",
+      "malay": "tengkorak",
+      "synset": "05540121-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tengkorak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "22201a92aeedcd8918c0dfaadefcf96b23f02afd0c5e41cb653eea04322f0f94",
+      "chinese": "头颅",
+      "english": "skull",
+      "malay": "tengkorak",
+      "synset": "05540121-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tengkorak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "8a03772b14d836aa3fa1a081f07e58df195180ff89dfb3fb150ce2e648e5d03d",
+      "chinese": "奸险",
+      "english": "malicious",
+      "malay": "jahat",
+      "synset": "00224731-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jahat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c8fb75996d97f9a547313d2e5ae83c2853fbc8eaf9a5d4a9a3ac7cd3f68a00c8",
+      "chinese": "好玩",
+      "english": "interesting",
+      "malay": "menarik",
+      "synset": "01343918-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/menarik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b135561d7071bab527fed88f23d50b4d6a74bef5c4464501b449edfefd2e8781",
+      "chinese": "妇科",
+      "english": "gynecology",
+      "malay": "ginekologi",
+      "synset": "06050901-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ginekologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ce760eaf5105206d498c01e8f787d6d303667c32dcbaab4e414042b2f1bce935",
+      "chinese": "妊",
+      "english": "pregnancy",
+      "malay": "Kehamilan",
+      "synset": "14046202-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kehamilan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "969bde9961f4fdb0c917b673967257cfdf76bc331208500beda88390c74a96b5",
+      "chinese": "妻室",
+      "english": "wife",
+      "malay": "Isteri",
+      "synset": "10780632-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/isteri#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "f4ef384786d1281d612d8292c6137f9aaf3509714c8d08a47ce301e573907ce2",
+      "chinese": "娘儿们",
+      "english": "wife",
+      "malay": "Isteri",
+      "synset": "10780632-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/isteri#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "ec81417474fae2308f9c6d05b8c7ef8273c4ceb2256daad25887b000610ff6d5",
+      "chinese": "孛",
+      "english": "comet",
+      "malay": "Komet",
+      "synset": "09251407-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/komet#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "dccaec55859dd3d3794367b4a74a2bd6738a4008f6ea25fc35de6b8ed00d5f55",
+      "chinese": "孤独症",
+      "english": "autism",
+      "malay": "Autisme",
+      "synset": "05896998-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/autisme#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cbd7395fec29c0108eaade9984cdb11abcec624eaa846f03081cce47a270ba1d",
+      "chinese": "完满",
+      "english": "successful",
+      "malay": "berjaya",
+      "synset": "02331262-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/berjaya#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "2d8bab5d513cb43d0458efcb7305a5ab0f9cf925a393ab644a36856f31209903",
+      "chinese": "实用主义",
+      "english": "pragmatism",
+      "malay": "pragmatisme",
+      "synset": "05151869-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pragmatisme#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cf637fe380c92c40e26f44dbac4d055774e6d640ff4cc36d78093e78a225d33b",
+      "chinese": "宵小",
+      "english": "thief",
+      "malay": "pencuri",
+      "synset": "10707804-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pencuri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b69c95e29f0185f9dda410ba2843cb9f0127e7c44c9956ee1ccd954eca264c2e",
+      "chinese": "家什",
+      "english": "furniture",
+      "malay": "Perabot",
+      "synset": "03405725-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perabot#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4654699dd6edda2b044b05338412e5a053fbadb2952cdb0e123da13f2f9a9779",
+      "chinese": "家室",
+      "english": "wife",
+      "malay": "Isteri",
+      "synset": "10780632-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/isteri#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "bb30864b7768bd9ca6709a7d993957a368a02f63d6e18a4438135b47d9b2ed58",
+      "chinese": "家小",
+      "english": "wife",
+      "malay": "Isteri",
+      "synset": "10780632-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/isteri#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "2a6a1cb08551359360460fc506c99ccef746df2a31e4b5a894a1307acb5b7c1d",
+      "chinese": "富翁",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "8cf9f90bfa71928382070cbeb0f8bdd55a8d8aacc3b82e8bef943d44c5ddeecc",
+      "chinese": "寝室",
+      "english": "bedroom",
+      "malay": "Bilik tidur",
+      "synset": "02821627-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilik%20tidur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "86a02eb8546d8cd84233dadd85834f74a3e3c0676f31153c8927bd0d4806e5dc",
+      "chinese": "将来",
+      "english": "future",
+      "malay": "masa depan",
+      "synset": "15121625-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/masa%20depan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "da91cf9b08711976502fd0c49f49c364c80e349e7b9ee5323b78ce16e693ff33",
+      "chinese": "将来",
+      "english": "the future",
+      "malay": "masa depan",
+      "synset": "15121625-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/masa%20depan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "136f2cce07b1e9891323a6b0c62eed2ebb60bae2b85b6ff65e5962f20a447dd6",
+      "chinese": "小偷",
+      "english": "thief",
+      "malay": "pencuri",
+      "synset": "10707804-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pencuri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7966b886e4243cbea0250acbe702db9f2c9e5d91fd687527703d80174c615183",
+      "chinese": "山凹",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "85e8925e419b3cd5f19ee0ef6ffe8dc489193a4939e156c7ecf070d8c3886e08",
+      "chinese": "山沟",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e8c0c27800470b7448247b6c2c12a6a5d5c34c7f88a409d9ec286ad28aca0dad",
+      "chinese": "峪",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "25167aff9fd09453c73bc82ad13eb19063e0a8b27d49b492e61fc56ece9ea60c",
+      "chinese": "崖壑",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2d1c97bde07193e88fa9e735f931fadfc3bec47d08968fb6901555546e5d7232",
+      "chinese": "崖谷",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "096716c434ff5f68013e1c28fc2a75a8b7aadadf9b43c70d6fd4c767f874c61a",
+      "chinese": "巨富",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cbcc7843c414f77070378e5ce4c8b88d16c40c225d326d3aa6b318c1512eaa21",
+      "chinese": "差点",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "70fbf25e93bde3f44294d3e70bb170c2c0ee26c974f7a2c2c6e6107430e82b6f",
+      "chinese": "差点没",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "44b2f738b4ffd22cf95d59fa610da259d738ea228270f8f38c51244e8adfec10",
+      "chinese": "巽",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e5d5bee533bc66a996323786226ce398c960c75c76917c903ebdc32468534982",
+      "chinese": "帖",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2edf67773f8d4c5fc7457be9293dbb1139cd6e107e2ff78c1da391fab8d270d5",
+      "chinese": "席卷",
+      "english": "to sweep",
+      "malay": "menyapu",
+      "synset": "02688403-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/menyapu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "33baa2be90d1ece3e605c2b47fe67f2a317bd546af470d39316171e99e19acfc",
+      "chinese": "并",
+      "english": "also",
+      "malay": "juga",
+      "synset": "00047534-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/juga#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "7643cf653318d94bc48eafe4a34f9f61e71e1fa15ab3def419b14667607e7ceb",
+      "chinese": "广告主",
+      "english": "advertiser",
+      "malay": "pengiklan",
+      "synset": "09773962-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pengiklan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a099525ee8b9139cb8d0c8a38dbcb505bf349b1262cb6d4223e13e80d639c20d",
+      "chinese": "廊",
+      "english": "veranda",
+      "malay": "Beranda",
+      "synset": "04527648-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/beranda#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "875a2aee63a17d40140d3c32e92decf045376933c7be7fcdae32663e10748c18",
+      "chinese": "影",
+      "english": "movie",
+      "malay": "filem",
+      "synset": "06613686-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/filem#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "47b377b0eaeff3567069fc55217d733c63252daccd299313d93a2e932f8055bf",
+      "chinese": "微生物学",
+      "english": "microbiology",
+      "malay": "Mikrobiologi",
+      "synset": "06077648-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mikrobiologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "da423b2a4be29f8f3b975be4d39a6262c407f201fb386e533906d9a5e0670ea2",
+      "chinese": "快",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "b3b0d0604570908d0809679b85cfc91bb633aa076f23ba09b433dbdf51d96a7d",
+      "chinese": "怀妊",
+      "english": "pregnancy",
+      "malay": "Kehamilan",
+      "synset": "14046202-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kehamilan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4ad6804bedcce430118eb33de9f721151d06b0d1fce016314026adc67f617589",
+      "chinese": "怀旧",
+      "english": "nostalgia",
+      "malay": "Nostalgia",
+      "synset": "07487375-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/nostalgia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "736f1c62c6b71b07e27b2a5bb0796b07bd9d9c65ccb7395630f4f488a5d23544",
+      "chinese": "怅怅然",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fe867a4e15d93c4c97fe0593b938a956f47e2cbae3acc756440865672de7952e",
+      "chinese": "怍",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1446b820c67810dd26fbf12e27aa86068e08bbe514df82ddce1cd0f13a84292d",
+      "chinese": "恧",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3e91e2cb57fc8b082385822b69314a4c070f608ee5f1700f9140bcaacc6fe47b",
+      "chinese": "恶毒",
+      "english": "malicious",
+      "malay": "jahat",
+      "synset": "00224731-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jahat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "20de3b30e14e145efef39daa326801715a1bcea3a984a586308bdf86a00b2134",
+      "chinese": "情志",
+      "english": "emotion",
+      "malay": "emosi",
+      "synset": "07480068-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/emosi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3524c3a336b6ba139a24af77a624323e3094cf01940b05d3f92a1d81f5a0cbce",
+      "chinese": "惆",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "595765f0ef1519a0838d68e6cc624436b9ab4f4f7649ca8a3fbe5876d8bafcaa",
+      "chinese": "惘",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c4ad588a715f78847777cebb9abf99b5b46d11bacf998e87f4f0929a58f9dda2",
+      "chinese": "惝",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4630c62c760b134a2567ed45dde5c7d18f607f0bc0a90570a6f908707815a124",
+      "chinese": "惭",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fa87ec8289f493fac67ef937122663d303902577c81bce7ef83bd1e2b9a5cfdf",
+      "chinese": "惭愧",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "144e88d0b85991256a13e2dec5c4411061b32c224eb447e948b40da2084fd85e",
+      "chinese": "愧",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a2231a4f333200f4a8c6694e1e0a35d09af44cb566a3d93d976aa6424d730b93",
+      "chinese": "愧怍",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a5f5a93cdb074b518322cdbfe6f3cc7c778207e443ab8da31d7dcffa915decda",
+      "chinese": "懅",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "aa8e92358f4ab1e8fad1f6d28ac4ef72d8a78c1651cbc5fe31483a4ffd80ee6b",
+      "chinese": "手包",
+      "english": "handbag",
+      "malay": "beg tangan",
+      "synset": "02774152-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/beg%20tangan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "b9ee55fbc47b28162656cc983c5506161aa7ade2ae5b8b05bfe102f473a0acc3",
+      "chinese": "手腕子",
+      "english": "wrist",
+      "malay": "pergelangan tangan",
+      "synset": "05584928-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pergelangan%20tangan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fc55a61bc2736573acbe1d6d4436bf9e4bedf211bda5652d404fe82af2fdea62",
+      "chinese": "手语",
+      "english": "sign language",
+      "malay": "Bahasa isyarat",
+      "synset": "06875697-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bahasa%20isyarat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c27291db4415d6e10fcf91985b99f8400708e46819b95187a3ae11ea86ebcba8",
+      "chinese": "扫帚星",
+      "english": "comet",
+      "malay": "Komet",
+      "synset": "09251407-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/komet#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "52f6c1f2c52922df32c6d2c242034ace102941c4b68924a57b9c792c4f29d5d7",
+      "chinese": "扫把星",
+      "english": "comet",
+      "malay": "Komet",
+      "synset": "09251407-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/komet#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "364b946db667a702df5f778cdedd8f569fb01dd82667dc97bca01d2ead41ee56",
+      "chinese": "抄袭",
+      "english": "to plagiarize",
+      "malay": "plagiat",
+      "synset": "02278061-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/plagiat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "16f84772860c9cfb0424a33b1ee6078d9877b0be1575cf9f5b1d99ca85afe042",
+      "chinese": "投票者",
+      "english": "voter",
+      "malay": "Pengundi",
+      "synset": "10760340-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pengundi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "29a307b93b321d3505f2d32585bfd53c9d30d201f45210100f24ef49e3b35ba5",
+      "chinese": "投资人",
+      "english": "investor",
+      "malay": "Pelabur",
+      "synset": "10216106-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pelabur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "99b1ebc48cc10a40106381e53e4ac84224cca9c267e49b968dffdd1109f581f1",
+      "chinese": "投资家",
+      "english": "investor",
+      "malay": "Pelabur",
+      "synset": "10216106-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pelabur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "174cc28ac312ec651c9bc25b012301a304f1af496a78ea2534ea6fb1b47db102",
+      "chinese": "投资者",
+      "english": "investor",
+      "malay": "Pelabur",
+      "synset": "10216106-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pelabur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "7e8a1a272d2ab215aa4f3e23ecc689154108046f38519ca1024214429f8d26d4",
+      "chinese": "折",
+      "english": "to fold",
+      "malay": "lipat",
+      "synset": "01277974-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lipat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "81d3877e7b0018a0b9d655195170b0d26f988d50d072d0f25ac5d7c41d0091ca",
+      "chinese": "折",
+      "english": "to fold",
+      "malay": "lipat",
+      "synset": "01277974-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lipat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "260519514a6d5262a847426719905a28761064d0b560d10a5232d16de04e1a46",
+      "chinese": "折叠",
+      "english": "to fold",
+      "malay": "lipat",
+      "synset": "01277974-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lipat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "eae1209eca690749d199590fab95fd0bd926d80129f89617a4ca231ffbe0a5a0",
+      "chinese": "提包",
+      "english": "handbag",
+      "malay": "beg tangan",
+      "synset": "02774152-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/beg%20tangan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e5465dc172c3f4eda6c2c1677d1ed225aded089c322669df2855893db7b02f31",
+      "chinese": "提纲",
+      "english": "synopsis",
+      "malay": "Sinopsis",
+      "synset": "06468951-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sinopsis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "56aabaa7667faea64e6b4aa4917fe0beefaefef8298045402ac2b890424f7d0d",
+      "chinese": "搭客",
+      "english": "passenger",
+      "malay": "penumpang",
+      "synset": "10403876-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/penumpang#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4b02d98f949009a4c4a7d941f78a5b3529e31da8d5cc3b361ce3f2507b55d644",
+      "chinese": "改造",
+      "english": "to reform",
+      "malay": "reformasi",
+      "synset": "00384620-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/reformasi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "570d796b861e5373fa3ad4fdde8a6fcbc5b202ff2288622d96217d5e48037682",
+      "chinese": "改革",
+      "english": "to reform",
+      "malay": "reformasi",
+      "synset": "00265673-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/reformasi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "48b895ef2c8e14a64958f24d995934ab9d000eb66893cfd17b44dd3888bb294a",
+      "chinese": "文娱",
+      "english": "entertainment",
+      "malay": "hiburan",
+      "synset": "00429048-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hiburan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4930ba821c738198605879906652a4d8a07047527f379fe19719a092388c095a",
+      "chinese": "料理店",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "481be450c5550e28faf7b29f4a86c6b224811877163877cf3ae89ad09cc85525",
+      "chinese": "方面",
+      "english": "side",
+      "malay": "sisi",
+      "synset": "06783265-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sisi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2ab2a0f4abf42d38fbd6a6dbf2a81b4fb62d758d7fda071f2ac2483a5c261d4f",
+      "chinese": "无私",
+      "english": "altruistic",
+      "malay": "altruistik",
+      "synset": "00101609-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/altruistik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cc05c243d873592d5841881b1ed5812e7f769761c4af67d59ac1bf2211f06b57",
+      "chinese": "时代",
+      "english": "epoch",
+      "malay": "era",
+      "synset": "15248564-n",
+      "sourcePages": [],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "6bd261e1200a416c3c68f001290a5ce6510134659433e887d2ba0928c740b984",
+      "chinese": "昂",
+      "english": "expensive",
+      "malay": "mahal",
+      "synset": "00933154-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mahal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5470a2e7bc48ed92c3a9c4cbe892354c8b1791054b6f96c85ab9795f2208a156",
+      "chinese": "昂贵",
+      "english": "expensive",
+      "malay": "mahal",
+      "synset": "00933154-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mahal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ad8b89833ec5ab77c96b8f2edf252d0b4efb8b23afe85fc952d9ebed2928d4df",
+      "chinese": "显镜",
+      "english": "microscope",
+      "malay": "mikroskop",
+      "synset": "03760671-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mikroskop#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "131752ff85fde2e848719fcb91a306226d4a20544951866b6905230f75793abe",
+      "chinese": "月亮",
+      "english": "the moon",
+      "malay": "bulan",
+      "synset": "09358226-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3fe68259086f5383fab158ff55790228ab1b41f03a0a174f3f255df7ce42317e",
+      "chinese": "月球",
+      "english": "the moon",
+      "malay": "bulan",
+      "synset": "09358226-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "afff92708cbbd466184bfbdd110b9b8527a91728d8664beb3c64f7c18b77e85d",
+      "chinese": "有人",
+      "english": "someone",
+      "malay": "seseorang",
+      "synset": "00007846-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/seseorang#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2cc43cb9d09bc200e4a745632f3c85eed86901b18d9efaf9c296d901a343d838",
+      "chinese": "有名",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c5d8f08cce09d6b9460ecc4f4a1a0b711e6c6eb17e83e946308ff9c562d4b5eb",
+      "chinese": "有意思",
+      "english": "interesting",
+      "malay": "menarik",
+      "synset": "01343918-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/menarik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "18a86f40bd545b33c296c7a7138481879c63e98670394a314bb8b2e20c593e1e",
+      "chinese": "服",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "26f2d481d770905a444978bd5e29c22e8ee324b2f6be0d788affa44869f4183a",
+      "chinese": "朝代",
+      "english": "dynasty",
+      "malay": "dinasti",
+      "synset": "07971582-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/dinasti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "019c1a85f576c9fddf0b5984ba31f24011ee69af31c49501cd2894145e2e0eaa",
+      "chinese": "朝廷",
+      "english": "dynasty",
+      "malay": "dinasti",
+      "synset": "07971582-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/dinasti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7b597342938c637040e9a8719bee187741f605f666cce03fb9994a99b9c081b7",
+      "chinese": "木吉他",
+      "english": "acoustic guitar",
+      "malay": "gitar akustik",
+      "synset": "02676566-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/gitar%20akustik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3ec6eee0906a97649568efa71cb8e5e825e3c04239589fe45d1a22f1137de900",
+      "chinese": "未来",
+      "english": "future",
+      "malay": "masa depan",
+      "synset": "15121625-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/masa%20depan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7a36cb9550ce6dc12e7a84f00574aa4f65310ba825833341b54aa4c0ff893657",
+      "chinese": "枪械",
+      "english": "firearm",
+      "malay": "senjata api",
+      "synset": "03343853-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/senjata%20api#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5d6a6c49e2b7d080b04c1223099031b25c3f0710cab5cb959428f3bfb456ca1a",
+      "chinese": "椰子",
+      "english": "a coconut",
+      "malay": "kelapa",
+      "synset": "12587803-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7c0490dec0699014b67c2624155824244ba88b4c53c32c6d80fac8fd48429812",
+      "chinese": "檐廊",
+      "english": "veranda",
+      "malay": "Beranda",
+      "synset": "04527648-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/beranda#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "dbf7df06fa8b2594aeab3c881f30bfcb719046d66ba04419be88c858dc6ae054",
+      "chinese": "欃",
+      "english": "comet",
+      "malay": "Komet",
+      "synset": "09251407-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/komet#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "aa89762119222138a7dbe2c51887ce63b3645c1755a35a6f428649b49dbf20d3",
+      "chinese": "欬",
+      "english": "to cough",
+      "malay": "batuk",
+      "synset": "00005815-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/batuk#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2a922041d3a8ce843e744307e4de1e63f7a0826d44ba849887b8a70f359b9154",
+      "chinese": "款伏",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2b3eb19605563e9fec522adecab1f27be35432f00c3af1687f75658bf7a3f6c1",
+      "chinese": "款服",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e142aaaf032ea5aba92ab2aa10372cf94ec45b9581e433d8577293a73046ec25",
+      "chinese": "正字法",
+      "english": "orthography",
+      "malay": "ortografi",
+      "synset": "06351202-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ortografi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "964d012c54a0e654c25858cb6b43b7e67ad4e64da40a76743e6a7877a07b08bf",
+      "chinese": "毒",
+      "english": "malicious",
+      "malay": "jahat",
+      "synset": "00224731-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jahat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7ca961157e6fa2dcd07ba2c408ba7fb6afa4f7ed48d465e040f04d297e9a92e6",
+      "chinese": "毛贼",
+      "english": "thief",
+      "malay": "pencuri",
+      "synset": "10707804-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pencuri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "95306b31bbe9c4a7c4c7ad858b360432d267f7171e310e2a37610a7d23ad3f5d",
+      "chinese": "气候变化",
+      "english": "climate change",
+      "malay": "Perubahan iklim",
+      "synset": "13449450-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perubahan%20iklim#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7dd9bcc188b593978e2092986c99cdd82a9ef034d22841c370bd88e21aa22a14",
+      "chinese": "水凼",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "86c56652cfc613e5d356e0ba4eb2a94e4c6bbfc540a1f4a4a409e1358b01ebc6",
+      "chinese": "水文",
+      "english": "hydrology",
+      "malay": "hidrologi",
+      "synset": "06119729-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hidrologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3b2d0be655652684460b110afe7b0ef0d454309bbcc1a34ce4f3f4f677403637",
+      "chinese": "水族箱",
+      "english": "aquarium",
+      "malay": "akuarium",
+      "synset": "02732072-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/akuarium#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "aa1c4a68ac132c8160675706f555164bffa1097af6afb6152e2dc18e90dfdea4",
+      "chinese": "池",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "217441c37b4016408d74facaadd1225fb20718c833e6e270f792222707e2f505",
+      "chinese": "池塘",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a4ed1ea8e7ef41430844f371e55b61d99a4aa39bad89a25443f57d9ddd74aa90",
+      "chinese": "池子",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "55b884b050511bf728daff61cac838493601edaffb0688cc7913847b5c3a8c2f",
+      "chinese": "池沼",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6ab772b8ea4e7c5a738fac91332f44faa867e22aae3543b7ef718105f2b501fa",
+      "chinese": "没脸",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d9caae553f7b1d632fa5c73ac025447a58ce5e93d369699c722da2ad191f39e1",
+      "chinese": "沼",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "61d26f4d31f36f178c91a64a852aa7664b081cc8231591d47c967def3912f4c5",
+      "chinese": "法",
+      "english": "method",
+      "malay": "Kaedah",
+      "synset": "05660268-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kaedah#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "3eb45d039647697e574206c908a8774711ea55ebdcdc8bf798763e64e5b7ffdd",
+      "chinese": "法西斯主义",
+      "english": "fascism",
+      "malay": "Fasisme",
+      "synset": "06217944-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/fasisme#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "bdb6e4482efb50078d852dd3e30b91ba76bd8e159370fa9165df2ba0858e4861",
+      "chinese": "泡子",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "73365e6a35e33a4d99aff65c310df110a3520193934e395ca3bce19dac448cb2",
+      "chinese": "泽",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fd07ec0432259648626abac263ae6c99a6a5fd0c3f04f47dc9a370a56cb36f23",
+      "chinese": "活度",
+      "english": "activity",
+      "malay": "Aktiviti",
+      "synset": "14531203-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/aktiviti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5c0ea53d12f17efd3547ad8eb0d1c1aaa03ce8c004073d5b5b7058b110ce2682",
+      "chinese": "浑家",
+      "english": "wife",
+      "malay": "Isteri",
+      "synset": "10780632-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/isteri#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "2f1d099c62c67c34392c305bf24a2f078bd73bcc0fd657df03324ed77a8e0231",
+      "chinese": "海啸",
+      "english": "tsunami",
+      "malay": "tsunami",
+      "synset": "07349299-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tsunami#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "518deb80b44604d51d606bc481bc93b07bb282ce120fa7df248d803a838f6049",
+      "chinese": "海水",
+      "english": "seawater",
+      "malay": "air laut",
+      "synset": "15008847-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/air%20laut#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "8ac044b5a9ca318bcafb238d4a4e5cf8454185abf73f1a29846643da9acdf933",
+      "chinese": "涧壑",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "f7d61c28238825089f6ffdc8565e21aed42cac13110eea5c150079542f00ad32",
+      "chinese": "渔业",
+      "english": "fishery",
+      "malay": "Perikanan",
+      "synset": "03350880-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perikanan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "081a4e28de4d6761d5e49c2901c12abc2271dcb1d2c19e7264ed8250debb9d08",
+      "chinese": "溏",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fcdd651766ec75db6712707e444d6684b5ef3791277f84e0c5efdef113b2c0a4",
+      "chinese": "溪壑",
+      "english": "valley",
+      "malay": "lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9dc5f3cdab9751b1fb14f2f22934ca7e8dc4d18006baecd278fec68f97172607",
+      "chinese": "满月",
+      "english": "the full moon",
+      "malay": "Bulan purnama",
+      "synset": "15207556-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ff35bc66b31c9be335ae22e7c15504e82b23334da96aff435713a8b6395dc477",
+      "chinese": "潢",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "bd1de550b4b7d77ee2b07b38d1d7c0ee035d5b519ba543f9cb3dfcde66b6b9ec",
+      "chinese": "潭",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d4c7280c8e8332efbbb7288efa8639886093e13a080bda2c4ad557cf775ab632",
+      "chinese": "潮气",
+      "english": "humidity",
+      "malay": "kelembapan",
+      "synset": "14535643-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kelembapan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "7c5e8886b499e88b5f8ee6d0b101d7e7ebafa3f81e7f5d84053cee4ad391b505",
+      "chinese": "潴",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "551e6a2a4eac9508cda050e01d732db89545379e4eb20b5f2826c64bc050394b",
+      "chinese": "烜赫",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6d26222eb047744f5cbc965be6b47e59fe2da4d0de1c40948ec0306e6e210e86",
+      "chinese": "烟卷",
+      "english": "cigarette",
+      "malay": "Rokok",
+      "synset": "03030663-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/rokok#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "77ab4e0c1c9092d6398bcdb39f38996b4fb384219835578d8d9ac3cae3c045a7",
+      "chinese": "烟卷儿",
+      "english": "cigarette",
+      "malay": "Rokok",
+      "synset": "03030663-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/rokok#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d8c666348bd55413e3a1e36cdc3a48c155219fa62b24f1512ee757b976b9212c",
+      "chinese": "片刻",
+      "english": "a moment",
+      "malay": "sekejap",
+      "synset": "15246853-n",
+      "sourcePages": [],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "9292fa14aeb1330c23aaf31a2161afa75d3312cf4de834a616ad0a8c42646a76",
+      "chinese": "片子",
+      "english": "movie",
+      "malay": "filem",
+      "synset": "06613686-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/filem#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "b8d514bcfef8ad225cc74ac725e06961eb2cd7ae5bb586341021d74d5d764b94",
+      "chinese": "版本",
+      "english": "edition",
+      "malay": "edisi",
+      "synset": "05840650-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/edisi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "43bdf2dd0161bc41fe562d19e8190e9f14831fd5b604a607ac410afa60a72978",
+      "chinese": "牝",
+      "english": "valley",
+      "malay": "Lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "0e6327c527d64d990898deef4b7c46a4790fdd908de9cfb1c7150c37ea6f6296",
+      "chinese": "犀",
+      "english": "rhinoceros",
+      "malay": "Badak",
+      "synset": "02391994-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/badak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "533d6d5c45fa8c1a6b6f88c580a2bd4938c627decde31feb7cbd6bc4b2c652c1",
+      "chinese": "狠毒",
+      "english": "malicious",
+      "malay": "jahat",
+      "synset": "00224731-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jahat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "93dfd3bec01db1bca4a8d0b01fc72994f199f0f6556d7d14f515b534d980c797",
+      "chinese": "王室",
+      "english": "royal family",
+      "malay": "Keluarga Diraja",
+      "synset": "08153437-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/keluarga%20diraja#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "165556931ccf00f0008276c5b24e7fadc7c6d63dd57ab6cd45706e097417ef32",
+      "chinese": "王朝",
+      "english": "dynasty",
+      "malay": "dinasti",
+      "synset": "07971582-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/dinasti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "fe1fb16695e7995927fbb4b98560600414014b0c5027e0c9260b6d1ad8f42ed2",
+      "chinese": "王爷",
+      "english": "prince",
+      "malay": "putera",
+      "synset": "10472799-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/putera#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ea7dbe3bc93ddc73f4589efefce0e315efb08b01d3af410537b3cd952ce74016",
+      "chinese": "环",
+      "english": "ring",
+      "malay": "cincin",
+      "synset": "13875392-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/cincin#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a322c5f5c91b46c9c11ddc24c694ce2fb92faf8e810c43bfccffe3e7e5e7cc98",
+      "chinese": "珊瑚礁",
+      "english": "coral reef",
+      "malay": "terumbu karang",
+      "synset": "09256479-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terumbu%20karang#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "f08e928b68ffce3dabe032323faacc63e099cdfb253cacd38b832fc9fe5da63e",
+      "chinese": "珰",
+      "english": "earring",
+      "malay": "anting-anting",
+      "synset": "03262349-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/anting-anting#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "8b961379e45f341993b925f9265bfc8d0f035380805e10dfcda20b0dbd16ee94",
+      "chinese": "用命",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1a1311f02de0057da9dccb780fbf8751245406bc019479873552a594a2ebd193",
+      "chinese": "疑案",
+      "english": "a controversy",
+      "malay": "kontroversi",
+      "synset": "07183151-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kontroversi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3d10bdfe2c3a64df553ae719aa9064a014f0143fe43df481ae87e5a6a12241f4",
+      "chinese": "疑问",
+      "english": "question",
+      "malay": "Soalan",
+      "synset": "04757522-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/soalan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "8d3934b49df076378d9e61e66e1a0fe861d15f1894661b2694da23963bc0dd81",
+      "chinese": "病原",
+      "english": "pathogen",
+      "malay": "Patogen",
+      "synset": "01386007-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/patogen#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "65607733998439774e539fcffece6aa433f566219446af53de77c0b6bbed149f",
+      "chinese": "病原菌",
+      "english": "a pathogen",
+      "malay": "patogen",
+      "synset": "01386007-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/patogen#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "30073f387ac424de27c4b35ecb3ead4c00bde5fdb29571df289520be5cb3041b",
+      "chinese": "症候",
+      "english": "illness",
+      "malay": "Penyakit",
+      "synset": "14061805-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/penyakit#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c37dc5c2f1e3aa0985d661262ca2c87b071ad84cc8db26417ec3141ae1f4f411",
+      "chinese": "痨",
+      "english": "tuberculosis",
+      "malay": "Tuberkulosis",
+      "synset": "14143415-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tuberkulosis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "d3839790cf9118567c8d6ef6f8ad0e24fc6b739d39d8cfb57865829dee3ef90e",
+      "chinese": "百万富翁",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "34ac5ff7327e523c495645bb7492f0db7b8bc44a1cf2981956f642c682630427",
+      "chinese": "皇子",
+      "english": "prince",
+      "malay": "putera",
+      "synset": "10472799-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/putera#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5f4d2ad133a6a96f76e1dbfbc87caf18837a3c92891977c49a70683380937a68",
+      "chinese": "皇室",
+      "english": "royal family",
+      "malay": "Keluarga Diraja",
+      "synset": "08153437-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/keluarga%20diraja#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "42b4081b681d06cd2228ce0a94fc68ef6a1fea643d718d6f1a0c85bf64e5cc05",
+      "chinese": "皮疹",
+      "english": "a rash",
+      "malay": "ruam",
+      "synset": "14321953-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ruam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "72d21b20861ec4b5bdaf92874f76fc906fda6f8987996a4a17bfe379cb9aa528",
+      "chinese": "盆浴",
+      "english": "bathtub",
+      "malay": "tab mandi",
+      "synset": "02808440-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tab%20mandi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "541445c944b665e3cb35cb099ac03966a93f8a0b14179884daed9821d824d373",
+      "chinese": "相干",
+      "english": "relevant",
+      "malay": "relevan",
+      "synset": "01975138-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/relevan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "85a6c290d7d6db5b2fa5b2a3c6b5164a957d186670f2311e4b0db1d9a57dc751",
+      "chinese": "眷眷之心",
+      "english": "nostalgia",
+      "malay": "nostalgia",
+      "synset": "07487375-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/nostalgia#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2457b709f22dec32311f45e730ef0ef233cc58bbc6db1744d45de16b6548076e",
+      "chinese": "着边",
+      "english": "relevant",
+      "malay": "relevan",
+      "synset": "01975138-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/relevan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9000cc87e661c6d9d71d4f0c5084151bbdfbafc1a0cc731205ec12322086414e",
+      "chinese": "睡房",
+      "english": "bedroom",
+      "malay": "Bilik tidur",
+      "synset": "02821627-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bilik%20tidur#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "f1cbd456b789cf4392b24b8df13ddce557f0c7bd162d5bed6cc01e9e3acf16d1",
+      "chinese": "矿水",
+      "english": "mineral water",
+      "malay": "air mineral",
+      "synset": "07936745-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/air%20mineral#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4c1654fb05bf4df3e5b3f17b726e15e8cf95828b52db4ba23f9b0f8004ead16e",
+      "chinese": "矿泉水",
+      "english": "mineral water",
+      "malay": "air mineral",
+      "synset": "07936745-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/air%20mineral#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e8e59297b8c0f72835e7c7511604cf999b08afab23963b6e728ec978d20913d8",
+      "chinese": "社会",
+      "english": "society",
+      "malay": "masyarakat",
+      "synset": "07966140-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/masyarakat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5a902339c6301a3ccf2bf69aefb9d337363eb118a7704a5c51a4afbc70c9977d",
+      "chinese": "积极性",
+      "english": "activity",
+      "malay": "Aktiviti",
+      "synset": "04635104-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/aktiviti#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cee0aa45a476ef4c9f49816122ef0eadd2acc3e846dd202f86a1d774a47ea675",
+      "chinese": "窃贼",
+      "english": "thief",
+      "malay": "pencuri",
+      "synset": "10707804-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pencuri#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9402816acf8f4115bae664b7fa528d416c0102131214eb3f2b09c7411d3f3c02",
+      "chinese": "窘迫",
+      "english": "embarrassed",
+      "malay": "malu",
+      "synset": "00531628-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "98ab17f2d1da7b39040ef952f01860cdc33ee59f3cbb2910712d872c5c4dac1c",
+      "chinese": "等式",
+      "english": "an equation",
+      "malay": "persamaan",
+      "synset": "06669864-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/persamaan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5b610096877c614a104249853b90868e64bc713cd8066ea105f304354c9579a6",
+      "chinese": "精神学",
+      "english": "psychology",
+      "malay": "Psikologi",
+      "synset": "06136258-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/psikologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "66b28e3c9fe0f74bded105c0f05f7224313e063c4a377a405af57337d06e58dd",
+      "chinese": "素数",
+      "english": "prime number",
+      "malay": "nombor perdana",
+      "synset": "13594302-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/nombor%20perdana#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "770435ee79f28422808741130b2fb403a5848be12aea827a6a4d1187c0818b69",
+      "chinese": "素食者",
+      "english": "vegetarian",
+      "malay": "vegetarian",
+      "synset": "10747119-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/vegetarian#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cf2444144f888e1fa22e6406a660cffa4e924169440c7fc3ff2bc541a985d8d1",
+      "chinese": "红旗",
+      "english": "red flag",
+      "malay": "bendera merah",
+      "synset": "00425615-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bendera%20merah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "58a2e6626e65e1bca369b6fba7fc91f095428a9a6225275240996df46f47cbb5",
+      "chinese": "约",
+      "english": "treaty",
+      "malay": "Perjanjian",
+      "synset": "06773434-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perjanjian#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "bea222216be6e4a12651eee3b47a263d3be666c4f635fb2a23b87868e31b0854",
+      "chinese": "纽带",
+      "english": "link",
+      "malay": "pautan",
+      "synset": "13870805-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pautan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4fb046369ab0c35bddd5425029ffa89eca160e0b7ce81896919b19a8e8988a66",
+      "chinese": "终点",
+      "english": "the end",
+      "malay": "akhir",
+      "synset": "05980875-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0ac264ae30ce50fba098289309ad7c99fd6f6688d9d6fd8fbbb38830b2727497",
+      "chinese": "网站",
+      "english": "website",
+      "malay": "laman web",
+      "synset": "06359193-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/laman%20web#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "4ba06f11ae80cb65700738d1b99eaa9166b22e37900783358e413bc31bf21b53",
+      "chinese": "羚",
+      "english": "antelope",
+      "malay": "antelop",
+      "synset": "02419796-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/antelop#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9120f0deb8493d505b857ad165c044e5aa9801da4b558a4e9177749cbd04f765",
+      "chinese": "羞",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3c6b2142053ef2764c0b589bca90fdf357e4585fbe467cab7be38370f434e5a7",
+      "chinese": "羞惭",
+      "english": "ashamed",
+      "malay": "malu",
+      "synset": "00153898-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/malu#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6212b9a290974f8b4f48ecaad2f635075ee521ad83ca5ec864ac3d6bd9b5e052",
+      "chinese": "肺痨",
+      "english": "tuberculosis",
+      "malay": "Tuberkulosis",
+      "synset": "14143415-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tuberkulosis#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "079e4462d31972604fdadb97cd3ea657f3613ce3640107ee69784948b69381bc",
+      "chinese": "肿",
+      "english": "swollen",
+      "malay": "bengkak",
+      "synset": "01891773-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bengkak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2ebe2803fa7eccb8163e0de788c7e759d545a23bfc7aa0b40fa030c8563dd882",
+      "chinese": "胀大",
+      "english": "swollen",
+      "malay": "bengkak",
+      "synset": "01891773-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bengkak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1d10e8c1f5dee03eb43360ac5a017462d370c324fb7979114ebc0969481d322f",
+      "chinese": "背面",
+      "english": "the back",
+      "malay": "belakang",
+      "synset": "04059701-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a504e94a2937794b602b98afca8b42e6e2f175bfb4ed6ec343c1edbcc0a65016",
+      "chinese": "胰",
+      "english": "pancreas",
+      "malay": "Pankreas",
+      "synset": "05387167-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pankreas#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "af8111af08dd839f9b3907b42d235e4e8567ddcc2cb97f62673d24ed881fb648",
+      "chinese": "胰脏",
+      "english": "pancreas",
+      "malay": "Pankreas",
+      "synset": "05387167-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pankreas#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "87e42d1f16ec6a7ebb786557a717176803c1117ccf9eb7dc80926f28efd3f812",
+      "chinese": "胰腺",
+      "english": "pancreas",
+      "malay": "Pankreas",
+      "synset": "05387167-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pankreas#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0ea423bc61f3f5f6b882720ad7010ae17aa256cb80da94a569db223df5b2c3a2",
+      "chinese": "脊柱侧凸",
+      "english": "scoliosis",
+      "malay": "Skoliosis",
+      "synset": "14505364-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/skoliosis#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "10a7eae6ff9126b0d6d1cd98abbf567ad9fefdc85998ffe2c599eefc916dc6d5",
+      "chinese": "脑海",
+      "english": "the brain",
+      "malay": "otak",
+      "synset": "05611302-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "162abb9e27bf099c3fb41b95046ffc1c1850c8d5474c661df4ec8f6960f07e98",
+      "chinese": "脑瓜",
+      "english": "skull",
+      "malay": "tengkorak",
+      "synset": "05540121-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tengkorak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6ad8ec702f0d75a314b1695aa8f5834726b3c8a737f1fe01f545267b100c3c29",
+      "chinese": "腕级",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cc5f2ec81a564b32f9ed0642f06f29cb2b29602fc6f237089fbd1715d127af7f",
+      "chinese": "膨",
+      "english": "swollen",
+      "malay": "bengkak",
+      "synset": "01891773-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bengkak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "70e238086a24f7852e74dac36f109a017a8c16b30033dc3025dd974c03043cfa",
+      "chinese": "膨胀",
+      "english": "to swell",
+      "malay": "membengkak",
+      "synset": "00256507-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/membengkak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9fc6e2bf0eb17dbdcf5e829a8ff1b0a770db217174eb8cf9f132ed73040660a9",
+      "chinese": "膵",
+      "english": "pancreas",
+      "malay": "Pankreas",
+      "synset": "05387167-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pankreas#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1ada2cb8581dac769e9c792bf158a08889593a5a4ee247426646715242f32450",
+      "chinese": "臌",
+      "english": "swollen",
+      "malay": "bengkak",
+      "synset": "01891773-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/bengkak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e6119051bc0c1f2b75199e4f9c6034e61d58ca2af0fd747251ce637d126f683b",
+      "chinese": "自闭症",
+      "english": "autism",
+      "malay": "Autisme",
+      "synset": "05896998-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/autisme#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "9d29225d3f9684d61cfa73b3f6cea27d45276721b879869a79c63e09d7bb22ae",
+      "chinese": "致癌物",
+      "english": "carcinogen",
+      "malay": "Karsinogen",
+      "synset": "14793812-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/karsinogen#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "839ecb76eef3fb6df1863ec01a36ca9d122a88182a9b80f5bf6a3a5762443115",
+      "chinese": "舢",
+      "english": "sampan",
+      "malay": "sampan",
+      "synset": "04133114-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sampan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e291ee467fe025dba4572882506dad9cae9b50b286fa677ba99ce2694d13c3d3",
+      "chinese": "舢板",
+      "english": "sampan",
+      "malay": "sampan",
+      "synset": "04133114-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sampan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "28630c46040eabc6cc1f777d8b4cf337d775de1f28b2114955ade1aa61b65765",
+      "chinese": "舨",
+      "english": "sampan",
+      "malay": "sampan",
+      "synset": "04133114-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sampan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "3f0af4d1aeddfbae0fb30fa3810099883c8884300ac9281f1f1faf153b2efe7a",
+      "chinese": "航空公司",
+      "english": "airline",
+      "malay": "syarikat penerbangan",
+      "synset": "02690081-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/syarikat%20penerbangan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "762dbc328941a6371e35f824f95957aa84bd2adb36a7fa0aed84dea9f859615b",
+      "chinese": "草食动物",
+      "english": "herbivore",
+      "malay": "herbivor",
+      "synset": "01324610-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/herbivor#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9aa6c186bc8efcdd5bbfba9d57a0a8c0ae840388d67cfe3ba4e1239ac137b387",
+      "chinese": "荡",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "6f12afad4ae6884531f0491ade1748dd1889d23eb5edde53be99687971fe64bf",
+      "chinese": "药剂士",
+      "english": "pharmacist",
+      "malay": "ahli farmasi",
+      "synset": "10421470-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ahli%20farmasi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "fa1151fdbd6053fb56fb8880dfc7cc10f79eab0de755aed0685306c5023345ea",
+      "chinese": "药师",
+      "english": "pharmacist",
+      "malay": "ahli farmasi",
+      "synset": "10421470-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/ahli%20farmasi#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "04f48860dfd560acf778a518dd6801f8b8fb6c70ad47310482cdcb721c308b06",
+      "chinese": "药物学",
+      "english": "pharmacology",
+      "malay": "Farmakologi",
+      "synset": "06054892-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/farmakologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "1bd3572c537b55b69b848eb47d6959b9e9bd2b27d2351df52d749ad041d6cea4",
+      "chinese": "药理",
+      "english": "pharmacology",
+      "malay": "Farmakologi",
+      "synset": "06054892-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/farmakologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "408b35284259088208d8eeda2361ec454f3c8223f46a7b3130765260cdce66f9",
+      "chinese": "药理学",
+      "english": "pharmacology",
+      "malay": "Farmakologi",
+      "synset": "06054892-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/farmakologi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c5bb378dc315730e5cfd5fd475a7b50294cdce79aa31bef3043280bc0ec3554b",
+      "chinese": "蓝鲸",
+      "english": "blue whale",
+      "malay": "paus biru",
+      "synset": "02064816-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/paus%20biru#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "faa23134fc54ef5feda4185646c3634dfb3eb81ebae7eb66cc5f2e57b6829f50",
+      "chinese": "薄荷脑",
+      "english": "menthol",
+      "malay": "mentol",
+      "synset": "03746861-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mentol#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "e825825f6cc12a945449892bc8d3bc7e5c5f2d15b23d777c940aa257160a8651",
+      "chinese": "虑病症",
+      "english": "hypochondria",
+      "malay": "hipokondria",
+      "synset": "14375005-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hipokondria#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3b7da63c3f64b3106b1d78c0f6fb20d5cea042d31dc06d771ff2edc054f8d3dc",
+      "chinese": "螾",
+      "english": "the earthworm",
+      "malay": "cacing tanah",
+      "synset": "01935395-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/cacing%20tanah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "2b520ea024471b00069cb870499da5027bfbc3cdf6305b045db9adfead46e10f",
+      "chinese": "蟺",
+      "english": "earthworm",
+      "malay": "cacing tanah",
+      "synset": "01935395-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/cacing%20tanah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "8c5d4b0db6484b04563a92d40dfa195d4015ff9f25888eb796a70a8b8fa38ece",
+      "chinese": "血管",
+      "english": "vein",
+      "malay": "vena",
+      "synset": "05418717-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ac389ab0346f81e663a55eea9e0b73f08acfeeb441f65b19e86f192d324f7e8b",
+      "chinese": "衉",
+      "english": "to vomit",
+      "malay": "muntah",
+      "synset": "00076400-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/muntah#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "05400e18c7f5828c40cc57fc3335692149dec6d4c1601f6ab48729469c2225a0",
+      "chinese": "西",
+      "english": "the West",
+      "malay": "Barat",
+      "synset": "13834399-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7f5460225ce03376fc8d8d027b890b526ea6049e39e9a9bffe00c4fbea62a110",
+      "chinese": "见习员",
+      "english": "trainee",
+      "malay": "Pelatih",
+      "synset": "10722385-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pelatih#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "cb441f56cb9eccc84a67e9f59f7007fce8265167bb4245ae539dd26633a24bb7",
+      "chinese": "计算机科学",
+      "english": "computer science",
+      "malay": "Sains Komputer",
+      "synset": "06128570-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/sains%20komputer#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "558c7075ebb58bc395bb47c511d18c53ca11b95a6b3c741722ff0ce9f71d3388",
+      "chinese": "讣",
+      "english": "obituary",
+      "malay": "obituari",
+      "synset": "06748133-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/obituari#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "05fff01f84318bcb92922bfc6377e8231ae46756ad8d423ec0e610fe921c4c9b",
+      "chinese": "讣告",
+      "english": "obituary",
+      "malay": "obituari",
+      "synset": "06748133-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/obituari#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5dc656f0f99a5e2c4350e692208d6e26e7e4a58386bfccbf66ed3978ad8157b1",
+      "chinese": "讣闻",
+      "english": "obituary",
+      "malay": "obituari",
+      "synset": "06748133-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/obituari#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cefd12f3405a04ed78e2fec4e5fe246812eb0879d55780d8a8fa1bd0784dcf11",
+      "chinese": "认识",
+      "english": "to know",
+      "malay": "mengetahui",
+      "synset": "00594337-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mengetahui#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5d2f22f0d326862d1e64f35176b1a8568e9eecd78814493a38e432b7a49dd3dc",
+      "chinese": "议定书",
+      "english": "treaty",
+      "malay": "Perjanjian",
+      "synset": "06773434-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/perjanjian#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cec40b917ef444f37d063bf4dac3c089c964eaa547f8e8418a1c9b6b85d51eb4",
+      "chinese": "论争",
+      "english": "controversy",
+      "malay": "kontroversi",
+      "synset": "07183151-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kontroversi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4435114703dc86bb032f544ca334b18b7435905031030e7db0de49a00a0a3764",
+      "chinese": "词典学",
+      "english": "lexicography",
+      "malay": "leksikografi",
+      "synset": "00931721-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/leksikografi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e5d3635cb041ce0b600726fd4de654794fb3a9a7af05c91f25feaf12b3eacdd6",
+      "chinese": "词素",
+      "english": "morpheme",
+      "malay": "morfem",
+      "synset": "06306233-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/morfem#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "80374a6cdc7583cba66314969a50292d004ed09bd7ad822b5b1dd5a6cc55c084",
+      "chinese": "译名",
+      "english": "transliteration",
+      "malay": "transliterasi",
+      "synset": "06349828-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/transliterasi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e1e61422be0dcd2db8bb261aef4e025662393a1ea113f7bc91907cc0958245da",
+      "chinese": "译音",
+      "english": "transliteration",
+      "malay": "transliterasi",
+      "synset": "06349828-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/transliterasi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "616ad730058ada3c511263abc9df2c5e508b9b96bc380e4759ef7b65e040571a",
+      "chinese": "语素",
+      "english": "morpheme",
+      "malay": "morfem",
+      "synset": "06306233-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/morfem#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ef51e3492b7bbe58b28d0f17a3e2d98173417d37b52a6a2e4e87826beb605db8",
+      "chinese": "谷",
+      "english": "valley",
+      "malay": "Lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "bc3732968b820e900d370b1ca7eaf50eddc60722d216a5b2abd9dfcdff14c16d",
+      "chinese": "谷地",
+      "english": "valley",
+      "malay": "Lembah",
+      "synset": "09468604-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/lembah#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "40ec4fdf54fe23970ffb0354e4ea7c8da10d14a86cd7f2b4a4bf3edfa9dd65c1",
+      "chinese": "败兴",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "03a0439e050b5a3c4082195aa67c21834928b5eb29f65265133b4d2cc686a949",
+      "chinese": "账册",
+      "english": "an account book",
+      "malay": "Buku Akaun",
+      "synset": "13404248-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9d5e9e6a8f911a27db88ff03ada48cd4fa377c7288bc3a63deed2265d69fe93a",
+      "chinese": "质数",
+      "english": "prime number",
+      "malay": "nombor perdana",
+      "synset": "13594302-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/nombor%20perdana#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0c04749389705eca5282cb22dd355a8e8e1af3358c3f95fa0dcfcbc09bbfbb98",
+      "chinese": "贴题",
+      "english": "relevant",
+      "malay": "relevan",
+      "synset": "01975138-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/relevan#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "e2ec6d1fae921403722ff89b679423165912d60ccf27ed91a2b813e35beb7e8e",
+      "chinese": "贵",
+      "english": "expensive",
+      "malay": "mahal",
+      "synset": "00933154-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mahal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "bbf515a7d6f1bac9cb481ab49621cba7ba8488910e7dd5fea76694dd6bf6d536",
+      "chinese": "资讯科技",
+      "english": "information technology",
+      "malay": "Teknologi Maklumat",
+      "synset": "06134510-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/teknologi%20maklumat#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "2a66f81d78a7ba1bbc48bc65b2e0980ca7167e0ea78297dbc65456dcefc0c9c2",
+      "chinese": "走",
+      "english": "to go away",
+      "malay": "pergi",
+      "synset": "02009433-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pergi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d5dc4eb29cb389ae1b2d975cd216e71468004f13dab32b75b83b5628aa1ee26c",
+      "chinese": "趣",
+      "english": "interesting",
+      "malay": "menarik",
+      "synset": "01343918-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/menarik#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "cf52e89dcb85a5b6e684e1fb83f79c60d1fb54af3e2907bb37c0a08ff7f82ec6",
+      "chinese": "身体",
+      "english": "the body",
+      "malay": "tubuh",
+      "synset": "05216365-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4e7b42f64c1b4d441807a3a1f086502885a4520e69f5db72e33e5b368fd9d520",
+      "chinese": "身子",
+      "english": "pregnancy",
+      "malay": "Kehamilan",
+      "synset": "14046202-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kehamilan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "c51efab00fe8b642626400e4d4f00ccb9bbdcaa901a704fb4b0937f437cb49c8",
+      "chinese": "身孕",
+      "english": "pregnancy",
+      "malay": "Kehamilan",
+      "synset": "14046202-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kehamilan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "f663aa7f329421d0764bc3d99e3e6e994d87d0c36372ce836f1f34c4e02f44d5",
+      "chinese": "轩然大波",
+      "english": "controversy",
+      "malay": "kontroversi",
+      "synset": "07183151-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kontroversi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7de017c345ed911d4f833f0606582be5a75c5d961b7d1ca70126c0c5158092a5",
+      "chinese": "轮椅",
+      "english": "wheelchair",
+      "malay": "Kerusi roda",
+      "synset": "04576002-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kerusi%20roda#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "78f82ada92852ab497823cdb1e19c546fa1266b52c78774239871a1767bc5616",
+      "chinese": "载",
+      "english": "also",
+      "malay": "juga",
+      "synset": "00047534-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/juga#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "ce8615495722b7953746023b56a14d410038c1126b980649a0af6b6a88c5c39b",
+      "chinese": "辞书学",
+      "english": "lexicography",
+      "malay": "leksikografi",
+      "synset": "00931721-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/leksikografi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "25ce795bc057061cd79d0fbf87fa3002ba46ca051524fda0eadd9223190fd6d7",
+      "chinese": "还",
+      "english": "also",
+      "malay": "juga",
+      "synset": "00047534-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/juga#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "658553fa198f955ebb496dc4d14c3acd2661c02dca4f0bb1d2c91d48ff3f9128",
+      "chinese": "进口商",
+      "english": "importer",
+      "malay": "Pengimport",
+      "synset": "10201366-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pengimport#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "795fb3edbb9d357a73ccfa90c1e4b6bdeec498e10377d23ebfa8badc35dda78e",
+      "chinese": "遵",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9435c195287da9c8bcb5b2caf33f4c0201c23ca6d368ab685c12724d07dc7a24",
+      "chinese": "遵行",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "7b513ee06131579a0490cf14b259fe84c758c4963ad103a04f62ef2b228dc959",
+      "chinese": "酒家",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "027641e9b0bf85e6d761664f5edd1f5d1cfbe01832b56b92a2e6d7437260fa9d",
+      "chinese": "酒楼",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "25d3e607bb70a627cd1a1305124618daec87312ad048b86f710a9a513e946d4f",
+      "chinese": "酥酪",
+      "english": "yogurt",
+      "malay": "yogurt",
+      "synset": "07849336-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/yogurt#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "4d5bf21b7e61ee2953b21a2a69e3aff4c146fbf15b15b3ea1b51718682d442e4",
+      "chinese": "酸乳",
+      "english": "yogurt",
+      "malay": "yogurt",
+      "synset": "07849336-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/yogurt#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "febbd63ea3ce45a894534d45147c7054d6dce0c2b4c1fc72df4a143f73bf3a98",
+      "chinese": "酸乳酪",
+      "english": "yogurt",
+      "malay": "yogurt",
+      "synset": "07849336-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/yogurt#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "676902f63645955b813d848e6706ee9eb45e62bd54fd4f5b5ad14a0acbdfefc3",
+      "chinese": "铂金",
+      "english": "platinum",
+      "malay": "platinum",
+      "synset": "14649543-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/platinum#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "43dd6622dde8683ed46964c5f1f4aa7f5874ead7885399c19174bc230a934647",
+      "chinese": "铭言",
+      "english": "slogan",
+      "malay": "Slogan",
+      "synset": "07152259-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/slogan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "d1923cd8f9d395f9f143e43a0c4ff46353e5d2c5633baf01996f04b2baa046e8",
+      "chinese": "锽",
+      "english": "trident",
+      "malay": "trisula",
+      "synset": "04482975-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/trisula#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "d3b4d3bf475925215555af31666de0db933fb9e1ff6af269cbf5476e8ecf45ce",
+      "chinese": "长大",
+      "english": "to grow up",
+      "malay": "membesar",
+      "synset": "02540347-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/membesar#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "3d439700ad8d26b6bb94a0f4cc891aa85324348dee3dd4ff7c5ece8339131d35",
+      "chinese": "闻名",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "a68725c6ed65f0f1b6a179f44d74f85379c9255f2fbb4be05969400847894941",
+      "chinese": "阔佬",
+      "english": "millionaire",
+      "malay": "jutawan",
+      "synset": "10529555-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jutawan#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "9af9f46b9d7a59cd9d9f18ed1c80507f18a8b094d90017c9a36ffd0f2d16587e",
+      "chinese": "阴鸷",
+      "english": "malicious",
+      "malay": "jahat",
+      "synset": "00224731-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/jahat#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "0241fcb0cfe7d9c0bfa27a2ca75e7e3a03169ea2ef5cb934b95e01511c32a758",
+      "chinese": "陂",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9a20b1ef90166f365517b1189e089e6a1d1062fab5a83b504cb82997dd8b216e",
+      "chinese": "陂塘",
+      "english": "pond",
+      "malay": "kolam",
+      "synset": "09397391-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kolam#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "eeeb74c284ab19b0e51cacb0cf9a7640e196d36eae60cd9f5a4832b9bc97b959",
+      "chinese": "险些",
+      "english": "almost",
+      "malay": "hampir",
+      "synset": "00073033-r",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/hampir#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "95a52255f0d63ef3f4b86a0751fcc27c54aee16457a4cd854118616969279e08",
+      "chinese": "静脉",
+      "english": "vein",
+      "malay": "vena",
+      "synset": "05418717-n",
+      "sourcePages": [],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "78208e3651d0539447350695b6131585148da3da8c65c391215fa24424a763e4",
+      "chinese": "音乐厅",
+      "english": "auditorium",
+      "malay": "Auditorium",
+      "synset": "02758134-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/auditorium#Malay"
+      ],
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+    },
+    {
+      "key": "5613ba51227c0457e05b305641fe968ab9d991ab93a3389f73a5300130f22388",
+      "chinese": "顺",
+      "english": "to obey",
+      "malay": "mematuhi",
+      "synset": "02542795-v",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mematuhi#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "745194ad18ade9c997c6dc792bbbf0121ff980d4259f6d51deb0923d64f62257",
+      "chinese": "颅",
+      "english": "skull",
+      "malay": "tengkorak",
+      "synset": "05540121-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/tengkorak#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "ab9e1fd89f46fec0fa67e7fea3d101e23c2d9a3a3c825ff982c9019c509e2e02",
+      "chinese": "颓然",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "88a41461ded32ce1e9e4f7c3c9a3a77b654ae476b3d8c82019285956c58056d0",
+      "chinese": "食肆",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "17b3135d550d7a3fdb688269399fadf598922eee72af990e02fb4a2f86a34df0",
+      "chinese": "食草动物",
+      "english": "herbivore",
+      "malay": "herbivor",
+      "synset": "01324610-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/herbivor#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "9169724b4e61465ad952e8420d56eb612a57f1beaecda8897427d34e7ef8cf96",
+      "chinese": "餐饮店",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "5f70c4acf21e600d36c327badd2ad16b46c02f337d04c5b882fe3768ee2a9647",
+      "chinese": "馆子",
+      "english": "restaurant",
+      "malay": "restoran",
+      "synset": "04081281-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/restoran#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "efe41e42bde1b6ce9af78bcc1ae2fdea046511ef9ba6f5325e5e4337d61f84cd",
+      "chinese": "马克思主义",
+      "english": "Marxism",
+      "malay": "Marxisme",
+      "synset": "06215618-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/Marxisme#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "c87811a3d2ff69874c51cf267ad63ee839c53e3c4c0d1e599e8910a30a50c9f9",
+      "chinese": "驰名",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "29b515184eae92dba3f170fbdf703bb7c258214b1aa9a4c37ecb30591c441912",
+      "chinese": "驰誉",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "710eafdc6ba2f95411cf814ec98f76a48168add975775f532bca35cbc19459df",
+      "chinese": "高昂",
+      "english": "expensive",
+      "malay": "mahal",
+      "synset": "00933154-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/mahal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "579e05ec80600d815239563defe829b395c9ebbfc55a6a6f887169bdf2b1d56a",
+      "chinese": "黄铁矿",
+      "english": "pyrite",
+      "malay": "pirit",
+      "synset": "14692682-n",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/pirit#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "172064ba42962f45ab7c8ec711eb307fa5160cbb3b2dec8711851d867dd9983a",
+      "chinese": "鼎鼎大名",
+      "english": "famous",
+      "malay": "terkenal",
+      "synset": "01375831-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/terkenal#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    },
+    {
+      "key": "f315ea67b66387ee639ab3597df36b2806afb7de84784138da79e129af042223",
+      "chinese": "𡒄",
+      "english": "disappointed",
+      "malay": "kecewa",
+      "synset": "02333976-a",
+      "sourcePages": [
+        "https://en.wiktionary.org/wiki/kecewa#Malay"
+      ],
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d"
+    }
+  ]
+}

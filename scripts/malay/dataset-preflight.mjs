@@ -13,7 +13,10 @@ for (const file of files) {
   assert(!/(?:^|\/)\.env(?!\.example$)/.test(file), `Environment file: ${file}`);
   assert(!/200k-english-malay|cambridge-english-malaysian|Kamus_Dewan|dbp\.zip/.test(file), `Restricted dataset: ${file}`);
   const bytes = readFileSync(file);
-  assert(bytes.length < 8 * 1024 * 1024, `Unexpected large addition: ${file}`);
+  const corpusAsset = ['scripts/data/malay-translations-v1.json', 'src/data/malay-runtime.json'].includes(file);
+  // Only the two validated canonical Malay assets may exceed 8 MiB. Their
+  // bounded JSON size remains below GitHub and the existing hosting limits.
+  assert(bytes.length < (corpusAsset ? 32 : 8) * 1024 * 1024, `Unexpected large addition: ${file}`);
   const text = bytes.toString('utf8');
   assert(!/BEGIN [A-Z ]*PRIVATE KEY|gh[pousr]_[a-zA-Z0-9]{20}|github_pat_[a-zA-Z0-9_]{20}|AKIA[0-9A-Z]{16}/.test(text), `Potential credential: ${file}`);
 }

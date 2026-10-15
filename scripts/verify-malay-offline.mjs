@@ -45,8 +45,17 @@ try {
   await expect(name).toBeVisible(); await name.click();
   await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText(annotation.malay);
   await expect(page.getByText('Machine-translated English definition · awaiting language review', { exact: true })).toBeVisible();
+  const recoveredReference = JSON.parse(readFileSync('src/data/malay-runtime.json')).records.find(r => r.entryId.split('|')[0] === 'B超' && r.translationKind === 'definition-translation');
+  await page.goto('http://127.0.0.1:4173/#search=' + encodeURIComponent('B超'));
+  const referenceCard = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: 'B超', exact: true }) }).first();
+  await expect(referenceCard).toBeVisible(); await referenceCard.click();
+  if (recoveredReference.senseId !== 'sense-0') await page.getByRole('group', { name: 'Word meaning' }).getByRole('button', { name: `${Number(recoveredReference.senseId.slice(6)) + 1}. ${recoveredReference.english}`, exact: true }).click();
+  await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText(recoveredReference.malay);
+  await expect(page.getByText('Machine-translated English definition · awaiting language review', { exact: true })).toBeVisible();
+  await page.goto('http://127.0.0.1:4173/#search=Internet');
+  await expect(page.getByRole('heading', { name: '互联网', exact: true })).toBeVisible();
   expect(errors).toEqual([]);
-  const report = { productionOfflinePass: true, firstLookupMs, freshHomeMalayFetches: 0, freshHomeDictionaryFetches: 0, savedSenseRetained: true, phraseAndSynonymOffline: true, newModelMeaningsOffline: true, definitionLabelsOffline: true, pageErrors: errors };
+  const report = { productionOfflinePass: true, firstLookupMs, freshHomeMalayFetches: 0, freshHomeDictionaryFetches: 0, savedSenseRetained: true, phraseAndSynonymOffline: true, newModelMeaningsOffline: true, definitionLabelsOffline: true, recoveredReferencesOffline: true, attestedLoanwordsOffline: true, pageErrors: errors };
   writeFileSync('.tmp/malay-offline.json', JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 } finally { await context.close(); await browser.close(); }

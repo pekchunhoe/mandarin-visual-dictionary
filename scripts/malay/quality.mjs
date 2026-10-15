@@ -1,4 +1,5 @@
 import { normalizeMalay } from '../../src/lib/malay-search.ts';
+import { validReferenceDefinition } from './reference-definition.mjs';
 const borrowed = new Set(['durian', 'tomato', 'pen', 'hospital', 'proton', 'neutron', 'atom', 'virus', 'nitrogen', 'bank', 'panda']);
 export function qualityIssues(record, sense) {
   const issues = [];
@@ -7,7 +8,8 @@ export function qualityIssues(record, sense) {
   if (record.entryId !== sense.entryId || record.senseId !== sense.senseId || record.english !== sense.english || record.key !== sense.key) issues.push('sense-misalignment');
   if (malay === english && !borrowed.has(malay) && !record.sameTextJustification) issues.push('english-copy');
   if (/\b(?:TODO|TBD|placeholder|undefined|null|translation pending|not available|terjemahan belum)\b/i.test(record.malay)) issues.push('placeholder');
-  if (/\p{Script=Han}|\ufffd|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(record.malay)) issues.push('invalid-language-or-unicode');
+  if (/\ufffd|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(record.malay)
+    || /\p{Script=Han}/u.test(record.malay) && !validReferenceDefinition(record, sense)) issues.push('invalid-language-or-unicode');
   if (/\b(?:the|to|of|with|from|which|something|someone)\b/i.test(record.malay)) issues.push('english-language-warning');
   if (/\b(?:mobil|sepeda|kantor|sekolah dasar|rumah sakit|telepon|apotik|kulkas|handuk|gratis)\b/i.test(record.malay)) issues.push('indonesian-localization-review');
   if (/\{\\|\\(?:an\d|pos|fad|k\d)|\b(?:brim|subordinate|superfluous|invoice)\b/i.test(record.malay)) issues.push('corrupt-or-untranslated-output');

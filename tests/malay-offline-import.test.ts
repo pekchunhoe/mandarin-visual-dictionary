@@ -29,6 +29,9 @@ it('stages a complete workload idempotently, preserves every existing record, an
     writeFileSync(`${root}/preparation.json`, JSON.stringify({ ...prepared, processedSenses: 1 }));
     expect(() => integrateOffline({ root, data })).toThrow('Full corpus inference must finish');
     writeFileSync(`${root}/preparation.json`, JSON.stringify(prepared));
+    writeFileSync(`${root}/preparation.json`, JSON.stringify({ ...prepared, additionalSourceSha256: { 'scripts/malay/reference-definition.mjs': 'changed-policy' } }));
+    expect(() => integrateOffline({ root, data })).toThrow('Recovery policy changed');
+    writeFileSync(`${root}/preparation.json`, JSON.stringify(prepared));
     writeFileSync(`${root}/candidates.json`, JSON.stringify({ records: [{ ...candidate, senseId: 'sense-wrong' }] }));
     expect(() => integrateOffline({ root, data })).toThrow();
   } finally { vi.restoreAllMocks(); }

@@ -34,6 +34,7 @@ def main():
     p.add_argument('--input', required=True); p.add_argument('--output', required=True)
     p.add_argument('--threads', type=int, default=4); p.add_argument('--batch-size', type=int, default=48)
     p.add_argument('--beam-size', type=int, default=4); p.add_argument('--max-records', type=int)
+    p.add_argument('--preprocessing', choices=['complete-original-sense-v3-context-in-qa', 'protected-dictionary-reference-v1'], default='complete-original-sense-v3-context-in-qa')
     args = p.parse_args()
     if not 1 <= args.threads <= 8 or not 1 <= args.batch_size <= 128 or not 1 <= args.beam_size <= 5: raise ValueError('Unbounded inference settings')
     # Optional CUDA libraries stay in the separate virtual environment. No
@@ -55,7 +56,7 @@ def main():
     model = Path('.tmp/malay-models/hplt-en-ms' if args.model == 'hplt' else '.tmp/malay-models/m2m100')
     provenance = json.loads((model / 'download-manifest.json').read_text('utf-8'))
     identity = {'schema': 1, 'inputSha256': sha(snapshot), 'model': provenance['model'], 'revision': provenance['revision'],
-                'weightsSha256': sha(model / ('ct2-' + args.precision) / 'model.bin'), 'runtime': ctranslate2.__version__, 'beamSize': args.beam_size, 'quantization': args.precision, 'preprocessing': 'complete-original-sense-v3-context-in-qa'}
+                'weightsSha256': sha(model / ('ct2-' + args.precision) / 'model.bin'), 'runtime': ctranslate2.__version__, 'beamSize': args.beam_size, 'quantization': args.precision, 'preprocessing': args.preprocessing}
     if args.device != 'cpu': identity['device'] = args.device
     manifest_path = out / 'checkpoint.json'
     manifest = json.loads(manifest_path.read_text('utf-8')) if manifest_path.exists() else {'identity': identity, 'shards': [], 'completed': 0, 'inferenceSeconds': 0, 'peakRssBytes': 0}

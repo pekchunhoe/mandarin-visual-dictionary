@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "created": "2026-10-15T21:28:39.866Z",
+  "baselineGitSha": "43a137e4f49414492c5ee96c9d4cc5fb094e0176",
+  "pass": true,
+  "time": "2026-10-15T21:28:37.135Z",
+  "backup": "D:\\Primary school simulation\\mandarin-visual-dictionary\\.tmp\\malay-datasets\\backups\\2026-10-15T20-41-18-328Z",
+  "corpusSha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+  "senses": 198245,
+  "entries": 125173,
+  "originalTranslationsPreserved": 5919,
+  "originalRuntimePreserved": 5919,
+  "originalUntrackedFilesPreserved": 15,
+  "added": 8466,
+  "beforeKinds": {
+    "lexical-equivalent": 1028,
+    "definition-translation": 707,
+    "legacy-unspecified": 4184
+  },
+  "addedKinds": {
+    "lexical-equivalent": 375,
+    "definition-translation": 8091,
+    "legacy-unspecified": 0
+  },
+  "finalKinds": {
+    "lexical-equivalent": 1403,
+    "definition-translation": 8798,
+    "legacy-unspecified": 4184
+  },
+  "finalStoredMeanings": 14385,
+  "remaining": 183860,
+  "coveragePercent": 7.256172917349744,
+  "independentHumanReviewed": 0,
+  "storeSha256": "9980df32b47b018258f1cdb3cc4a3fa809ac23dd6609929034116710e696cb89",
+  "runtimeSha256": "294888895666f2c21f2a23a34660dbbe8110bafb165a7334e9c5685c1cc1e128",
+  "storeBytes": 20828295,
+  "runtimeBytes": 15132761,
+  "recoveredPriorCandidates": 6576,
+  "newM2mRows": 711,
+  "newM2mAccepted": 94,
+  "protectedDefinitionRows": 1796,
+  "protectedDefinitionAccepted": 1796,
+  "previousCandidateRows": 197721,
+  "previousCheckpointRowsIncludingPilots": 200761,
+  "newCheckpointRowsIncludingFailedPilot": 3007,
+  "newRuns": [
+    {
+      "directory": "new-m2m100",
+      "identity": {
+        "schema": 1,
+        "inputSha256": "869acc6931dc1dc8fff1b0da1c7fe3c6989d6acae3d09f5ddb1dee3b46319de4",
+        "model": "facebook/m2m100_418M",
+        "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636",
+        "weightsSha256": "cd59477b2c5bb3b8fb95750d8b129217632f2d6231f634a0a600d8f74127bb24",
+        "runtime": "4.8.3",
+        "beamSize": 4,
+        "quantization": "int8",
+        "preprocessing": "complete-original-sense-v3-context-in-qa"
+      },
+      "checkpointRows": 711,
+      "distinctInputContexts": 711,
+      "nonemptyRows": 711,
+      "emptyRows": 0,
+      "inferenceFailureRows": 0,
+      "inferenceSeconds": 60.59299999999348,
+      "peakRssBytes": 921133056
+    },
+    {
+      "directory": "protected-hplt",
+      "identity": {
+        "schema": 1,
+        "inputSha256": "701e8383965dace219ccfb60d444710fa753d100347777f010b3ae77048c5ab1",
+        "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+        "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d",
+        "weightsSha256": "14f85b3f7fab3ffb2cb9a25afa8573a6f51bd739609da6050ce55c52f409686c",
+        "runtime": "4.8.3",
+        "beamSize": 4,
+        "quantization": "int8",
+        "preprocessing": "protected-dictionary-reference-v1"
+      },
+      "checkpointRows": 500,
+      "distinctInputContexts": 7,
+      "nonemptyRows": 500,
+      "emptyRows": 0,
+      "inferenceFailureRows": 0,
+      "inferenceSeconds": 0.4529999999940628,
+      "peakRssBytes": 142790656
+    },
+    {
+      "directory": "protected2-hplt",
+      "identity": {
+        "schema": 1,
+        "inputSha256": "d7459e2fc0072babc72634f950058fbe9d5e4d2c65e99e4adf332b5a67d82266",
+        "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+        "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d",
+        "weightsSha256": "14f85b3f7fab3ffb2cb9a25afa8573a6f51bd739609da6050ce55c52f409686c",
+        "runtime": "4.8.3",
+        "beamSize": 4,
+        "quantization": "int8",
+        "preprocessing": "protected-dictionary-reference-v1"
+      },
+      "checkpointRows": 1796,
+      "distinctInputContexts": 7,
+      "nonemptyRows": 1796,
+      "emptyRows": 0,
+      "inferenceFailureRows": 0,
+      "inferenceSeconds": 0.125,
+      "peakRssBytes": 143691776
+    }
+  ],
+  "sourceSha256": {
+    "scripts/malay/deep-artifacts.mjs": "327d4404c6f6d762bcf698f040dbfdd742320a2a8ae5147a89733733a80396ef",
+    "scripts/malay/deep-cache.mjs": "3f1f6cbb1f6fabe490f097339984b902f1fd197507759190f2bc4014604a67e7",
+    "scripts/malay/deep-combine.mjs": "45583a5404903014261bd2828f211b6937797d72418aaa99b88659f4c19920ca",
+    "scripts/malay/deep-forensics.mjs": "766f46cc0351de3a9e973e2997b7c37db62db00f64e525ded36b8b7324e64fb1",
+    "scripts/malay/deep-new.mjs": "96f1cfc80fc1a9267ce1a48d031b5d6c373e0f0192746a128dbd08cad08e3a6a",
+    "scripts/malay/deep-pilot.mjs": "bb179195962673bbfdc39c30b0e1e9ba859325b0a531d322653ce33d3de1b3a2",
+    "scripts/malay/deep-preservation.mjs": "83d8a3364545e29bc1a1563004b50e1b74a8f2cf4443dc135335786d9085870b",
+    "scripts/malay/deep-protected-evaluate.mjs": "874c933b373e79c176cd82dd733e432793a6c666293d6fe38e1f91f991eb7e41",
+    "scripts/malay/deep-protected.mjs": "9b7a2f99f83ad76a79824b396f0a87d1dbc1ed22a9f4738d37a603c4f42893e2",
+    "scripts/malay/deep-quality.mjs": "936e02dbcbbb833da81860f2bf7f4531174dd117eefe648ef432602fa416fef7",
+    "scripts/malay/deep-recover.mjs": "2f4848878ff0ecaeb0720e94c56d66deb1cbe0858b888932167f3a58387d2ce3",
+    "scripts/malay/deep-stage.mjs": "2781cb848ae4b627a9bd02524d95c410058b61943b8c659ea12794d992d0ca4b",
+    "scripts/malay/reference-definition.mjs": "81d92e4e6a88af2f2c2bf0f6bf2a1f6e54c82ecce0cb7627deb453ff007b42a0",
+    "scripts/data/malay-deep-review-policy.json": "8176ed1675d82c8c6b25ddd4626abfedf2c07d7a21e38f002e9b9fc29df6e183",
+    "scripts/malay/offline-bulk.py": "7732f57cb34003a8e385de5e3b9945af953b8bc9c8220da64aa778391f91c807",
+    "scripts/malay/offline-integrate.mjs": "e3d1f013a7d7713d4f72f108aa7b0e19f0c0ec94400c2861559c6b25ee033a9c",
+    "scripts/malay/quality.mjs": "306865457108be11800faba700b786a88db73bdd9e0893f9d3b7c68c6ebce9b6"
+  },
+  "translationApiCalls": 0,
+  "translationApiChargesUsd": 0,
+  "productionInference": false,
+  "validation": {
+    "created": "2026-10-15T21:28:12.248Z",
+    "unit": {
+      "passed": 844,
+      "failed": 0,
+      "files": 29
+    },
+    "browser": {
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0,
+      "report": "  86 passed (9.1m)"
+    },
+    "targetedQualityTests": 17,
+    "build": true,
+    "bundle": true,
+    "source": true,
+    "whitespace": true,
+    "lazy": true,
+    "malayOffline": true,
+    "offlineMigration": true
+  },
+  "limitations": "Coverage includes explicitly typed definitions and legacy unspecified records. All new meanings await independent language review. Withheld candidates are not all known incorrect."
+}

@@ -177,3 +177,48 @@ actual model outputs, assistant screening, and a separate 200-case surname
 pilot. Independent human review remains zero. Model agreement, exact reference
 matching and automated validation do not establish general semantic accuracy.
 All newly stored outputs require independent Mandarin–Malaysian Malay review.
+
+## Deep recovery of the recorded bulk run
+
+`KANJIAN_MALAY_TRANSLATION_RECOVERY_REPORT.md` records the subsequent forensic
+investigation and release. `deep-forensics.mjs` verifies all saved workload and
+shard hashes and classifies every original withheld sense. Its evidence classes
+are not semantic truth labels. The immutable prior quarantine remains intact.
+`deep-recover.mjs` reuses actual cached model outputs; it accepts scoped Malay
+loanwords and verb lemmas using POS/reference evidence. Missing Chinese WordNet
+entries require both a unique complete-English synset and Malay Wiktionary
+attestation; a contradictory Chinese entry is never ignored. Known false friends
+remain excluded by `malay-deep-review-policy.json`.
+
+Dictionary cross-reference definitions have a separate bounded grammar in
+`reference-definition.mjs`. It preserves the complete cited Chinese spelling
+and numeric pinyin. The generic Unicode validator permits Han only when this
+complete proof validates; arbitrary Han, damaged references, dropped qualifiers
+and extra explanations remain rejected. These records are explicitly definitions.
+Protected mode translates seven fixed relations with an opaque marker and
+restores the original citation per sense. Its many output rows are not thousands
+of independently inferred lexical translations. Both raw model text and the
+actual protected English input are stored, with grammar normalization disclosed.
+
+The new run reused both downloaded models. M2M100 processed only previously
+unattempted, reference-eligible senses. A failed long-placeholder pilot was
+quarantined; a shorter marker and expanded English abbreviation passed the
+500-sense scoped pilot. No human verification or calibrated confidence is claimed.
+
+The frozen new workloads and checkpoints are in `.tmp/malay-deep/`. To verify or
+resume inference without repeating completed work:
+
+```powershell
+.\.tmp\malay-model-env\Scripts\python.exe scripts/malay/offline-bulk.py --model m2m100 --input .tmp/malay-deep/new-tasks.jsonl --output .tmp/malay-deep/new-m2m100 --threads 4 --batch-size 128 --beam-size 4
+.\.tmp\malay-model-env\Scripts\python.exe scripts/malay/offline-bulk.py --input .tmp/malay-deep/protected2-tasks.jsonl --output .tmp/malay-deep/protected2-hplt --threads 2 --batch-size 128 --beam-size 4 --preprocessing protected-dictionary-reference-v1
+node scripts/malay/deep-stage.mjs --new --resume
+```
+
+The last command stages an idempotent import and does not promote it. Paired
+promotion is the separate `--promote-local` operation. Each prepared import binds
+the exact policy/source hashes as well as its baseline and candidate hashes.
+Retain the original extraction and partition files; do not regenerate workloads
+over a promoted store into the same run directory. A new recovery session needs
+its own backup, baseline and workspace before extraction. The two canonical Malay
+JSON files have a narrowly scoped 32 MiB preflight ceiling; all other pending
+files retain the 8 MiB check. Weights/caches are excluded from Git and deployment.

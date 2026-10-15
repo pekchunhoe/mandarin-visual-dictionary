@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { hash } from './malay/corpus.mjs';
 
 const base = process.env.KANJIAN_TEST_URL ?? 'https://mandarin-visual-dictionary.vercel.app';
-const root = '.tmp/zero-cost'; mkdirSync(root, { recursive: true });
+const root = process.env.KANJIAN_ZERO_COST_EVIDENCE_ROOT ?? '.tmp/zero-cost'; mkdirSync(root, { recursive: true });
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' });
 const context = await browser.newContext(); const page = await context.newPage();
 const errors = [], appGoogleRequests = [], googleDocuments = [];

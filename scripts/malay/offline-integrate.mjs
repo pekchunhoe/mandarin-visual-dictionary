@@ -12,6 +12,7 @@ export function integrateOffline({ root = '.tmp/malay-complete', promote = false
   assert.equal(hash(readFileSync('scripts/data/malay-bulk-review-policy.json')), prepared.policySha256);
   assert.equal(hash(readFileSync('scripts/data/malay-offline-review-policy.json')), prepared.offlineReviewPolicySha256);
   assert.equal(hash(readFileSync('scripts/data/malay-offline-templates.json')), prepared.templatesSha256);
+  for (const [file, expected] of Object.entries(prepared.additionalSourceSha256 ?? {})) assert.equal(hash(readFileSync(file)), expected, `Recovery policy changed: ${file}`);
   assert.equal(prepared.corpusSha256, data.digest);
   assert.equal(prepared.processedSenses + prepared.baselineRecords, data.senses.length, 'Full corpus inference must finish before integration');
   assert.equal(prepared.usableProvisionalCandidates, incoming.length);

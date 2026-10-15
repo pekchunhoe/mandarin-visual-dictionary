@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "reviewerRole": "AI assistant screening; no independent human approval",
+  "excludedSenseOutputs": {
+    "整备|preparedness|persiapan": "Readiness as a state versus preparations as an activity requires review.",
+    "学费|tuition|tuisyen": "School/education fees, not private supplementary tuition classes.",
+    "民族学|anthropology|antropologi": "Ethnology and broader anthropology need terminology review.",
+    "小鼠|mouse|tetikus": "Animal mouse, not a computer input device.",
+    "属性|property|harta": "Attribute/property, not possessions.",
+    "时代|age|umur": "Historical era, not a person's age.",
+    "景象|scene|adegan": "View/scenery, not a performed scene.",
+    "物质|matter|perkara": "Physical substance, not an issue or affair.",
+    "理智|reason|alasan": "Reason/rationality, not an excuse.",
+    "箱|chest|dada": "Storage chest, not anatomy.",
+    "箱子|chest|dada": "Storage chest, not anatomy.",
+    "野味|game|permainan": "Wild meat/game animals, not a game to play.",
+    "铃声|ring|cincin": "Ringing sound, not jewelry.",
+    "田|field|lapangan": "Cultivated land, not a generic open area.",
+    "田地|field|lapangan": "Cultivated land, not a generic open area.",
+    "田野|field|lapangan": "Agricultural fields require a more specific equivalent.",
+    "四季豆|green bean|kacang hijau": "French/green beans, not mung beans.",
+    "病因|pathogen|patogen": "Mandarin denotes a cause of illness; source English needs review.",
+    "表音|transliteration|transliterasi": "Phonetic representation; transliteration needs context review.",
+    "经络|tactic|taktik": "Mandarin meridian/extended sense requires review.",
+    "过度紧张|hypertension|hipertensi": "Mandarin overstrain and clinical hypertension must not be conflated.",
+    "虐待狂|sadism|sadisme": "Person/disposition distinction needs review.",
+    "流域|valley|lembah": "Catchment/drainage basin versus valley requires review.",
+    "拖|to trail|jejak": "Dragging/trailing versus footprint or tracking requires context review.",
+    "有兴趣|interesting|menarik": "Interested versus interesting requires review."
+  },
+  "excludedEnglishMalay": {
+    "youth hostel|hostel": "Omitted youth qualification.",
+    "hatred|benci": "Use a suitable noun expression or independently review the nominal usage."
+  },
+  "excludedTerms": {
+    "musim dingin": "Prefer Malaysian musim sejuk; locale review pending.",
+    "tenggorokan": "Prefer Malaysian tekak; locale review pending.",
+    "rem": "Prefer Malaysian brek; locale review pending.",
+    "jongkok": "Prefer Malaysian mencangkung; locale review pending.",
+    "pencurian": "Malaysian noun/locale review pending; retain pencuri for thief."
+  }
+}

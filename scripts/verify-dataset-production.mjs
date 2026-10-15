@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { hash } from './malay/corpus.mjs';
 const base = process.env.KANJIAN_TEST_URL ?? 'https://mandarin-visual-dictionary.vercel.app';
 const before = process.argv.includes('--before');
-const dir = `.tmp/malay-datasets/production-${before ? 'before' : 'after'}`; mkdirSync(dir, { recursive: true });
+const dir = `${process.env.KANJIAN_DATASET_EVIDENCE_ROOT ?? '.tmp/malay-datasets'}/production-${before ? 'before' : 'after'}`; mkdirSync(dir, { recursive: true });
 const corpusResponse = await fetch(`${base}/data/cedict.json`, { signal: AbortSignal.timeout(60000), cache: 'no-store' });
 if (!corpusResponse.ok) throw Error(`Production dictionary HTTP ${corpusResponse.status}`);
 const bytes = Buffer.from(await corpusResponse.arrayBuffer());

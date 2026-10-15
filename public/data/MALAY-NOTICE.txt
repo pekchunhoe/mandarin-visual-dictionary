@@ -52,7 +52,7 @@ Google Translate-derived 200k data, Cambridge, DBP/PRPM and Kamus Dewan mirrors
 are excluded from this release because redistribution rights were not confirmed.
 
 Coverage is incomplete. Refer to
-KANJIAN_COMPLETE_OFFLINE_MALAY_TRANSLATION_REPORT.md in the source repository
+KANJIAN_MALAY_TRANSLATION_RECOVERY_REPORT.md in the source repository
 for current sense-level coverage. Earlier dictionary-only integration work is
 documented in KANJIAN_FINAL_DATASET_INTEGRATION_REPORT.md.
 Future imports must retain their own applicable attribution and licenses.
@@ -73,5 +73,20 @@ lexical equivalents of Chinese names. A restricted validator requires the
 Wordnet Bahasa phrase nama keluarga and preserves the complete original Roman
 name. The model's actual output must satisfy this check; no missing output is
 filled by a handwritten template. The website labels this distinction.
-See KANJIAN_COMPLETE_OFFLINE_MALAY_TRANSLATION_REPORT.md in the repository for
+See KANJIAN_MALAY_TRANSLATION_RECOVERY_REPORT.md in the repository for
 the latest actual coverage, exclusions, model evaluation and deployment checks.
+
+Deep recovery additions preserve every previously stored translation. Some
+lexical candidates use exact Malay Wiktionary/POS evidence, with WordNet sense
+constraints and explicit Malaysian scope exclusions. New source-page credits
+and the cross-reference definition method are documented at
+/data/MALAY-RECOVERY-ATTRIBUTION.json
+Cross-reference definitions translate the English relation (such as variant
+of or see), while preserving the complete original Chinese citation and pinyin.
+Protected mode translates seven fixed relations with an opaque placeholder,
+then restores each original citation literally. It is not an independent
+neural lexical translation of every cited word. Malay relation wording is
+maintainer-authored grammatical normalization, CC BY-SA 4.0. The raw model
+input/output and exact sense linkage are retained in the source store.
+These definitions are labelled separately from lexical equivalents and all
+remain provisional pending independent Mandarin-Malaysian Malay review.

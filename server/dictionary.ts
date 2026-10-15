@@ -6,8 +6,11 @@ import type { Word } from '../src/types';
 let entries: Map<string, RawRow> | undefined;
 const curatedByRow = new Map(words.map(word => [word.dictionaryId, word]));
 /** The browser's exact row ID is authoritative. Text aliases are starter-only. */
-export function resolveImageWord(id: string): Word | undefined {
-  const curated = byId.get(id) ?? curatedByRow.get(id); if (curated) return curated;
+export function resolveImageWord(id: string, senseId?: string): Word | undefined {
+  const curated = byId.get(id) ?? curatedByRow.get(id);
+  // Canonical Malay results can expose a corpus sense absent from the starter
+  // presentation (e.g. 开 / to boil). Keep curated plans for their own senses.
+  if (curated && (!senseId || !id.includes('|') || curated.senses.some(s => s.id === senseId))) return curated;
   if (!id.includes('|')) return;
   if (!entries) {
     // Both source and generated bundle live in server/. Resolve from the module,

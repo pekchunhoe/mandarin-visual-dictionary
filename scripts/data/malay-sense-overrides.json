@@ -1,0 +1,20 @@
+{
+  "version": "ms-MY-sense-editorial-1",
+  "source": "KANJIAN independently written sense candidates",
+  "license": "CC-BY-SA-4.0",
+  "records": [
+    { "simplified": "帮助", "english": "to help; to assist", "malay": "membantu; memberikan pertolongan", "malaySearchTerms": ["membantu"], "malaySynonyms": ["menolong", "memberikan pertolongan"], "malayMorphology": ["bantu", "bantuan", "pertolongan"] },
+    { "simplified": "帮助", "english": "assistance; aid", "malay": "bantuan; pertolongan", "malaySearchTerms": ["bantuan", "pertolongan"], "malaySynonyms": ["pemberian bantuan"], "malayMorphology": ["bantu", "membantu", "menolong"] },
+    { "simplified": "学习", "english": "to learn; to study", "malay": "belajar; menuntut ilmu", "malaySearchTerms": ["belajar", "menuntut ilmu"], "malayMorphology": ["ajar", "pembelajaran"] },
+    { "simplified": "谦虚", "english": "modest", "malay": "rendah hati; tidak membanggakan diri", "malaySearchTerms": ["rendah hati"], "malaySynonyms": ["tidak membanggakan diri"] },
+    { "simplified": "勇气", "english": "courage", "malay": "keberanian", "malaySearchTerms": ["keberanian"], "malaySynonyms": ["semangat berani"] },
+    { "simplified": "不耻下问", "english": "not feel ashamed to ask and learn from one's subordinates", "malay": "Tidak malu bertanya atau meminta tunjuk ajar daripada orang yang lebih rendah kedudukannya.", "malaySearchTerms": ["tidak malu bertanya"], "malaySynonyms": ["meminta tunjuk ajar"], "idiomExplanation": true },
+    { "simplified": "开", "english": "to open (transitive or intransitive)", "malay": "membuka; terbuka", "malaySearchTerms": ["membuka", "terbuka"], "malayMorphology": ["buka"] },
+    { "simplified": "开", "english": "to turn on; to put in operation; to operate; to run", "malay": "menghidupkan; menjalankan; mengendalikan", "malaySearchTerms": ["menghidupkan", "mengendalikan"], "malaySynonyms": ["menjalankan mesin"] },
+    { "simplified": "开", "english": "to boil", "malay": "mendidih", "malaySearchTerms": ["mendidih"] },
+    { "simplified": "长", "english": "to grow", "malay": "tumbuh; membesar", "malaySearchTerms": ["tumbuh", "membesar"], "malayMorphology": ["pertumbuhan"] },
+    { "simplified": "狼吞虎咽", "english": "to wolf down one's food (idiom); to devour ravenously", "malay": "Makan dengan gelojoh dan tergesa-gesa.", "malaySearchTerms": ["makan dengan gelojoh"], "malaySynonyms": ["makan dengan rakus"], "idiomExplanation": true },
+    { "simplified": "惊慌失措", "english": "to lose one's head out of fear (idiom)", "malay": "Terlalu panik atau takut sehingga tidak tahu apa yang perlu dilakukan.", "malaySearchTerms": ["panik sehingga tidak tahu apa yang perlu dilakukan"], "malaySynonyms": ["hilang arah kerana takut"], "idiomExplanation": true },
+    { "simplified": "人山人海", "english": "(idiom) multitude; vast crowd", "malay": "Orang yang sangat ramai dan bersesak-sesak.", "malaySearchTerms": ["orang yang sangat ramai"], "malaySynonyms": ["orang ramai bersesak-sesak"], "idiomExplanation": true }
+  ]
+}

@@ -25,7 +25,9 @@ it('preserves dictionary presentation and snapshots phrase-aware classification 
   const worker = createDictionaryEntries(inference.buildVisualQuery);
   for (const row of rows) {
     const word = worker.fromRow(row);
-    hash.update(JSON.stringify(word) + '\n');
+    // New translation metadata is independently validated. Keep the original
+    // snapshot for every pre-existing definition and visual property unchanged.
+    hash.update(JSON.stringify({ ...word, senses: word.senses.map(({ translationStatus: _newStatus, ...original }) => original) }) + '\n');
     presentation.update(JSON.stringify({ ...word, senses: word.senses.map(({ id, english }) => ({ id, english })) }) + '\n');
     for (const englishMeaning of row[3]) intents.update(JSON.stringify(inference.buildVisualQuery({ englishMeaning })) + '\n');
   }

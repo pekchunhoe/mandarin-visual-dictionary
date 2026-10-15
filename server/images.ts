@@ -105,7 +105,7 @@ async function searchProvider(provider: ImageProvider, search: ImageSearch, secr
   try { return await request; } finally { pending.delete(key); }
 }
 export async function getImages(wordId: string, senseId: string, options: Options = {}): Promise<ImageResult> {
-  const word = resolveImageWord(wordId); const sense = word?.senses.find(s => s.id === senseId);
+  const word = resolveImageWord(wordId, senseId); const sense = word?.senses.find(s => s.id === senseId);
   if (!word || !sense) throw Object.assign(new Error('Choose a known dictionary word and meaning.'), { status: 400, diagnostic: !word ? 'dictionary_word_not_found' : 'sense_not_found' });
   const plan = imageSearchPlan(word, sense);
   if (!plan) return { images: [], status: 'unavailable', diagnostics: ['non_visual_word', 'no_plan', 'openverse_not_called'], message: 'This meaning is explained with words and diagrams.' };

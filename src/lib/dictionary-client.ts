@@ -1,6 +1,6 @@
 import type { Word } from '../types';
 import { words } from '../data/learning';
-export type DictionaryRequest = { type: 'search'; query: string } | { type: 'refresh'; words: Word[] };
+export type DictionaryRequest = { type: 'search'; query: string } | { type: 'entry'; entryId: string; senseId?: string } | { type: 'refresh'; words: Word[] };
 let worker: Worker | undefined; let sequence = 0;
 const requests = new Map<number, { resolve: (words: Word[]) => void; reject: (error: Error) => void }>();
 export function requestDictionary(request: DictionaryRequest, signal?: AbortSignal): Promise<Word[]> {

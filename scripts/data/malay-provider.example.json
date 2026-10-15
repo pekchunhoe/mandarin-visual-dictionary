@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "offline": true,
+  "adapter": "./path/to/licensed-local-adapter.mjs",
+  "model": "local-context-aware-ms-MY-model",
+  "promptVersion": "ms-MY-sense-context-1",
+  "maxRecords": 100,
+  "batchSize": 25,
+  "concurrency": 1,
+  "checkpoint": ".tmp/malay-generation-checkpoint.json",
+  "output": ".tmp/malay-generated-candidates.json",
+  "maxCostUsd": 0,
+  "maxBatchCostUsd": 0
+}

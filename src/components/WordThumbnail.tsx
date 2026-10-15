@@ -13,8 +13,9 @@ export function WordThumbnail({ word }: { word: Word }) {
     const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting)) { setVisible(true); observer.disconnect(); } }, { rootMargin: '100px' });
     observer.observe(element); return () => observer.disconnect();
   }, [word.id]);
-  const { result } = useImages(word, word.senses[0], 'thumbnail', visible && !!visualQuery(word.senses[0]));
-  const fallback = word.photo ? localPhoto(word.photo, word.senses[0].english) : undefined;
+  const sense = word.senses.find(s => s.id === word.matchedSenseId) ?? word.senses[0];
+  const { result } = useImages(word, sense, 'thumbnail', visible && !!visualQuery(sense));
+  const fallback = word.photo && sense.id === word.senses[0].id ? localPhoto(word.photo, sense.english) : undefined;
   const candidate = result?.images[0] ?? fallback;
   const photo = candidate?.thumbnailUrl === failedUrl ? fallback : candidate;
   return <span ref={target} className="word-thumbnail">{photo ? <Photo key={photo.thumbnailUrl} photo={photo} onUnavailable={() => setFailedUrl(photo.thumbnailUrl)}/> : <span className="word-art" lang="zh-Hans">{word.simplified}</span>}{photo?.provider && <span className="thumbnail-credit" title={photo.attribution}>{photo.photographer ? `${photo.photographer} · ` : ''}{photo.source}{photo.license ? ` · ${photoLicense(photo)}` : ''}</span>}</span>;

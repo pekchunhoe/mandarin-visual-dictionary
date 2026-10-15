@@ -6,7 +6,7 @@ const chunks = new Map(graph.filter(item => !item.asset).map(item => [item.file,
 const initial = new Set();
 function visit(file) { if (initial.has(file)) return; initial.add(file); for (const child of chunks.get(file)?.imports ?? []) visit(child); }
 for (const item of chunks.values()) if (item.entry) visit(item.file);
-const forbidden = /(?:visual-inference|dictionary-entry|learning-source|cedict-core|visual-lexicon(?:-source)?\.json(?!\?url)|concept-templates|visual-templates|\/server\/)/;
+const forbidden = /(?:visual-inference|dictionary-entry|learning-source|cedict-core|malay-runtime\.json(?!\?url)|visual-lexicon(?:-source)?\.json(?!\?url)|concept-templates|visual-templates|\/server\/)/;
 for (const item of chunks.values()) {
   for (const module of item.modules) assert(!forbidden.test(module), `Heavy/server data entered UI chunk: ${module}`);
   for (const module of item.modules) assert(!/node_modules\/(?:vitest|@playwright|@testing-library|esbuild)\//.test(module), `Development tooling entered UI chunk: ${module}`);
@@ -19,6 +19,9 @@ assert(!modules.some(module => module.endsWith('/visual-lexicon.json')), 'Worker
 assert(!modules.some(module => module.endsWith('/learning-runtime.json')), 'Worker must reuse the UI starter collection');
 const assets = readdirSync('dist/assets');
 const semantic = assets.filter(file => /^visual-lexicon.*\.json$/.test(file));
+const malay = assets.filter(file => /^malay-runtime.*\.json$/.test(file));
+assert.equal(malay.length, 1);
+assert.deepEqual(JSON.parse(readFileSync('dist/assets/' + malay[0], 'utf8')), JSON.parse(readFileSync('src/data/malay-runtime.json', 'utf8')));
 assert.equal(semantic.length, 1);
 assert.deepEqual(JSON.parse(readFileSync('dist/assets/' + semantic[0], 'utf8')), JSON.parse(readFileSync('src/data/visual-lexicon.json', 'utf8')));
 const sw = readFileSync('dist/sw.js', 'utf8');
@@ -32,6 +35,9 @@ for (const url of immutable) {
 for (const file of chunks.keys()) assert(immutable.includes('/' + file), `Lazy module missing immutable matching: ${file}`);
 assert(immutable.includes('/assets/' + semantic[0]));
 assert(!precache.includes('/assets/' + semantic[0]), 'Fresh home install must not download semantic data');
+assert(!precache.includes('/assets/' + malay[0]), 'Fresh home install must not download Malay data');
+assert(immutable.includes('/assets/' + malay[0]));
+assert(sw.includes('/assets/' + malay[0]), 'Malay data missing from offline upgrade allowlist');
 for (const file of chunks.keys()) assert(precache.includes('/' + file), `Lazy UI unavailable offline: ${file}`);
 assert(precache.some(file => /dictionary\.worker.*\.js$/.test(file)));
 assert(sw.includes('/assets/' + semantic[0]), 'Worker runtime data missing from upgrade cache allowlist');

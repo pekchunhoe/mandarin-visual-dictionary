@@ -1,0 +1,17 @@
+# Build-time downloads, backups, checkpoints and restricted research data.
+.tmp/
+.git/
+node_modules/
+test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+# Preserved unfinished model experiments are not part of the application build.
+scripts/malay/recovery-*
+scripts/malay/adapt-madlad-gguf.py
+scripts/malay/inspect-gguf.py
+scripts/data/malay-recovery-*
+scripts/data/malay-translation-memory-v1.json

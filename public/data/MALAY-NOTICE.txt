@@ -1,0 +1,56 @@
+KANJIAN Bahasa Melayu (Malaysia) additions
+
+Original Mandarin, traditional spelling, pinyin and English definitions:
+CC-CEDICT, https://www.mdbg.net/chinese/dictionary?page=cedict
+Creative Commons Attribution-ShareAlike 4.0 International:
+https://creativecommons.org/licenses/by-sa/4.0/
+The original dictionary corpus has not been changed by the Malay integration.
+
+Malay glosses include preserved learning material, KANJIAN assistant-authored
+exact-sense explanations and qualified Malaysian Malay terminology aligned with
+Wordnet Bahasa (zsm), Chinese Open Wordnet and Princeton WordNet 3.0.
+They require independent human linguistic review. No DBP/PRPM definitions were
+scraped or reproduced. Model benchmark outputs were not mass-published.
+No paid translation API was used. Dictionary additions are CC BY-SA 4.0;
+individual records retain the additional source licenses, version and status.
+
+Wordnet Bahasa: copyright 2011--2015 Francis Bond and the contributors
+named in the complete MIT license (including data):
+/data/licenses/WORDNET-BAHASA-LICENSE.txt
+Chinese Open Wordnet: copyright 2013, 2014 Francis Bond and Shan Wang.
+Full license and notices:
+/data/licenses/CHINESE-OPEN-WORDNET-LICENSE.txt
+Princeton WordNet 3.0: copyright 2006 Princeton University. Full license,
+disclaimer and acknowledgment:
+/data/licenses/PRINCETON-WORDNET-3.0-LICENSE.txt
+Open Multilingual Wordnet resource revision:
+406bf83b3c507a3d1f26e88252d5d66893fd36bf
+https://github.com/omwn/omw-data
+
+Bulk dictionary additions also use original English Wiktionary contributors'
+Malay lemmas, English glosses and parts of speech under CC BY-SA 4.0:
+https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wiktionary.org/wiki/Wiktionary:Copyrights
+Complete license: /data/licenses/CC-BY-SA-4.0.txt
+Per-sense source page links: /data/MALAY-DATASET-ATTRIBUTION.json
+Changes by KANJIAN: selected Malay lexical senses, normalized whitespace/NFC,
+filtered regional/grammatical alternatives and aligned them to unchanged
+CC-CEDICT sense IDs using the separately licensed WordNet resources above.
+These adapted dictionary additions remain CC BY-SA 4.0. No quotations,
+illustrative example sentences or third-party dictionary extracts are reused.
+
+Extraction: Tatu Ylonen / Wiktextract / Kaikki, https://kaikki.org/
+Malay JSONL: enwiktionary dump 2026-09-02, extracted 2026-10-03.
+https://kaikki.org/dictionary/Malay/index.html
+Supplementary Wiktionary filtering: Mesolitica, malaysian-dataset;
+mirror revision 5da1400408400a49f5550277166afb00aadd0f33 (dump date unspecified).
+https://huggingface.co/datasets/mesolitica/wiktionary-bahasa
+The mirror contains several languages; only entries explicitly tagged ms were
+eligible. Both extracts derive from Wiktionary, not two independent dictionaries.
+Source file hashes and precise versions are recorded in the integration report.
+Google Translate-derived 200k data, Cambridge, DBP/PRPM and Kamus Dewan mirrors
+are excluded from this release because redistribution rights were not confirmed.
+
+Coverage is incomplete. Refer to KANJIAN_FINAL_DATASET_INTEGRATION_REPORT.md
+in the source repository for current sense-level coverage and remaining work.
+Future imports must retain their own applicable attribution and licenses.

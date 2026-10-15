@@ -9,7 +9,7 @@ export function createDictionaryEntries(buildVisualQuery: ReturnType<typeof crea
     const [traditional, simplified, numericPinyin, definitions] = row; const id = canonicalWordId(row);
     return { id, dictionaryId: id, simplified, traditional, numericPinyin, pinyin: toneMarks(numericPinyin), source: 'CC-CEDICT', senses: definitions.filter(d => !/^CL:/i.test(d)).map((definition, index) => {
       const intent = buildVisualQuery({ englishMeaning: definition });
-      return { id: canonicalSenseId(index), english: displayMeaning(definition), visualType: intent?.visualType ?? 'abstract', visualQuery: intent?.query, visualSubject: intent?.subject, visualOrigin: 'inferred', examples: [] };
+      return { id: canonicalSenseId(index), english: displayMeaning(definition), translationStatus: 'missing', visualType: intent?.visualType ?? 'abstract', visualQuery: intent?.query, visualSubject: intent?.subject, visualOrigin: 'inferred', examples: [] };
     }) };
   }
 

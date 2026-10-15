@@ -111,6 +111,12 @@ export const words: Word[] = Object.entries(lessons).flatMap(([chinese, lesson])
   }
   return [{ ...word, id: chinese, category, photo }];
 });
+for (const word of words) for (const sense of word.senses) {
+  if (sense.malay?.trim()) Object.assign(sense, {
+    translationStatus: 'unreviewed', translationSource: 'KANJIAN existing editorial learning collection',
+    translationLicense: 'CC-BY-SA-4.0', translationVersion: 'learning-original-1', translationConfidence: 0.8
+  });
+}
 export const byId = new Map(words.map(w => [w.id, w]));
 export const categories = [
   ['Animals', '动物', '猫', 'Discover your animal friends', 'sage'], ['Food', '食物', '苹果', 'A delicious way to learn', 'peach'],

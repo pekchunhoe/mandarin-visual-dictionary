@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node scripts/build-learning-data.mjs && vite --host 127.0.0.1",
-    "build": "node scripts/build-learning-data.mjs && tsc -b && node scripts/build-image-function.mjs && node scripts/verify-server-package.mjs && vite build",
+    "build": "node scripts/build-learning-data.mjs && node scripts/malay/pipeline.mjs build && tsc -b && node scripts/build-image-function.mjs && node scripts/verify-server-package.mjs && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "typecheck": "tsc -b",
@@ -22,7 +22,17 @@
     "data:learning": "node scripts/build-learning-data.mjs",
     "test:bundle": "node scripts/verify-bundle.mjs",
     "measure:bundle": "node scripts/measure-bundle.mjs",
-    "test:lazy": "node scripts/verify-lazy.mjs"
+    "test:lazy": "node scripts/verify-lazy.mjs",
+    "malay:audit": "node scripts/audit-malay.mjs",
+    "malay:build": "node scripts/malay/pipeline.mjs build",
+    "malay:queue": "node scripts/malay/pipeline.mjs queue .tmp/malay-remaining-senses.jsonl",
+    "malay:generate": "node scripts/malay/pipeline.mjs generate",
+    "malay:import": "node scripts/malay/pipeline.mjs import",
+    "malay:validate": "node scripts/validate-malay.mjs",
+    "malay:datasets:prepare": "node scripts/malay/bulk-dataset.mjs prepare",
+    "malay:datasets:test-import": "node scripts/malay/bulk-dataset.mjs integrate",
+    "malay:datasets:import": "node scripts/malay/bulk-dataset.mjs integrate --promote-local",
+    "test:malay-offline": "node scripts/verify-malay-offline.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",

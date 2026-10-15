@@ -130,12 +130,14 @@ export async function generate(configPath, data = corpus()) {
   if (config.batchSize !== undefined && (!Number.isInteger(config.batchSize) || config.batchSize < 1 || config.batchSize > 100)) throw new Error('batchSize must be an integer between 1 and 100.');
   const concurrency = config.concurrency ?? 1;
   const batchSize = config.batchSize ?? 25;
-  const paid = config.offline !== true;
-  if (paid && (!Number.isFinite(config.maxCostUsd) || !(config.maxCostUsd > 0) || !Number.isFinite(config.maxBatchCostUsd) || !(config.maxBatchCostUsd > 0))) throw new Error('A network provider requires explicit maxCostUsd and a conservative maxBatchCostUsd ceiling.');
-  const adapter = await import(pathToFileURL(resolve(config.adapter)).href);
-  if (typeof adapter.translateBatch !== 'function' || !adapter.version || !adapter.source || !adapter.license) throw new Error('Adapter must export translateBatch, version, source and license.');
+  // This check precedes dynamic import: even adapter initialization must not
+  // run when a legacy configuration requests a network provider or any spend.
+  if (config.offline !== true || [config.maxCostUsd, config.maxBatchCostUsd].some(value => value !== undefined && value !== 0)) throw new Error('KANJIAN strict zero-cost mode requires offline=true and zero translation budgets. Network translation providers are disabled.');
   const checkpointFile = config.checkpoint ?? '.tmp/malay-generation-checkpoint.json';
   const checkpoint = loadJSON(checkpointFile, { schema: 2, cache: {}, cacheFiles: [], costUsd: 0, reservedUsd: 0, pending: {}, inputTokens: 0, outputTokens: 0, errors: [] });
+  if ((checkpoint.costUsd ?? 0) !== 0 || (checkpoint.reservedUsd ?? 0) !== 0 || Object.keys(checkpoint.pending ?? {}).length) throw new Error('Strict zero-cost mode cannot resume a checkpoint with recorded costs or pending network work. The checkpoint is preserved unchanged.');
+  const adapter = await import(pathToFileURL(resolve(config.adapter)).href);
+  if (typeof adapter.translateBatch !== 'function' || !adapter.version || !adapter.source || !adapter.license) throw new Error('Adapter must export translateBatch, version, source and license.');
   checkpoint.reservedUsd ??= 0; checkpoint.pending ??= {};
   checkpoint.cacheFiles ??= []; checkpoint.cache ??= {};
   const rejectedKeys = new Set();
@@ -177,23 +179,15 @@ export async function generate(configPath, data = corpus()) {
       const uncached = batch.filter(s => !checkpoint.cache[`${signature}:${s.key}`] && (config.retryRejected || !rejectedKeys.has(`${signature}:${s.key}`)) && !pendingKeys.has(s.key));
       if (!uncached.length) continue;
       const batchKey = hash(JSON.stringify([signature, uncached.map(s => s.key)]));
-      if (checkpoint.pending[batchKey]) continue; // Unknown billing needs manual reconciliation.
-      if (paid && checkpoint.costUsd + checkpoint.reservedUsd + config.maxBatchCostUsd > config.maxCostUsd) break;
-      if (paid) {
-        checkpoint.reservedUsd += config.maxBatchCostUsd;
-        checkpoint.pending[batchKey] = { ceilingUsd: config.maxBatchCostUsd, keys: uncached.map(s => s.key) };
-        saveCheckpoint(); // Persist budget BEFORE any provider request.
-      }
       tasks.push((async () => {
-        // Retries are allowed only for failures certified not billed by the adapter.
+        // Only local offline failures can retry; a cost-policy violation cannot.
         for (let attempt = 0; attempt < 3; attempt++) try {
-          const result = await adapter.translateBatch(uncached, { ...config.adapterOptions, locale: 'ms-MY', model: config.model, promptVersion: config.promptVersion, maxCostUsd: config.maxBatchCostUsd, attempt });
+          const result = await adapter.translateBatch(uncached, { ...config.adapterOptions, locale: 'ms-MY', model: config.model, promptVersion: config.promptVersion, maxCostUsd: 0, attempt });
           if (!result || !Array.isArray(result.records)) throw new Error('Adapter must return a records array.');
-          if (paid && (!Number.isFinite(result.usage?.costUsd) || result.usage.costUsd < 0 || result.usage.costUsd > config.maxBatchCostUsd)) throw new Error('Provider omitted usage or exceeded the declared batch ceiling.');
+          if (result.usage?.costUsd !== undefined && result.usage.costUsd !== 0) throw Object.assign(new Error('Offline adapter reported non-zero cost; output is quarantined.'), { zeroCostViolation: true });
           for (const field of ['inputTokens', 'outputTokens']) if (result.usage?.[field] !== undefined && (!Number.isInteger(result.usage[field]) || result.usage[field] < 0)) throw new Error('Provider token usage must be a nonnegative integer.');
           if (result.usage?.costUsd !== undefined && (!Number.isFinite(result.usage.costUsd) || result.usage.costUsd < 0)) throw new Error('Invalid provider cost usage.');
-          checkpoint.costUsd += result.usage?.costUsd ?? 0;
-          if (paid) { checkpoint.reservedUsd -= config.maxBatchCostUsd; delete checkpoint.pending[batchKey]; }
+          checkpoint.costUsd = 0;
           checkpoint.inputTokens += result.usage?.inputTokens ?? 0; checkpoint.outputTokens += result.usage?.outputTokens ?? 0;
           const returned = new Set();
           for (const candidate of result.records) {
@@ -221,9 +215,8 @@ export async function generate(configPath, data = corpus()) {
           if (!checkpoint.cacheFiles.includes(name)) checkpoint.cacheFiles.push(name);
           saveCheckpoint(); return;
         } catch (error) {
-          if (attempt === 2 || paid && error.notBilled !== true) {
-            if (paid && error.notBilled === true) { checkpoint.reservedUsd -= config.maxBatchCostUsd; delete checkpoint.pending[batchKey]; }
-            const errors = [{ keys: uncached.map(s => s.key), message: 'Adapter failed; inspect adapter locally. Credential-bearing errors are not persisted.' }];
+          if (attempt === 2 || error.zeroCostViolation === true) {
+            const errors = error.zeroCostViolation ? uncached.map(s => ({ key: s.key, cacheKey: `${signature}:${s.key}`, issues: ['zero-cost-policy-violation'] })) : [{ keys: uncached.map(s => s.key), message: 'Adapter failed; inspect adapter locally. Credential-bearing errors are not persisted.' }];
             recordErrors(errors);
             const name = `${batchKey}-failure.json`;
             atomicJSON(resolve(cacheDirectory, name), { entries: [], errors });
@@ -235,7 +228,6 @@ export async function generate(configPath, data = corpus()) {
       })());
     }
     await Promise.all(tasks);
-    if (!tasks.length && paid && checkpoint.costUsd + checkpoint.reservedUsd + config.maxBatchCostUsd > config.maxCostUsd) break;
   }
   const currentSenses = new Map(data.senses.map(s => [s.key, s]));
   const queueKeys = new Set(queue.map(s => s.key));

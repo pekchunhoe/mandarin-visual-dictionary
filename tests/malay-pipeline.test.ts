@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, it, vi } from 'vitest';
 // @ts-expect-error maintenance module is native ESM
@@ -56,22 +56,38 @@ it('resumes cached offline batches, sanitizes failures and never labels model ou
   expect(JSON.parse(readFileSync(checkpoint, 'utf8')).inputTokens).toBe(first.inputTokens);
   expect(readFileSync(checkpoint, 'utf8')).not.toContain('secret credential');
   writeFileSync(config, JSON.stringify({ enabled: true, offline: false, adapter, maxRecords: 3 }));
-  await expect(generate(config, data)).rejects.toThrow('explicit maxCostUsd');
+  await expect(generate(config, data)).rejects.toThrow('strict zero-cost');
   vi.restoreAllMocks();
 });
-it('persists network budget reservations before work and refuses to reissue uncertain billed batches', async () => {
+it('rejects all network/budget configurations and legacy pending work before importing an adapter', async () => {
   const dir = mkdtempSync(resolve('.tmp/malay-budget-test-'));
   const adapter = resolve(dir, 'adapter.mjs'), config = resolve(dir, 'config.json'), checkpoint = resolve(dir, 'checkpoint.json'), output = resolve(dir, 'output.json');
-  writeFileSync(adapter, `import {readFileSync} from 'node:fs'; export const version='budget-fixture',source='No-network budget fixture',license='CC-BY-SA-4.0';
-    export async function translateBatch(){const state=JSON.parse(readFileSync(${JSON.stringify(checkpoint)}));if(state.reservedUsd!==1)throw new Error('missing reservation');throw new Error('uncertain billed provider failure');}`);
-  writeFileSync(config, JSON.stringify({ enabled: true, offline: false, adapter, checkpoint, output, maxRecords: 3, batchSize: 1, concurrency: 2, maxCostUsd: 1, maxBatchCostUsd: 1 }));
-  vi.spyOn(console, 'log').mockImplementation(() => {});
-  await generate(config, data);
-  const first = JSON.parse(readFileSync(checkpoint, 'utf8'));
-  expect(first.reservedUsd).toBe(1); expect(Object.keys(first.pending)).toHaveLength(1); expect(first.errors).toHaveLength(1);
-  await generate(config, data);
-  expect(JSON.parse(readFileSync(checkpoint, 'utf8'))).toEqual(first);
-  vi.restoreAllMocks();
+  const marker = resolve(dir, 'adapter-loaded');
+  writeFileSync(adapter, `import {writeFileSync} from 'node:fs'; writeFileSync(${JSON.stringify(marker)},'must not execute'); export const version='fixture',source='fixture',license='MIT'; export async function translateBatch(){throw Error('must not execute');}`);
+  const settings = { enabled: true, adapter, checkpoint, output, maxRecords: 3 };
+  for (const policy of [{ offline: false, maxCostUsd: 1, maxBatchCostUsd: 1 }, {}, { offline: true, maxCostUsd: 1 }, { offline: true, maxBatchCostUsd: 0.01 }]) {
+    writeFileSync(config, JSON.stringify({ ...settings, ...policy }));
+    await expect(generate(config, data)).rejects.toThrow('strict zero-cost');
+    expect(existsSync(marker)).toBe(false);
+  }
+  const pending = JSON.stringify({ schema: 2, costUsd: 0, reservedUsd: 1, pending: { old: { keys: ['fixture'] } } });
+  writeFileSync(checkpoint, pending); writeFileSync(config, JSON.stringify({ ...settings, offline: true }));
+  await expect(generate(config, data)).rejects.toThrow('checkpoint is preserved');
+  expect(readFileSync(checkpoint, 'utf8')).toBe(pending); expect(existsSync(marker)).toBe(false);
+});
+
+it('quarantines a non-zero usage claim without retrying or publishing candidates', async () => {
+  const dir = mkdtempSync(resolve('.tmp/malay-cost-policy-'));
+  const adapter = resolve(dir, 'adapter.mjs'), config = resolve(dir, 'config.json'), checkpoint = resolve(dir, 'checkpoint.json'), output = resolve(dir, 'output.json');
+  writeFileSync(adapter, `export const version='cost-fixture',source='Local protocol fixture, no network',license='MIT'; export let calls=0; export async function translateBatch(senses,options){calls++;if(options.maxCostUsd!==0)throw Error('nonzero ceiling');return{records:senses.map(s=>({...s,malay:'makna ujian'})),usage:{costUsd:1}};}`);
+  writeFileSync(config, JSON.stringify({ enabled: true, offline: true, adapter, checkpoint, output, maxRecords: 1 }));
+  const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+  await generate(config, data); await generate(config, data);
+  const module = await import(new URL('file:///' + adapter.replaceAll('\\', '/')).href);
+  expect(module.calls).toBe(1);
+  expect(JSON.parse(readFileSync(output, 'utf8')).records).toEqual([]);
+  expect(JSON.parse(readFileSync(checkpoint, 'utf8')).costUsd).toBe(0);
+  log.mockRestore();
 });
 it('checkpoints rejections once, keeps them out of candidates, and invalidates cache when policy options change', async () => {
   const dir = mkdtempSync(resolve('.tmp/malay-rejection-test-'));

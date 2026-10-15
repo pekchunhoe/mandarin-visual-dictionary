@@ -7,9 +7,11 @@ const root = '.tmp/zero-cost'; mkdirSync(root, { recursive: true });
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' });
 const context = await browser.newContext(); const page = await context.newPage();
 const errors = [], appGoogleRequests = [], googleDocuments = [];
+const malayAssets = new Set();
 let officialDestination;
 page.on('pageerror', error => errors.push(error.message));
 page.on('request', request => { if (new URL(request.url()).hostname.endsWith('google.com')) appGoogleRequests.push(request.url()); });
+page.on('response', response => { if (new URL(response.url()).origin === new URL(base).origin && /\/assets\/malay-runtime[^/]+\.json$/.test(new URL(response.url()).pathname)) malayAssets.add(response.url()); });
 context.on('response', response => {
   // Match the chosen navigation URL without accessing a popup frame before it
   // exists. Never inspect translation contents or the site's internal requests.
@@ -46,9 +48,10 @@ try {
     await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText('banci');
     await expect(page.getByRole('link', { name: 'Translate with Google' })).toHaveCount(0); queries.push(query);
   }
-  const asset = await context.request.get(base + '/assets/malay-runtime-JEoRui_g.json'); expect(asset.ok()).toBe(true);
+  expect(malayAssets.size).toBeGreaterThan(0);
+  const asset = await context.request.get([...malayAssets][0]); expect(asset.ok()).toBe(true);
   expect(await asset.json()).toEqual(JSON.parse(readFileSync('src/data/malay-runtime.json')));
   expect(errors).toEqual([]);
-  const report = { pass: true, base, homeMs, googleNavigation: url.href, googleDocuments, noAutomaticGoogleRequests: appGoogleRequests.length === 0, noGoogleResultReadOrPersisted: true, sameDictionaryAndMalayAssets: true, translations: 4184, queries, appErrors: errors };
+  const report = { pass: true, base, homeMs, googleNavigation: url.href, googleDocuments, noAutomaticGoogleRequests: appGoogleRequests.length === 0, noGoogleResultReadOrPersisted: true, sameDictionaryAndMalayAssets: true, translations: JSON.parse(readFileSync('src/data/malay-runtime.json')).records.length, queries, appErrors: errors };
   writeFileSync(root + '/production-smoke.json', JSON.stringify(report, null, 2) + '\n'); console.log(JSON.stringify(report, null, 2));
 } finally { await context.close(); await browser.close(); }

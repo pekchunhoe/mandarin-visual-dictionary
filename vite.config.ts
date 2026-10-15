@@ -7,7 +7,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 export default defineConfig(({ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd(), ['PIXABAY_', 'PEXELS_', 'OPENVERSE_']));
-  return { worker: { format: 'es', plugins: () => [bundleAudit('worker')] }, plugins: [react(), bundleAudit('browser'), { name: 'local-image-api', configureServer(server) { server.middlewares.use('/api/images', (req, res) => { void images(req, res); }); } }, { name: 'offline-shell', writeBundle(_, bundle) {
+  return { server: { watch: { ignored: /(?:^|[/\\])\.tmp(?:[/\\]|$)/ } }, worker: { format: 'es', plugins: () => [bundleAudit('worker')] }, plugins: [react(), bundleAudit('browser'), { name: 'local-image-api', configureServer(server) { server.middlewares.use('/api/images', (req, res) => { void images(req, res); }); } }, { name: 'offline-shell', writeBundle(_, bundle) {
     const runtime = ['/data/cedict.json', ...Object.keys(bundle).filter(file => /(?:visual-lexicon|malay-runtime).*\.json$/.test(file)).map(file => `/${file}`)];
     const assets = ['/', '/favicon.svg', '/manifest.webmanifest', ...Object.keys(bundle).filter(file => !runtime.includes(`/${file}`)).map(file => `/${file}`), ...readdirSync('public/photos').map(file => `/photos/${file}`)];
     const immutable = Object.keys(bundle).filter(file => /^assets\/.+-[\w-]{8,}\.[\w]+$/.test(file)).map(file => `/${file}`);

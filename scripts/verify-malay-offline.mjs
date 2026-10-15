@@ -1,5 +1,5 @@
 import { chromium, expect } from '@playwright/test';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' });
 const context = await browser.newContext();
 const requests = [], errors = [];
@@ -33,8 +33,20 @@ try {
   await expect(page.getByRole('heading', { name: '不耻下问', exact: true })).toBeVisible({ timeout: 30000 });
   await page.goto('http://127.0.0.1:4173/#search=menolong');
   await expect(page.getByRole('heading', { name: '帮助', exact: true })).toBeVisible();
+  await page.goto('http://127.0.0.1:4173/#search=hartanah');
+  const estate = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '不动产', exact: true }) }).first();
+  await expect(estate).toBeVisible(); await estate.click();
+  await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText('hartanah');
+  await expect(page.getByText('Machine-translated equivalent · awaiting language review', { exact: true })).toBeVisible();
+  const annotation = JSON.parse(readFileSync('src/data/malay-runtime.json')).records.find(r => r.entryId.split('|')[0] === '丁' && r.english === 'surname Ding');
+  expect(annotation.translationKind).toBe('definition-translation');
+  await page.goto('http://127.0.0.1:4173/#search=' + encodeURIComponent(annotation.malay));
+  const name = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '丁', exact: true }) }).first();
+  await expect(name).toBeVisible(); await name.click();
+  await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText(annotation.malay);
+  await expect(page.getByText('Machine-translated English definition · awaiting language review', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
-  const report = { productionOfflinePass: true, firstLookupMs, freshHomeMalayFetches: 0, freshHomeDictionaryFetches: 0, savedSenseRetained: true, phraseAndSynonymOffline: true, pageErrors: errors };
+  const report = { productionOfflinePass: true, firstLookupMs, freshHomeMalayFetches: 0, freshHomeDictionaryFetches: 0, savedSenseRetained: true, phraseAndSynonymOffline: true, newModelMeaningsOffline: true, definitionLabelsOffline: true, pageErrors: errors };
   writeFileSync('.tmp/malay-offline.json', JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 } finally { await context.close(); await browser.close(); }

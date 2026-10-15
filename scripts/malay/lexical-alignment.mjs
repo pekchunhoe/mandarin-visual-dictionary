@@ -28,6 +28,13 @@ export function lexicalResources(root='.tmp/malay-lexical') {
   return {revision:manifest.revision,english:tab(`${root}/wns/eng/wn-data-eng.tab`,'eng'),chinese:tab(`${root}/wns/cow/wn-data-cmn.tab`,'cmn'),malay:tab(`${root}/wns/msa/wn-data-zsm.tab`,'zsm')};
 }
 const loanwords=new Set(['atom','proton','neutron','nitrogen','virus','hospital','pen','bank','panda','durian','tomato']);
+export function malayTermsForSynset(synset, resources) {
+  const englishTerms=new Set((resources.english.bySynset.get(synset)??[]).map(normalizeMalay));
+  const terms=(resources.malay.bySynset.get(synset)??[]).map(t=>t.replace(/\byg\b/g,'yang').replace(/\bsso\b/g,'seseorang').replace(/\bsst\b/g,'sesuatu'))
+    .filter(t=>t && /^[\p{L}\p{N} ,'-]+$/u.test(t) && t.length<100 && (!englishTerms.has(normalizeMalay(t))||loanwords.has(normalizeMalay(t))))
+    .filter(t=>!/\b(?:mobil|sepeda|kantor|rumah sakit|telepon|apotik|kulkas|handuk|gratis|obat|hewan|bebek|sapi|sumur|algoritme)\b/i.test(t));
+  return [...new Set(terms)];
+}
 export function alignLexicalSense(sense, resources) {
   if(sense.idiom || /\b(?:fig\.|idiom|surname|variant|abbr\.|classifier|lit\.)/i.test(sense.english))return {reason:'needs-contextual-explanation'};
   let english=sense.english.replace(/^\((?:bound form|literary|coll\.|formal|informal)\)\s*/i,'').trim();
@@ -46,11 +53,7 @@ export function alignLexicalSense(sense, resources) {
   }
   if(candidates.size!==1)return {reason:candidates.size?'ambiguous-synset':'no-common-synset'};
   const [synset]=candidates;
-  const englishTerms=new Set((resources.english.bySynset.get(synset)??[]).map(normalizeMalay));
-  const terms=(resources.malay.bySynset.get(synset)??[]).map(t=>t.replace(/\byg\b/g,'yang').replace(/\bsso\b/g,'seseorang').replace(/\bsst\b/g,'sesuatu'))
-    .filter(t=>t && /^[\p{L}\p{N} ,'-]+$/u.test(t) && t.length<100 && (!englishTerms.has(normalizeMalay(t))||loanwords.has(normalizeMalay(t))))
-    .filter(t=>!/\b(?:mobil|sepeda|kantor|rumah sakit|telepon|apotik|kulkas|handuk|gratis|obat|hewan|bebek|sapi|sumur|algoritme)\b/i.test(t));
-  const unique=[...new Set(terms)];
+  const unique=malayTermsForSynset(synset, resources);
   if(!unique.length)return {reason:'no-usable-malaysian-lemma',synset};
   const malay=unique.slice(0,3).join('; ');
   const record={...sense,malay,malaySearchTerms:unique.slice(0,3),malaySynonyms:[],malayMorphology:[],

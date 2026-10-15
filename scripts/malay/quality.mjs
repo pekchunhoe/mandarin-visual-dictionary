@@ -14,6 +14,7 @@ export function qualityIssues(record, sense) {
   if (record.translationQuality !== undefined && !['human-verified', 'automated-high-confidence', 'automated-review-required'].includes(record.translationQuality)) issues.push('invalid-quality-status');
   if (record.translationQuality === 'human-verified' && (record.translationStatus !== 'verified' || !record.translationReviewer)) issues.push('unsupported-human-verification');
   if (!['generated', 'unreviewed', 'verified'].includes(record.translationStatus)) issues.push('invalid-status');
+  if (record.translationKind !== undefined && !['lexical-equivalent', 'definition-translation'].includes(record.translationKind)) issues.push('invalid-translation-kind');
   // Evidence-based dictionary imports need no invented numeric probability.
   // Existing generator confidence values retain their original validation.
   if (record.translationConfidence !== undefined && (!Number.isFinite(record.translationConfidence) || record.translationConfidence < 0 || record.translationConfidence > 1)) issues.push('invalid-confidence');
@@ -27,6 +28,6 @@ export function qualityIssues(record, sense) {
   return issues;
 }
 export function runtimeRecord(record) {
-  const fields = ['key', 'entryId', 'senseId', 'english', 'malay', 'malaySearchTerms', 'malaySynonyms', 'malayMorphology', 'translationSource', 'translationStatus', 'translationQuality', 'translationModel', 'translationModelRevision', 'translationConfidence', 'translationLicense', 'translationVersion', 'translationReviewer', 'translationNotes'];
+  const fields = ['key', 'entryId', 'senseId', 'english', 'malay', 'malaySearchTerms', 'malaySynonyms', 'malayMorphology', 'translationSource', 'translationStatus', 'translationKind', 'translationQuality', 'translationModel', 'translationModelRevision', 'translationConfidence', 'translationLicense', 'translationVersion', 'translationReviewer', 'translationNotes'];
   return Object.fromEntries(fields.filter(k => record[k] !== undefined).map(k => [k, record[k]]));
 }

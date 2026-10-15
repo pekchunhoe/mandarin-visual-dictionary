@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "purpose": "Attribution for locally generated provisional Malay equivalents and translated surname definitions; weights are not redistributed or deployed.",
+  "reviewStatus": "Machine-generated, awaiting independent Mandarin–Malaysian Malay human review",
+  "models": [
+    {
+      "creator": "HPLT consortium",
+      "model": "HPLT/translate-en-ms-v2.0-hplt_opus",
+      "revision": "873965aa16eb43f662b57f52f39dcc2efe20681d",
+      "url": "https://huggingface.co/HPLT/translate-en-ms-v2.0-hplt_opus",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "licenseNotice": "/data/licenses/CC-BY-4.0.txt",
+      "sourceWeightsSha256": "35e36ae55781473fe7f03405fa22cea4ed8f572c6679ce77f60b2574f3cb9f5c",
+      "changes": "Windows-local Marian to CTranslate2 int8 CPU and float32 GPU conversion; English sense translation; licensed lexical concordance and constrained surname-definition validation; leading infinitive and duplicate alternative normalization. No HPLT endorsement or human verification implied.",
+      "citation": "Burchell et al. (2025), An Expanded Massive Multilingual Dataset for High-Performance Language Technologies, arXiv:2503.10267",
+      "funding": "EU Horizon Europe grant 101070350; UKRI Horizon Europe funding guarantee 10052546"
+    },
+    {
+      "creator": "Meta / Facebook, Inc. and affiliates",
+      "model": "facebook/m2m100_418M",
+      "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636",
+      "url": "https://huggingface.co/facebook/m2m100_418M",
+      "license": "MIT",
+      "licenseNotice": "/data/licenses/META-M2M100-MIT.txt",
+      "changes": "Windows-local CTranslate2 int8 conversion; English source and explicit __ms__ target; provisional sense concordance and grammatical normalization. No Meta endorsement or human verification implied."
+    }
+  ],
+  "alignmentSources": "See /data/MALAY-NOTICE.txt and Wordnet Bahasa, Chinese Open Wordnet, Princeton WordNet 3.0 license notices.",
+  "runtime": "Local maintenance only: CTranslate2 4.8.3 CPU / 3.24.0 CUDA 11 (MIT), SentencePiece 0.2.2 (Apache-2.0), Transformers 4.57.6 (Apache-2.0), PyTorch CPU (BSD-3-Clause). NVIDIA cuBLAS 11.11.3.6 is a free vendor runtime installed only in the local GPU virtual environment under its own license; it is not redistributed or deployed.",
+  "outputPolicy": "These corpus-aligned dictionary additions are offered under CC-BY-SA-4.0, with the applicable model and lexical-resource attribution retained. Automatic QA is not proof of semantic correctness. No independent human review is claimed."
+}

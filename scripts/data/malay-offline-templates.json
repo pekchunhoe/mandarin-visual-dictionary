@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "surname": {
+    "english": "surname",
+    "malay": "nama keluarga",
+    "synset": "06336904-n",
+    "source": "Wordnet Bahasa zsm via Open Multilingual Wordnet",
+    "revision": "406bf83b3c507a3d1f26e88252d5d66893fd36bf",
+    "url": "https://github.com/omwn/omw-data/blob/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/msa/wn-data-zsm.tab",
+    "license": "MIT",
+    "policy": "Validate a whole model-generated translation of the exact English annotation surname NAME. Require the licensed Malay prefix and unchanged Roman NAME. Do not generate a substitute output or call the annotation a lexical equivalent."
+  }
+}

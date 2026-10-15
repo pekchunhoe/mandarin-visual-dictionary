@@ -29,3 +29,4 @@
 .meaning-display{border:0;padding:0;flex-direction:row;flex-wrap:wrap;gap:8px 14px}.meaning-display legend{margin-bottom:8px}.meaning-display label{display:flex;align-items:center;gap:5px;min-height:32px;cursor:pointer}.meaning-display input{accent-color:var(--green)}
 .meaning-display{grid-column:1/-1;min-width:0}.meaning-panel>div{min-width:0}@media(max-width:600px){.word-header .meaning-panel{grid-template-columns:1fr}}
 .translation-help{grid-column:1/-1;display:grid;gap:7px;margin-top:12px}.translation-help .text-button{justify-self:start;font-size:13px}.translation-help small{color:var(--muted);font-size:11px;line-height:1.6}
+.card-translation-note{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:5px}

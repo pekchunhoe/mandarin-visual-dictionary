@@ -29,6 +29,15 @@ it('search cards show the matching sense instead of the first sense', () => {
   expect(open).toHaveBeenCalledWith(word);
 });
 
+it('distinguishes machine-translated definitions from lexical equivalents without claiming review', () => {
+  const generated: Word = { ...word, senses: word.senses.map(s => ({ ...s, translationStatus: 'generated', translationKind: s.id === 'sense-1' ? 'definition-translation' : 'lexical-equivalent' })) };
+  render(<WordDetail word={generated} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);
+  expect(screen.getByText('Machine-translated English definition · awaiting language review')).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: '1. to open' }));
+  expect(screen.getByText('Machine-translated equivalent · awaiting language review')).toBeVisible();
+  expect(screen.queryByText('Reviewed Malay meaning')).not.toBeInTheDocument();
+});
+
 it('offers only missing senses an official English-to-Malay website link and keeps the selected definition intact', () => {
   const missing: Word = { ...word, matchedSenseId: 'sense-0', senses: [
     { id: 'sense-0', english: 'light (not heavy); light & portable?', visualType: 'abstract', examples: [] },

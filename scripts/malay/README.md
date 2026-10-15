@@ -111,3 +111,69 @@ are never needed by production. `MALAY-NOTICE.txt`, the full licenses and
 per-sense `MALAY-DATASET-ATTRIBUTION.json` retain source credits. The review
 sample is `scripts/data/malay-bulk-review-samples.json`; the local TSV review
 sheet and all ambiguous candidates are in `.tmp/malay-datasets/`.
+
+## Complete local offline model processing
+
+`KANJIAN_COMPLETE_OFFLINE_MALAY_TRANSLATION_REPORT.md` records actual counts,
+benchmarks and release verification. The neural models are maintenance tools;
+neither Vercel nor a student's browser downloads weights or runs inference.
+All inference is local, and the worker explicitly disables network connections.
+There is no paid provider, billing setup, subscription, or paid fallback.
+
+Use the existing separate Python 3.12 environment in `.tmp/malay-model-env`.
+`prepare-hplt.py` verifies the pinned HPLT CC BY 4.0 weight/tokenizer checksums,
+preserves and checks all 64,000 tokenizer IDs, and creates int8 / float32 local
+CTranslate2 models. `requirements-offline.txt` lists the CPU dependencies.
+`requirements-cuda11.txt` describes a separate optional environment for the
+existing older NVIDIA driver; it changes no system driver. The free NVIDIA
+vendor runtime is not redistributed with the application.
+
+After backing up the current store, `node scripts/malay/offline-workload.mjs`
+creates a hashed per-sense workload with Mandarin, pinyin, exact English,
+entry context, available POS/reference data and protected-existing status.
+It deduplicates only equivalent complete contexts, never English spelling alone.
+Each worker locks its directory, takes an immutable workload snapshot, checks
+identity and shard SHA-256 values, and resumes its committed position. Batches
+shrink with low available RAM and split on inference failure. Oversized input
+is rejected instead of silently truncated; low memory/disk failures retain
+completed shards. Separate partitions cannot import until all original senses
+have an exactly aligned output row. No candidate is automatically verified.
+
+Resume the two final partitions of the recorded run in separate terminals:
+
+```powershell
+.\.tmp\malay-model-env\Scripts\python.exe scripts/malay/offline-bulk.py --input .tmp/malay-complete/tasks-cpu-final.jsonl --output .tmp/malay-complete/full-cpu-final --threads 4 --batch-size 128 --beam-size 1
+.\.tmp\malay-cuda11-env\Scripts\python.exe scripts/malay/offline-bulk.py --device cuda --precision float32 --input .tmp/malay-complete/tasks-gpu-final.jsonl --output .tmp/malay-complete/full-gpu-final --threads 2 --batch-size 128 --beam-size 1
+```
+
+The frozen original CPU partitions and `bulk-plan.json` must remain unchanged.
+M2M100 processes a separate exact-sense lexical subset; a restricted surname
+retry expands `surname NAME` to the synonymous `Family name: NAME.` input.
+Only a whole model output matching licensed `nama keluarga` and the complete
+unchanged Roman name qualifies. Such outputs are typed and displayed as English
+definition translations, separately from lexical equivalents. The validator
+does not fill a translation from the template when the model fails.
+
+After all worker checkpoints finish:
+
+```powershell
+node scripts/malay/offline-prepare.mjs
+node scripts/malay/offline-integrate.mjs
+node scripts/malay/offline-integrate.mjs --promote-local
+```
+
+The first import is isolated. Immutable per-batch import snapshots permit
+interruption recovery; existing translations are protected byte for byte at
+record level. Local promotion uses a paired backup/journal and rollback on
+failure. A repeat import adds zero records. Unqualified outputs remain local
+in `.tmp/malay-complete/quarantine.jsonl`; they never enter application data.
+If a promotion journal is pending, verify its before-file SHA-256 values and
+restore both `promotion-before-store.json` and `promotion-before-runtime.json`
+before retrying. The complete project snapshot also has `RESTORE.txt` and a
+per-file checksum manifest. Do not reset unrelated working-tree changes.
+
+The committed evaluation contains 380 stratified senses, licensed references,
+actual model outputs, assistant screening, and a separate 200-case surname
+pilot. Independent human review remains zero. Model agreement, exact reference
+matching and automated validation do not establish general semantic accuracy.
+All newly stored outputs require independent Mandarin–Malaysian Malay review.

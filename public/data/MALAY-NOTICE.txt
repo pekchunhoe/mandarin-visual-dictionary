@@ -51,6 +51,27 @@ Source file hashes and precise versions are recorded in the integration report.
 Google Translate-derived 200k data, Cambridge, DBP/PRPM and Kamus Dewan mirrors
 are excluded from this release because redistribution rights were not confirmed.
 
-Coverage is incomplete. Refer to KANJIAN_FINAL_DATASET_INTEGRATION_REPORT.md
-in the source repository for current sense-level coverage and remaining work.
+Coverage is incomplete. Refer to
+KANJIAN_COMPLETE_OFFLINE_MALAY_TRANSLATION_REPORT.md in the source repository
+for current sense-level coverage. Earlier dictionary-only integration work is
+documented in KANJIAN_FINAL_DATASET_INTEGRATION_REPORT.md.
 Future imports must retain their own applicable attribution and licenses.
+
+Offline machine translation additions use HPLT consortium's English-to-Malay
+v2.0 HPLT+OPUS model (CC BY 4.0), and Meta's M2M100 418M model (MIT).
+Pinned revisions, model links, creators, funding acknowledgment, conversion and
+normalization changes, and license links: /data/MALAY-OFFLINE-MODELS.json
+Full additional notices: /data/licenses/CC-BY-4.0.txt and
+/data/licenses/META-M2M100-MIT.txt
+No model weights or translation inference run on the deployed website.
+Every new machine-generated equivalent or translated surname annotation is
+provisional and awaits independent
+Mandarin-Malaysian Malay human review. Automated lexical concordance is not
+human verification; neither model distinguishes all Malaysian usage reliably.
+Surname annotations are translations of the English definition, not Malay
+lexical equivalents of Chinese names. A restricted validator requires the
+Wordnet Bahasa phrase nama keluarga and preserves the complete original Roman
+name. The model's actual output must satisfy this check; no missing output is
+filled by a handwritten template. The website labels this distinction.
+See KANJIAN_COMPLETE_OFFLINE_MALAY_TRANSLATION_REPORT.md in the repository for
+the latest actual coverage, exclusions, model evaluation and deployment checks.

@@ -15,15 +15,10 @@ const context = await browser.newContext(); const page = await context.newPage()
 const pageErrors = [], apiResponses = [], failedRequests = [], runtimeAssets = [];
 page.on('pageerror', error => pageErrors.push(error.message));
 page.on('requestfailed', request => { if (!/ERR_ABORTED/.test(request.failure()?.errorText ?? '')) failedRequests.push({ url: request.url(), failure: request.failure()?.errorText }); });
-const saves = [];
+const runtimeURLs = new Set();
 page.on('response', response => {
   if (new URL(response.url()).pathname === '/api/images') apiResponses.push({ status: response.status(), url: response.url() });
-  if (/\/assets\/malay-runtime[^/]+\.json/.test(response.url())) saves.push((async () => {
-    const raw = await response.body(), data = JSON.parse(raw);
-    writeFileSync(`${dir}/malay-runtime.json`, raw);
-    runtimeAssets.push({ url: response.url(), sha256: hash(raw), version: data.version, translations: data.records.length });
-    if (!before) expect(data).toEqual(JSON.parse(readFileSync('src/data/malay-runtime.json')));
-  })());
+  if (/\/assets\/malay-runtime[^/]+\.json/.test(response.url())) runtimeURLs.add(response.url());
 });
 const examples = [];
 try {
@@ -65,7 +60,15 @@ try {
     expect((await notices.json()).records).toHaveLength(316);
     const license = await context.request.get(`${base}/data/licenses/CC-BY-SA-4.0.txt`); expect(license.ok()).toBe(true);
   }
-  await Promise.all(saves);
+  // Read large assets independently: DevTools can evict a 15 MB response body
+  // while the real application continues using its successfully fetched data.
+  for (const url of runtimeURLs) {
+    const response = await context.request.get(url); expect(response.ok()).toBe(true);
+    const raw = await response.body(), data = JSON.parse(raw);
+    writeFileSync(`${dir}/malay-runtime.json`, raw);
+    runtimeAssets.push({ url, sha256: hash(raw), version: data.version, translations: data.records.length });
+    if (!before) expect(data).toEqual(JSON.parse(readFileSync('src/data/malay-runtime.json')));
+  }
   expect(pageErrors).toEqual([]);
   expect(apiResponses.filter(r => r.status >= 500)).toEqual([]);
   if (!before) expect(runtimeAssets.length).toBeGreaterThan(0);

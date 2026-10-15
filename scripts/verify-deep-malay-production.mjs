@@ -11,6 +11,12 @@ page.on('request', r => { if (/huggingface\.co|translation\.googleapis\.com|api\
 page.on('response', r => { const path = new URL(r.url()).pathname; if (path === '/api/images' && r.status() >= 500) apiErrors.push(r.status()); if (/\/assets\/malay-runtime[^/]+\.json$/.test(path)) runtimes.add(r.url()); });
 try {
   const start = Date.now(); await page.goto(base); await expect(page.locator('.hero')).toBeVisible(); const homeMs = Date.now() - start;
+  // Progressive search can reorder a positional locator between a text read
+  // and its click. Observe the actual clicked DOM card at event capture time.
+  await page.evaluate(() => document.addEventListener('click', event => {
+    const card = event.target instanceof Element && event.target.closest('.word-card-main');
+    if (card) globalThis.__kanjianClickedMeaning = { chinese: card.querySelector('h3').textContent, english: card.querySelector('p[lang="en"]').textContent };
+  }, { capture: true }));
   for (const [chinese, english] of [['互联网', 'Internet'], ['海啸', 'tsunami'], ['轮椅', 'wheelchair'], ['T裇', 'variant of T恤[T xu4]'], ['B超', 'abbr. for B型超聲|B型超声[B xing2 chao1 sheng1]']]) {
     const record = store.records.find(r => r.entryId.split('|')[0] === chinese && r.english === english); expect(record).toBeDefined();
     for (const query of [chinese, record.malay]) {
@@ -31,8 +37,11 @@ try {
   }
   for (const query of ['bank', 'light', 'charge', 'current', 'spring', 'right', 'match', 'set', 'run', 'break']) {
     await page.goto(base + '/#search=' + query); const card = page.locator('.word-card-main').first(); await expect(card).toBeVisible({ timeout: 60000 });
-    const before = await card.locator('p[lang="en"]').innerText(); await card.click();
-    const english = await page.locator('.meaning-panel p[lang="en"]').innerText(); expect(english.split(';')[0]).toBe(before);
+    await page.evaluate(() => { globalThis.__kanjianClickedMeaning = null; }); await card.click();
+    const clicked = await page.evaluate(() => globalThis.__kanjianClickedMeaning); expect(clicked).toBeTruthy();
+    await expect(page.locator('.word-header h1')).toHaveText(clicked.chinese);
+    await expect.poll(async () => (await page.locator('.meaning-panel p[lang="en"]').innerText()).split(';')[0]).toBe(clicked.english);
+    const english = await page.locator('.meaning-panel p[lang="en"]').innerText();
     polysemy.push({ query, selectedEnglish: english, chinese: await page.locator('.word-header h1').innerText() });
   }
   const corpus = await context.request.get(base + '/data/cedict.json'); expect(corpus.ok()).toBe(true); expect(hash(await corpus.body())).toBe(hash(readFileSync('public/data/cedict.json')));

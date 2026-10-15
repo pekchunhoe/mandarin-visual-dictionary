@@ -34,7 +34,7 @@ try {
     await expect(page.getByRole('heading', { name: '人口普查', exact: true })).toBeVisible({ timeout: 60000 });
   } else {
     for (const [chinese, english, malay] of [['人口普查', 'census', 'banci'], ['灯泡', 'light bulb', 'mentol'], ['脚踝', 'ankle', 'buku lali'], ['研究', 'research', 'penyelidikan'], ['银行', 'bank', 'bank'], ['狗', 'dog', 'anjing']]) {
-      for (const query of [chinese, english]) {
+      for (const query of [...new Set([chinese, english, malay])]) {
         const start = Date.now(); await page.goto(`${base}/#search=${encodeURIComponent(query)}`);
         const card = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: chinese, exact: true }) }).first();
         await expect(card).toBeVisible({ timeout: 60000 }); await card.click();
@@ -44,10 +44,18 @@ try {
         examples.push({ query, chinese, english, malay, pinyin, displayedMs: Date.now() - start });
       }
     }
+    // The last preserved entry is the dog. Verify an actual rendered gallery,
+    // in addition to HTTP success; live provider results are never mocked here.
+    await expect(page.locator('.gallery-grid figure').first()).toBeVisible({ timeout: 30000 });
+    baseline.preservedGalleryPictures = await page.locator('.gallery-grid figure').count();
     await page.goto(`${base}/#search=${encodeURIComponent('河岸')}`);
     const river = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '河岸', exact: true }) }).first();
     await expect(river).toBeVisible({ timeout: 30000 }); await river.click();
     await expect(page.locator('.meaning-panel p[lang="ms"]')).not.toHaveText('bank');
+    await page.goto(`${base}/#search=banci`);
+    const census = page.locator('.word-card-main').filter({ has: page.getByRole('heading', { name: '人口普查', exact: true }) }).first();
+    await expect(census).toBeVisible({ timeout: 30000 }); await census.click();
+    await expect(page.locator('.meaning-panel p[lang="ms"]')).toHaveText('banci');
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.screenshot({ path: `${dir}/phone.png`, fullPage: true });

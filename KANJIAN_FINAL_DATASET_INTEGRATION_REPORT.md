@@ -1,12 +1,12 @@
 # KANJIAN final dataset integration report
 
-Generated 2026-10-15T02:45:03.456Z. Counts refer to canonical individual CC-CEDICT senses, not word-list membership.
+Generated 2026-10-15T02:52:46.342Z. Counts refer to canonical individual CC-CEDICT senses, not word-list membership.
 
 ## Result
 
 The local dictionary now contains **4,184 Malay-translated senses of 198,245 (2.110520%)**, an increase of **316** over the verified 3,868 baseline (1.951121%). **194,061 senses remain untranslated.** All 4184 translations require independent Malaysian Malay review; none is claimed human-verified. The 316 new entries are licensed dictionary-derived provisional additions. No paid API or new model inference was used.
 
-Production verification: **pending**. Local tests are recorded below; release results will be filled only after actual verification.
+Production verification: **PASS**. The deployed Malay asset has 4184 records and version ms-MY-v1-18955b5e78b1.
 
 ## Baseline, integrity and recovery
 
@@ -127,18 +127,18 @@ Preserved examples include 银行 / bank / bank and 狗 / dog / anjing. Untransl
 
 - Repository: https://github.com/pekchunhoe/mandarin-visual-dictionary
 - Branch: main. The existing remote was fetched and matched the original base 4d75be23fafa8e44d9711d2e4097acd46b675a03; no force-push or history rewrite is used.
-- Application release commit: pending final reviewed commit.
-- Push verification: pending.
-- This report may be finalized by a subsequent documentation-only commit; the application release SHA above identifies the tested application content.
+- Application release commit: c22137260e53d19c9f962b141614a5746944ab2e.
+- Push verification: verified against origin/main.
+- This report may be finalized by a subsequent documentation/release-verification commit; the application release SHA above identifies the tested application content.
 - Existing Vercel project: mandarin-visual-dictionary, scope pek-explains-physics; project ID prj_45bxtqgs7w3rV211KuVvoWmmxJkU.
 - Existing production URL: https://mandarin-visual-dictionary.vercel.app
 - Deployment workflow: the existing project has no Git-source link; use its established Vercel CLI production deployment, preserving domain, Node 24, build command, function packaging, security headers and environment variables. No replacement project or remote database is created. The dictionary is immutable bundled/static data; no shared production database mutation is needed.
 - Previous working deployment retained for rollback: dpl_Ddxp4e9dArWNJH9XgGAdgRuMfT1K, https://mandarin-visual-dictionary-dcffq36qa-pek-explains-physics.vercel.app . The pre-release production corpus was downloaded, backed up and verified against the same SHA-256. Restore through the existing Vercel rollback mechanism if a critical regression appears.
-- New production deployment ID: pending.
-- New deployment status: pending.
-- Live smoke test: pending; no deployment claim is made yet
+- New production deployment ID: dpl_C2cjXcwm9GiSQ65MN44YUkGrpyzn.
+- New deployment status: READY.
+- Live smoke test: PASS, 17 actual search/detail checks; home visible in 757 ms, no page exceptions or image API 5xx responses. Live corpus SHA-256 and the fetched Malay asset match the tested local files. Mobile overflow, credits and full license URLs checked.
 
-
+Actual smoke evidence: 1 hashed Malay runtime response(s); 55 image API responses (all HTTP 200); 0 failed request(s), detailed in the local production-after/smoke.json ledger. The preserved live dog gallery rendered 1 picture(s). Image availability varies: a successful endpoint does not guarantee 20 relevant pictures for every word, and the existing unavailable-picture fallback remains functional. Provider inventory/content is not a linguistic guarantee.
 
 ## Remaining limitations
 

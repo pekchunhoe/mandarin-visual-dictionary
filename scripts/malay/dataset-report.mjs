@@ -143,7 +143,7 @@ Preserved examples include 银行 / bank / bank and 狗 / dog / anjing. Untransl
 - Branch: main. The existing remote was fetched and matched the original base 4d75be23fafa8e44d9711d2e4097acd46b675a03; no force-push or history rewrite is used.
 - Application release commit: ${release?.applicationCommit ?? 'pending final reviewed commit'}.
 - Push verification: ${release?.pushVerified ? 'verified against origin/main' : 'pending'}.
-- This report may be finalized by a subsequent documentation-only commit; the application release SHA above identifies the tested application content.
+- This report may be finalized by a subsequent documentation/release-verification commit; the application release SHA above identifies the tested application content.
 - Existing Vercel project: mandarin-visual-dictionary, scope pek-explains-physics; project ID prj_45bxtqgs7w3rV211KuVvoWmmxJkU.
 - Existing production URL: https://mandarin-visual-dictionary.vercel.app
 - Deployment workflow: the existing project has no Git-source link; use its established Vercel CLI production deployment, preserving domain, Node 24, build command, function packaging, security headers and environment variables. No replacement project or remote database is created. The dictionary is immutable bundled/static data; no shared production database mutation is needed.
@@ -152,7 +152,7 @@ Preserved examples include 银行 / bank / bank and 狗 / dog / anjing. Untransl
 - New deployment status: ${release?.deploymentStatus ?? 'pending'}.
 - Live smoke test: ${production?.productionPass ? `PASS, ${production.examples.length} actual search/detail checks; home visible in ${production.homeVisibleMs} ms, no page exceptions or image API 5xx responses. Live corpus SHA-256 and the fetched Malay asset match the tested local files. Mobile overflow, credits and full license URLs checked.` : 'pending; no deployment claim is made yet'}
 
-${production ? `Actual smoke evidence: ${production.runtimeAssets.length} hashed Malay runtime response(s); ${production.apiResponses.length} image API responses; ${production.failedRequests.length} failed request(s), detailed in the local production-after/smoke.json ledger. Provider availability/content is not a linguistic guarantee.` : ''}
+${production ? `Actual smoke evidence: ${production.runtimeAssets.length} hashed Malay runtime response(s); ${production.apiResponses.length} image API responses (${production.apiResponses.every(r => r.status === 200) ? 'all HTTP 200' : 'see status ledger'}); ${production.failedRequests.length} failed request(s), detailed in the local production-after/smoke.json ledger. The preserved live dog gallery rendered ${production.preservedGalleryPictures} picture(s). Image availability varies: a successful endpoint does not guarantee 20 relevant pictures for every word, and the existing unavailable-picture fallback remains functional. Provider inventory/content is not a linguistic guarantee.` : ''}
 
 ## Remaining limitations
 

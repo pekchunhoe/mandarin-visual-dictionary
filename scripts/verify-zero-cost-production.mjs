@@ -7,12 +7,13 @@ const root = '.tmp/zero-cost'; mkdirSync(root, { recursive: true });
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' });
 const context = await browser.newContext(); const page = await context.newPage();
 const errors = [], appGoogleRequests = [], googleDocuments = [];
+let officialDestination;
 page.on('pageerror', error => errors.push(error.message));
 page.on('request', request => { if (new URL(request.url()).hostname.endsWith('google.com')) appGoogleRequests.push(request.url()); });
 context.on('response', response => {
-  // Observe only the top-level official website response, never its translation
-  // contents or the website's internal requests. No result is scraped or saved.
-  if (response.request().isNavigationRequest() && response.request().resourceType() === 'document' && response.request().frame().parentFrame() === null && new URL(response.url()).hostname === 'translate.google.com') googleDocuments.push({ status: response.status(), url: response.url() });
+  // Match the chosen navigation URL without accessing a popup frame before it
+  // exists. Never inspect translation contents or the site's internal requests.
+  if (response.request().isNavigationRequest() && response.request().resourceType() === 'document' && response.url() === officialDestination) googleDocuments.push({ status: response.status(), url: response.url() });
 });
 try {
   const start = Date.now(); await page.goto(base); await expect(page.locator('.hero')).toBeVisible(); const homeMs = Date.now() - start;
@@ -24,6 +25,7 @@ try {
   await page.getByRole('button', { name: '2. river bank', exact: true }).click();
   const link = page.getByRole('link', { name: 'Translate with Google', exact: true }); await expect(link).toBeVisible();
   const url = new URL(await link.getAttribute('href'));
+  officialDestination = url.href;
   expect(url.origin).toBe('https://translate.google.com'); expect(url.searchParams.get('sl')).toBe('en'); expect(url.searchParams.get('tl')).toBe('ms'); expect(url.searchParams.get('text')).toBe('river bank');
   expect(appGoogleRequests).toEqual([]);
   const stored = await page.evaluate(() => JSON.stringify(localStorage));

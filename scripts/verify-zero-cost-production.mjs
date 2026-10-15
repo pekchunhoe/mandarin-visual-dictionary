@@ -12,7 +12,7 @@ page.on('request', request => { if (new URL(request.url()).hostname.endsWith('go
 context.on('response', response => {
   // Observe only the top-level official website response, never its translation
   // contents or the website's internal requests. No result is scraped or saved.
-  if (response.request().isNavigationRequest() && response.request().resourceType() === 'document' && new URL(response.url()).hostname === 'translate.google.com') googleDocuments.push({ status: response.status(), url: response.url() });
+  if (response.request().isNavigationRequest() && response.request().resourceType() === 'document' && response.request().frame().parentFrame() === null && new URL(response.url()).hostname === 'translate.google.com') googleDocuments.push({ status: response.status(), url: response.url() });
 });
 try {
   const start = Date.now(); await page.goto(base); await expect(page.locator('.hero')).toBeVisible(); const homeMs = Date.now() - start;

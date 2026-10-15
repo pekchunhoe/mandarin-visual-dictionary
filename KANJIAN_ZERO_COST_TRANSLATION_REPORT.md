@@ -51,7 +51,7 @@ The [official Cloud Translation setup documentation](https://docs.cloud.google.c
 - Full unit/integration suite: **825 tests passed**, 26 files, no failures or skips.
 - Focused browser suite: **6 passed**, zero failed, skipped or flaky, including the real new-tab navigation test and existing Malay/gallery/mobile checks.
 - Production-built lazy loading and Malay offline/reload/saved-sense checks: **PASS**.
-- Data preservation, build cost guard, lazy bundle boundaries, source/security checks and whitespace: passing; final release checks recorded below.
+- Data preservation, build cost guard, lazy bundle boundaries, source/security checks and whitespace: **PASS**.
 - Startup JavaScript remains **321,145 bytes / 95,837 bytes gzip**, identical in size to the preceding release.
 - The lazy word-detail chunk is **12,473 bytes**. The worker and hashed Malay data asset retain their existing filenames and content; no model weights or dataset files were added to the frontend.
 - The only production feature added is a static external link and explanatory text. No new server function, storage/database, background task, inference compute or paid service is provisioned. Existing Vercel configuration, project, domain, credentials and environment variables remain unchanged.
@@ -62,10 +62,12 @@ Browser verification checks the actual anchor, exact selected-sense parameters, 
 
 - Repository: https://github.com/pekchunhoe/mandarin-visual-dictionary
 - Branch: `main`.
-- Release commit: pending validated release.
+- Application release commit: `69106316588083f95f882973708b2617cbbef6ee`, pushed and verified against `origin/main`. A subsequent report/verification-only commit records the completed deployment; it does not change application behavior.
 - Existing production project: `pek-explains-physics/mandarin-visual-dictionary`, ID `prj_45bxtqgs7w3rV211KuVvoWmmxJkU`.
 - Existing URL: https://mandarin-visual-dictionary.vercel.app
 - Prior working deployment retained for rollback: `dpl_7DjrHJn3tAYBBqVQZjTWSQdpHUoh`, the Git-triggered deployment of preceding commit `824604c296a0067ec6db3e015086a4e267bc86dc`.
-- Deployment and independent live verification: pending. No production-success claim is made before verification.
+- Application deployment: **READY**, ID `dpl_E3xp3FTuKXsC7QH7o6cyDFf1Amut`, exact Git SHA `69106316588083f95f882973708b2617cbbef6ee`, assigned to the existing production domain.
+- Independent live verification: **PASS**. The actual official Google Translate page returned HTTP 200 for the selected `river bank` definition, English source and Malay target. The new tab had no opener; KANJIAN made no automatic Google request before the click, retained its missing-translation state and stored no result. No Google translation text was read or persisted.
+- Actual production Mandarin `人口普查`, English `census` and Malay `banci` searches all retained the stored `banci` meaning and did not show the missing-meaning action. Production corpus and Malay runtime matched the tested local assets. The 320-pixel layout had no horizontal overflow; no app exceptions occurred. Fresh home display was measured at 1,723 ms in this smoke run, with no startup JavaScript size increase.
 
 Authenticated project/deployment API metadata confirms the existing GitHub integration deploys `main` automatically. This release uses that workflow without plan changes, paid add-ons, quota overrides or a duplicate manual deployment. If the platform refuses the deployment because of a limit, the previous working release is retained; no upgrade or billing activation is attempted. This release introduces no translation API or model-hosting resource that could incur translation charges. The earlier integration report's inference about a missing Git link was corrected after checking the full authenticated API metadata; the CLI inspection summary had omitted that information.

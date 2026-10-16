@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "verified": "2026-10-16T00:40:47.723Z",
+  "repository": "https://github.com/pekchunhoe/mandarin-visual-dictionary",
+  "appDataCommit": "26c6250e6bf538395171d9317e741492655eab01",
+  "push": "confirmed-origin-main",
+  "deployment": {
+    "id": "dpl_E94i6ie3NWT4B1K3kEWUkQkZLQVF",
+    "state": "READY",
+    "gitSha": "26c6250e6bf538395171d9317e741492655eab01",
+    "plan": "hobby",
+    "url": "mandarin-visual-dictionary-379cfjd9l-pek-explains-physics.vercel.app",
+    "alias": [
+      "mandarin-visual-dictionary.vercel.app",
+      "mandarin-visual-dictionary-pek-explains-physics.vercel.app",
+      "mandarin-visual-dictionary-git-main-pek-explains-physics.vercel.app"
+    ],
+    "errorMessage": null
+  },
+  "hostingBefore": {
+    "teamId": "team_xgKqVI7fCqujMHBAeFyTRGVM",
+    "projectId": "prj_45bxtqgs7w3rV211KuVvoWmmxJkU",
+    "plan": "hobby",
+    "status": "active",
+    "rollbackDeployment": "dpl_3eZFUXuXiimGiDfJNkAEL3d7amuP",
+    "rollbackSource": "6cba4e5891d56a3a50d5aa7b1d7ba89a524cf495",
+    "rollbackUrl": "mandarin-visual-dictionary-7u78q6xo2-pek-explains-physics.vercel.app"
+  },
+  "validation": {
+    "appCommit": "26c6250e6bf538395171d9317e741492655eab01",
+    "baselineCommit": "6cba4e5891d56a3a50d5aa7b1d7ba89a524cf495",
+    "unit": {
+      "passed": 864,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    },
+    "browser": {
+      "passed": 88,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "seconds": 676.173,
+      "logSha256": "c5c199bf72b67719ea03a3be16235b07060c4bf0f676578b7761bf6eed84a442"
+    },
+    "originalFieldsPreserved": 14385,
+    "storedSenses": 14761,
+    "storeSha256": "b2da754474821abd6b3ac9428796a0bc0b5e338a27c93350891854620ea1d3c1",
+    "runtimeSha256": "cff29f4747a5a62a7533c255544d5847374b395c863feca50279c8f42059be19",
+    "checks": {
+      "build": true,
+      "bundle": true,
+      "sourceSecurity": true,
+      "whitespace": true,
+      "malayValidator": true,
+      "lazy": true,
+      "offlineMalay": true,
+      "offlineUpgrade": true,
+      "zeroCost": true
+    },
+    "translationApiCostUsd": 0
+  },
+  "preservation": {
+    "allOriginalFieldsPreserved": true,
+    "preservedRecords": 14385,
+    "originalUntrackedFilesPreserved": 15,
+    "canonicalSha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+    "originalDictionaryAndLearningAndSecurityUnchanged": true,
+    "generatedImageBundleRebuilt": true
+  },
+  "performanceBefore": {
+    "builtMs": 5450.5695,
+    "heapUsedBytes": 578462456,
+    "rssBytes": 744099840,
+    "queries": {
+      "猫": {
+        "medianMs": 0.09990000000016153,
+        "maxMs": 25.583599999999933
+      },
+      "chang jing lu": {
+        "medianMs": 1.4259999999994761,
+        "maxMs": 2.4680000000007567
+      },
+      "dog": {
+        "medianMs": 0.140400000000227,
+        "maxMs": 6.113400000000183
+      },
+      "help": {
+        "medianMs": 0.08130000000073778,
+        "maxMs": 6.9452000000001135
+      },
+      "anjing": {
+        "medianMs": 0.5689999999995052,
+        "maxMs": 17.50500000000011
+      },
+      "membantu": {
+        "medianMs": 0.41899999999986903,
+        "maxMs": 7.359699999999975
+      },
+      "tidak malu bertanya": {
+        "medianMs": 0.4102999999995518,
+        "maxMs": 0.7992000000003827
+      },
+      "qzxqzxqzx": {
+        "medianMs": 0.022399999999834108,
+        "maxMs": 0.0430000000005748
+      }
+    },
+    "retainedHeapBytes": 321282712,
+    "retainedRssBytes": 670822400
+  },
+  "performanceAfter": {
+    "builtMs": 5913.8577,
+    "heapUsedBytes": 583329376,
+    "rssBytes": 747810816,
+    "queries": {
+      "猫": {
+        "medianMs": 0.1066000000000713,
+        "maxMs": 26.902600000000348
+      },
+      "chang jing lu": {
+        "medianMs": 1.597899999999754,
+        "maxMs": 2.902100000000246
+      },
+      "dog": {
+        "medianMs": 0.1481999999996333,
+        "maxMs": 6.096400000000358
+      },
+      "help": {
+        "medianMs": 0.11430000000018481,
+        "maxMs": 7.397299999999632
+      },
+      "anjing": {
+        "medianMs": 0.5387000000000626,
+        "maxMs": 19.631400000000212
+      },
+      "membantu": {
+        "medianMs": 0.4216000000005806,
+        "maxMs": 7.652899999999136
+      },
+      "tidak malu bertanya": {
+        "medianMs": 0.3886999999995169,
+        "maxMs": 0.8587999999999738
+      },
+      "qzxqzxqzx": {
+        "medianMs": 0.023699999999735155,
+        "maxMs": 0.04290000000037253
+      }
+    },
+    "retainedHeapBytes": 321724944,
+    "retainedRssBytes": 674951168
+  },
+  "assetsBefore": [
+    {
+      "file": "dictionary.worker-DuEMsbhR.js",
+      "bytes": 56062,
+      "gzipBytes": 21298,
+      "sha256": "a4c0324b2ed64b6d45d527acbaf41eeef3ef046b111fdeedc3d83a885c2fb7c5"
+    },
+    {
+      "file": "dm-sans-latin-ext-wght-normal-BOFOeGcA.woff2",
+      "bytes": 18228,
+      "gzipBytes": 18256,
+      "sha256": "a5d38fe99f930275684999b462c7123faa063d9e44e73b4b241723d884aa0f49"
+    },
+    {
+      "file": "dm-sans-latin-wght-normal-Xz1IZZA0.woff2",
+      "bytes": 36932,
+      "gzipBytes": 36852,
+      "sha256": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543"
+    },
+    {
+      "file": "index-BYIDipj5.js",
+      "bytes": 321652,
+      "gzipBytes": 95967,
+      "sha256": "28581481f4cf041e15bcd04f4914b2a1148dd0b226fa9b41448095303d572a1f"
+    },
+    {
+      "file": "index-FLIJhHCl.css",
+      "bytes": 47404,
+      "gzipBytes": 10574,
+      "sha256": "e34d2f78ac544c5f110e27711bf8551e5facf6acf3c7ad258e6eb558cd6de836"
+    },
+    {
+      "file": "malay-runtime-DZMk2JXF.json",
+      "bytes": 15132761,
+      "gzipBytes": 1368935,
+      "sha256": "294888895666f2c21f2a23a34660dbbe8110bafb165a7334e9c5685c1cc1e128"
+    },
+    {
+      "file": "PictureQuiz-CeyzqAyL.js",
+      "bytes": 1566,
+      "gzipBytes": 882,
+      "sha256": "f6a6f8530f66ecf90fa95152115c6d5cbf94bc36c2723b25307c4df61bb36bdb"
+    },
+    {
+      "file": "visual-lexicon-BbIQzTYa.json",
+      "bytes": 750817,
+      "gzipBytes": 267812,
+      "sha256": "ff017c91a46fe29109b7d0d8992c59c306e2b48bb9d5c6a4bf069992fb6b134a"
+    },
+    {
+      "file": "WordDetail-DPEZkDqW.js",
+      "bytes": 12386,
+      "gzipBytes": 4394,
+      "sha256": "af84aeff37def54aeaaa4bf7000b114b6203910cebbb968c1e472a75a6951d5a"
+    }
+  ],
+  "assetsAfter": [
+    {
+      "file": "dictionary.worker-CjF1zp5I.js",
+      "bytes": 56409,
+      "gzipBytes": 21399,
+      "sha256": "57f87a146e4853e8adedaa8fc725171e9e198c5ea04ee2ab56d379ccc2e6a361"
+    },
+    {
+      "file": "dm-sans-latin-ext-wght-normal-BOFOeGcA.woff2",
+      "bytes": 18228,
+      "gzipBytes": 18256,
+      "sha256": "a5d38fe99f930275684999b462c7123faa063d9e44e73b4b241723d884aa0f49"
+    },
+    {
+      "file": "dm-sans-latin-wght-normal-Xz1IZZA0.woff2",
+      "bytes": 36932,
+      "gzipBytes": 36852,
+      "sha256": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543"
+    },
+    {
+      "file": "index-B1lSvU3T.css",
+      "bytes": 47650,
+      "gzipBytes": 10619,
+      "sha256": "c3d271ffc20f16686e6523572712ed2a436f5201e070c20e0b1879f7abf22f6c"
+    },
+    {
+      "file": "index-XEKyM8GR.js",
+      "bytes": 322308,
+      "gzipBytes": 96151,
+      "sha256": "99421317171d970e504222ab29b088f0375f4268c2a4dd5bbffe3711bcca8cb3"
+    },
+    {
+      "file": "malay-runtime-DScEciuc.json",
+      "bytes": 15445028,
+      "gzipBytes": 1417521,
+      "sha256": "cff29f4747a5a62a7533c255544d5847374b395c863feca50279c8f42059be19"
+    },
+    {
+      "file": "PictureQuiz-hN-BIvUp.js",
+      "bytes": 1566,
+      "gzipBytes": 883,
+      "sha256": "b132f09cee1a853c6d1748dfd59fe60e94ab1c70d7d0979c11c81afa2ea70131"
+    },
+    {
+      "file": "visual-lexicon-BbIQzTYa.json",
+      "bytes": 750817,
+      "gzipBytes": 267812,
+      "sha256": "ff017c91a46fe29109b7d0d8992c59c306e2b48bb9d5c6a4bf069992fb6b134a"
+    },
+    {
+      "file": "WordDetail-BzaF6m9U.js",
+      "bytes": 13373,
+      "gzipBytes": 4573,
+      "sha256": "c4832c106ebf69a54e961b9a579476cbc79a9787cf6ec68c19f53ec6317d87cb"
+    }
+  ],
+  "dist": {
+    "files": 54,
+    "bytes": 30541015
+  },
+  "liveBefore": {
+    "time": "2026-10-16T00:18:25.088Z",
+    "beforeRelease": true,
+    "base": "https://mandarin-visual-dictionary.vercel.app",
+    "dictionarySha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+    "runtimeSha256": "294888895666f2c21f2a23a34660dbbe8110bafb165a7334e9c5685c1cc1e128",
+    "runtimeVersion": "ms-MY-v1-5ea8cf4f7c8b",
+    "storedSenses": 14385,
+    "assets": {
+      "main": "/assets/index-BYIDipj5.js",
+      "mainSha256": "28581481f4cf041e15bcd04f4914b2a1148dd0b226fa9b41448095303d572a1f",
+      "worker": "/assets/dictionary.worker-DuEMsbhR.js",
+      "workerSha256": "a4c0324b2ed64b6d45d527acbaf41eeef3ef046b111fdeedc3d83a885c2fb7c5",
+      "runtime": "malay-runtime-DZMk2JXF.json"
+    },
+    "browser": null
+  },
+  "liveAfter": {
+    "time": "2026-10-16T00:40:47.723Z",
+    "beforeRelease": false,
+    "base": "https://mandarin-visual-dictionary.vercel.app",
+    "dictionarySha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+    "runtimeSha256": "cff29f4747a5a62a7533c255544d5847374b395c863feca50279c8f42059be19",
+    "runtimeVersion": "ms-MY-v1-49faaa93c203",
+    "storedSenses": 14761,
+    "assets": {
+      "main": "/assets/index-XEKyM8GR.js",
+      "mainSha256": "99421317171d970e504222ab29b088f0375f4268c2a4dd5bbffe3711bcca8cb3",
+      "worker": "/assets/dictionary.worker-CjF1zp5I.js",
+      "workerSha256": "57f87a146e4853e8adedaa8fc725171e9e198c5ea04ee2ab56d379ccc2e6a361",
+      "runtime": "malay-runtime-DScEciuc.json"
+    },
+    "browser": {
+      "homeMs": 775,
+      "examples": [
+        {
+          "query": "家俱",
+          "chinese": "家俱",
+          "english": "variant of 家具[jia1 ju4]",
+          "lexical": "perabot",
+          "explanation": "Varian bagi 家具[jia1 ju4]."
+        },
+        {
+          "query": "perabot",
+          "chinese": "家俱",
+          "english": "variant of 家具[jia1 ju4]",
+          "lexical": "perabot",
+          "explanation": "Varian bagi 家具[jia1 ju4]."
+        },
+        {
+          "query": "哺乳动物",
+          "chinese": "哺乳动物",
+          "english": "mammal",
+          "lexical": "mamalia",
+          "explanation": null
+        },
+        {
+          "query": "mamalia",
+          "chinese": "哺乳动物",
+          "english": "mammal",
+          "lexical": "mamalia",
+          "explanation": null
+        }
+      ],
+      "fallbackSense": {
+        "chinese": "电流",
+        "english": "an electric current"
+      },
+      "galleryItems": 1,
+      "apiResponses": [
+        200,
+        200,
+        200
+      ],
+      "errors": [],
+      "forbiddenRequests": [],
+      "mobileWidth": 320
+    }
+  },
+  "backupManifestSha256": "ee8948eabad9bd6d3f6187ec37ad5140669890a6a4cd2d06b3423175cbac17f7",
+  "independentHumanReviewed": 0,
+  "translationApiCostUsd": 0
+}

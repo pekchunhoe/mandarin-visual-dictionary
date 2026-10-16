@@ -31,7 +31,7 @@ export interface CompetitionTrace {
   providerDistribution?: Record<string, number>; facetDistribution?: Record<string, number>;
   selected?: { id: string; provider?: string; score: number }[];
 }
-interface Options extends OpenverseCredentials { pixabayKey?: string; pexelsKey?: string; fetcher?: typeof fetch; mode?: ImageMode; onTrace?: (event: CompetitionTrace) => void }
+interface Options extends OpenverseCredentials { pixabayKey?: string; pexelsKey?: string; fetcher?: typeof fetch; mode?: ImageMode; onTrace?: (event: CompetitionTrace) => void; onProgress?: (result: ImageResult) => void }
 // Opt-in server/test instrumentation. No URLs, credentials, headers, upstream
 // bodies or automatic production logging; observer errors never affect results.
 function observe(options: Options, event: CompetitionTrace) { try { options.onTrace?.(event); } catch { /* diagnostic observer only */ } }
@@ -114,7 +114,29 @@ export async function getImages(wordId: string, senseId: string, options: Option
   const images: Photo[] = []; let failed = false; const diagnostics: string[] = plan.relevance.englishFallback ? ['english_definition_plan'] : [];
   const deadline = Date.now() + 8000;
   let composition: CompositionDecision[] = [];
-  const ranked = () => rankImageCandidates(images, plan, limit, decisions => { composition = decisions; });
+  let rankedCount = -1, selection: Photo[] = [];
+  const ranked = () => {
+    // Candidate records are immutable and only appended by collect(). Reuse a
+    // composition until another provider adds inventory, rather than repeating
+    // the same semantic/diversity pass for progress, stopping and final output.
+    if (rankedCount !== images.length) {
+      selection = rankImageCandidates(images, plan, limit, decisions => { composition = decisions; });
+      rankedCount = images.length;
+    }
+    return selection;
+  };
+  let lastProgress = '';
+  const publish = () => {
+    if (!options.onProgress) return;
+    const selected = ranked().filter(photo => imageRelevance(photo, plan).semantic)
+      .map(photo => ({ ...photo, galleryFacets: candidateSemantics(photo, plan).facets }));
+    const identity = selected.map(photo => photo.id).join('|');
+    if (!selected.length || identity === lastProgress) return;
+    lastProgress = identity;
+    // Same thresholds, diversity and deduplication as the final gallery. Never
+    // stop a round early: the other provider still competes in the final rank.
+    try { options.onProgress({ images: selected, status: 'live', expiresAt: Math.min(...selected.map(photo => photo.expiresAt!)) }); } catch { /* disconnected observer */ }
+  };
   const enough = () => enoughSemanticCoverage(ranked(), plan, options.mode === 'thumbnail');
   observe(options, { stage: 'plan', target: limit, wordId: word.id, senseId: sense.id, english: plan.meaning, facets: plan.facets, queries: plan.searches.map(c => c.query) });
   const failedProviders = new Set<ImageProvider>();
@@ -160,16 +182,17 @@ export async function getImages(wordId: string, senseId: string, options: Option
       openverseAttempted = true;
       jobs.push({ provider: 'openverse', request: searchProvider('openverse', { ...search, category: undefined, imageType: 'all' }, '', options, deadline) });
     }
-    const settled = await Promise.allSettled(jobs.map(job => job.request));
     const providerCounts: CompetitionTrace['providerCounts'] = {};
-    settled.forEach((result, i) => {
+    const settled = await Promise.allSettled(jobs.map(async job => {
+      const result = await job.request.then(value => ({ status: 'fulfilled' as const, value }), reason => ({ status: 'rejected' as const, reason }));
       const value: CachedSearch = result.status === 'fulfilled' ? result.value : {
-        images: [], failed: true, expiresAt: Date.now() + 60_000, diagnostic: `${jobs[i].provider}_upstream_failure`
+        images: [], failed: true, expiresAt: Date.now() + 60_000, diagnostic: `${job.provider}_upstream_failure`
       };
-      providerCounts[jobs[i].provider] = { raw: value.raw ?? 0, normalized: value.images.length };
+      providerCounts[job.provider] = { raw: value.raw ?? 0, normalized: value.images.length };
       rawCount += value.raw ?? 0;
-      collect(jobs[i].provider, value);
-    });
+      collect(job.provider, value); publish();
+      return value;
+    }));
     const qualified = qualifiedImageCandidates(images, plan);
     const unique = deduplicateImages(images, images.length).length;
     const chosen = ranked();
@@ -199,6 +222,7 @@ export async function getImages(wordId: string, senseId: string, options: Option
       const result = await searchProvider('pexels', search, options.pexelsKey.trim(), options, deadline);
       rawCount += result.raw ?? 0;
       collect('pexels', result);
+      publish();
       if (result.failed || enough()) break;
     }
   }

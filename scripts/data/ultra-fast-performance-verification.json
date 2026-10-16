@@ -1,0 +1,985 @@
+{
+  "schema": 1,
+  "createdUTC": "2026-10-16T02:28:48.566Z",
+  "baselineCommit": "b2cb0262a521645bb2c398b039bef03c8c5fed47",
+  "backup": ".tmp/malay-datasets/backups/2026-10-16T01-12-15-252Z",
+  "dataIntegrity": [
+    {
+      "file": "public/data/cedict.json",
+      "sha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+      "bytes": 10883962,
+      "unchanged": true
+    },
+    {
+      "file": "scripts/data/malay-translations-v1.json",
+      "sha256": "b2da754474821abd6b3ac9428796a0bc0b5e338a27c93350891854620ea1d3c1",
+      "bytes": 21382097,
+      "unchanged": true
+    },
+    {
+      "file": "src/data/malay-runtime.json",
+      "sha256": "cff29f4747a5a62a7533c255544d5847374b395c863feca50279c8f42059be19",
+      "bytes": 15445028,
+      "unchanged": true
+    }
+  ],
+  "preservedResearchFiles": [
+    {
+      "file": "scripts/data/malay-recovery-benchmark.json",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/data/malay-recovery-deduplication.json",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/data/malay-recovery-diagnostics.json",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/data/malay-recovery-polysemy.json",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/data/malay-translation-memory-v1.json",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/adapt-madlad-gguf.py",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/inspect-gguf.py",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-benchmark.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-diagnostics.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-gate.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-memory.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-output-quality.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-prompts.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-reference-download.py",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/malay/recovery-resources.py",
+      "unchanged": true
+    }
+  ],
+  "dictionary": {
+    "hardware": {
+      "model": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "cpus": 8,
+      "ram": 12728672256
+    },
+    "runs": [
+      {
+        "packed": false,
+        "iteration": 0,
+        "builtMs": 5399.0932,
+        "heapUsedBytes": 552732688,
+        "rssBytes": 741842944,
+        "queries": {
+          "猫": {
+            "medianMs": 0.12080000000059954,
+            "maxMs": 26.555100000000493
+          },
+          "chang jing lu": {
+            "medianMs": 1.5177000000003318,
+            "maxMs": 2.48700000000008
+          },
+          "dog": {
+            "medianMs": 0.1503999999995358,
+            "maxMs": 5.57340000000022
+          },
+          "help": {
+            "medianMs": 0.11509999999998399,
+            "maxMs": 7.500799999999799
+          },
+          "anjing": {
+            "medianMs": 0.5762999999997191,
+            "maxMs": 19.26509999999962
+          },
+          "membantu": {
+            "medianMs": 0.3927000000003318,
+            "maxMs": 19.016500000000633
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.40419999999994616,
+            "maxMs": 0.8619000000007873
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.0227999999997337,
+            "maxMs": 0.059900000000197906
+          }
+        },
+        "retainedHeapBytes": 321675896,
+        "retainedRssBytes": 674729984
+      },
+      {
+        "packed": true,
+        "iteration": 0,
+        "builtMs": 5018.5252,
+        "heapUsedBytes": 400454040,
+        "rssBytes": 576794624,
+        "queries": {
+          "猫": {
+            "medianMs": 0.09249999999974534,
+            "maxMs": 26.963400000000547
+          },
+          "chang jing lu": {
+            "medianMs": 1.4093000000002576,
+            "maxMs": 3.1965000000000146
+          },
+          "dog": {
+            "medianMs": 0.10929999999916618,
+            "maxMs": 18.151199999999335
+          },
+          "help": {
+            "medianMs": 0.06730000000061409,
+            "maxMs": 7.231099999999969
+          },
+          "anjing": {
+            "medianMs": 0.49989999999979773,
+            "maxMs": 16.51090000000022
+          },
+          "membantu": {
+            "medianMs": 0.3213999999998123,
+            "maxMs": 6.070700000000215
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.3921999999993204,
+            "maxMs": 0.8072000000001935
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.021700000000237196,
+            "maxMs": 0.056300000000192085
+          }
+        },
+        "retainedHeapBytes": 220270224,
+        "retainedRssBytes": 544411648
+      },
+      {
+        "packed": false,
+        "iteration": 1,
+        "builtMs": 5555.942800000001,
+        "heapUsedBytes": 584578688,
+        "rssBytes": 749146112,
+        "queries": {
+          "猫": {
+            "medianMs": 0.09959999999955471,
+            "maxMs": 24.930199999999786
+          },
+          "chang jing lu": {
+            "medianMs": 1.590700000000652,
+            "maxMs": 2.454200000000128
+          },
+          "dog": {
+            "medianMs": 0.14069999999992433,
+            "maxMs": 5.11200000000008
+          },
+          "help": {
+            "medianMs": 0.09550000000035652,
+            "maxMs": 7.86409999999978
+          },
+          "anjing": {
+            "medianMs": 0.532799999999952,
+            "maxMs": 18.059900000000198
+          },
+          "membantu": {
+            "medianMs": 0.40970000000015716,
+            "maxMs": 6.683100000000195
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.4566999999997279,
+            "maxMs": 0.8802999999998065
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.02570000000014261,
+            "maxMs": 0.054799999999886495
+          }
+        },
+        "retainedHeapBytes": 321728872,
+        "retainedRssBytes": 675749888
+      },
+      {
+        "packed": true,
+        "iteration": 1,
+        "builtMs": 5133.263400000001,
+        "heapUsedBytes": 436860456,
+        "rssBytes": 582426624,
+        "queries": {
+          "猫": {
+            "medianMs": 0.08910000000014406,
+            "maxMs": 27.515800000000127
+          },
+          "chang jing lu": {
+            "medianMs": 1.4906000000000859,
+            "maxMs": 2.4970000000002983
+          },
+          "dog": {
+            "medianMs": 0.09069999999974243,
+            "maxMs": 5.889799999999923
+          },
+          "help": {
+            "medianMs": 0.07139999999981228,
+            "maxMs": 7.774599999999737
+          },
+          "anjing": {
+            "medianMs": 0.5502999999998792,
+            "maxMs": 19.03990000000067
+          },
+          "membantu": {
+            "medianMs": 0.36189999999987776,
+            "maxMs": 7.331199999999626
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.4372000000003027,
+            "maxMs": 0.9058999999997468
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.025499999999738066,
+            "maxMs": 0.044799999999668216
+          }
+        },
+        "retainedHeapBytes": 220131320,
+        "retainedRssBytes": 540876800
+      },
+      {
+        "packed": false,
+        "iteration": 2,
+        "builtMs": 5564.0033,
+        "heapUsedBytes": 552125488,
+        "rssBytes": 742014976,
+        "queries": {
+          "猫": {
+            "medianMs": 0.09760000000005675,
+            "maxMs": 32.42649999999958
+          },
+          "chang jing lu": {
+            "medianMs": 1.501800000000003,
+            "maxMs": 2.932400000000598
+          },
+          "dog": {
+            "medianMs": 0.177599999999984,
+            "maxMs": 6.4484999999995125
+          },
+          "help": {
+            "medianMs": 0.08940000000075088,
+            "maxMs": 9.674399999999878
+          },
+          "anjing": {
+            "medianMs": 0.5712000000003172,
+            "maxMs": 18.172700000000077
+          },
+          "membantu": {
+            "medianMs": 0.39069999999992433,
+            "maxMs": 7.178399999999783
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.3909000000003289,
+            "maxMs": 13.703400000000329
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.021499999999832653,
+            "maxMs": 0.04629999999997381
+          }
+        },
+        "retainedHeapBytes": 321666096,
+        "retainedRssBytes": 673701888
+      },
+      {
+        "packed": true,
+        "iteration": 2,
+        "builtMs": 5032.8721,
+        "heapUsedBytes": 424228608,
+        "rssBytes": 585347072,
+        "queries": {
+          "猫": {
+            "medianMs": 0.12860000000000582,
+            "maxMs": 26.44959999999992
+          },
+          "chang jing lu": {
+            "medianMs": 1.4741999999996551,
+            "maxMs": 2.9670999999998457
+          },
+          "dog": {
+            "medianMs": 0.1055000000005748,
+            "maxMs": 5.369599999999991
+          },
+          "help": {
+            "medianMs": 0.08330000000023574,
+            "maxMs": 6.9210000000002765
+          },
+          "anjing": {
+            "medianMs": 0.5878999999995358,
+            "maxMs": 17.352899999999863
+          },
+          "membantu": {
+            "medianMs": 0.39949999999953434,
+            "maxMs": 7.484999999999673
+          },
+          "tidak malu bertanya": {
+            "medianMs": 0.407799999999952,
+            "maxMs": 0.8014000000002852
+          },
+          "qzxqzxqzx": {
+            "medianMs": 0.02419999999983702,
+            "maxMs": 0.07219999999961146
+          }
+        },
+        "retainedHeapBytes": 220190688,
+        "retainedRssBytes": 548270080
+      }
+    ]
+  },
+  "searchOrder": {
+    "entries": 125173,
+    "senses": 198245,
+    "normalizedValues": 938640,
+    "queries": 821,
+    "exactResultOrderParity": true
+  },
+  "gallery": {
+    "fixture": true,
+    "exactSelectionAndOrderParity": true,
+    "reports": [
+      {
+        "legacy": true,
+        "fast": "pixabay",
+        "firstMetadataMs": 906.7928000000002,
+        "firstFourMs": 906.7928000000002,
+        "finalMs": 906.7928000000002,
+        "cachedServerMs": 63.533300000000054,
+        "requests": 2,
+        "cachedExtraRequests": 0,
+        "finalCount": 20,
+        "uniqueIds": 20,
+        "selectedIds": [
+          "openverse-scene-1015",
+          "pixabay-1",
+          "openverse-scene-1010",
+          "openverse-scene-1020",
+          "openverse-scene-1019",
+          "openverse-scene-1029",
+          "openverse-scene-1016",
+          "openverse-scene-1032",
+          "openverse-scene-1013",
+          "openverse-scene-1024",
+          "openverse-scene-1025",
+          "openverse-scene-1017",
+          "openverse-scene-1007",
+          "openverse-scene-1006",
+          "openverse-scene-1012",
+          "openverse-scene-1018",
+          "openverse-scene-1027",
+          "openverse-scene-1014",
+          "openverse-scene-1026",
+          "openverse-scene-1008"
+        ],
+        "providers": {
+          "openverse": 19,
+          "pixabay": 1
+        },
+        "progress": []
+      },
+      {
+        "legacy": true,
+        "fast": "openverse",
+        "firstMetadataMs": 867.5243,
+        "firstFourMs": 867.5243,
+        "finalMs": 867.5243,
+        "cachedServerMs": 56.01059999999961,
+        "requests": 2,
+        "cachedExtraRequests": 0,
+        "finalCount": 20,
+        "uniqueIds": 20,
+        "selectedIds": [
+          "openverse-scene-1015",
+          "pixabay-1",
+          "openverse-scene-1010",
+          "openverse-scene-1020",
+          "openverse-scene-1019",
+          "openverse-scene-1029",
+          "openverse-scene-1016",
+          "openverse-scene-1032",
+          "openverse-scene-1013",
+          "openverse-scene-1024",
+          "openverse-scene-1025",
+          "openverse-scene-1017",
+          "openverse-scene-1007",
+          "openverse-scene-1006",
+          "openverse-scene-1012",
+          "openverse-scene-1018",
+          "openverse-scene-1027",
+          "openverse-scene-1014",
+          "openverse-scene-1026",
+          "openverse-scene-1008"
+        ],
+        "providers": {
+          "openverse": 19,
+          "pixabay": 1
+        },
+        "progress": []
+      },
+      {
+        "legacy": false,
+        "fast": "pixabay",
+        "firstMetadataMs": 110.73829999999998,
+        "firstFourMs": 110.73829999999998,
+        "finalMs": 859.7422000000001,
+        "cachedServerMs": 34.241399999999885,
+        "requests": 2,
+        "cachedExtraRequests": 0,
+        "finalCount": 20,
+        "uniqueIds": 20,
+        "selectedIds": [
+          "openverse-scene-1015",
+          "pixabay-1",
+          "openverse-scene-1010",
+          "openverse-scene-1020",
+          "openverse-scene-1019",
+          "openverse-scene-1029",
+          "openverse-scene-1016",
+          "openverse-scene-1032",
+          "openverse-scene-1013",
+          "openverse-scene-1024",
+          "openverse-scene-1025",
+          "openverse-scene-1017",
+          "openverse-scene-1007",
+          "openverse-scene-1006",
+          "openverse-scene-1012",
+          "openverse-scene-1018",
+          "openverse-scene-1027",
+          "openverse-scene-1014",
+          "openverse-scene-1026",
+          "openverse-scene-1008"
+        ],
+        "providers": {
+          "openverse": 19,
+          "pixabay": 1
+        },
+        "progress": [
+          {
+            "ms": 110.73829999999998,
+            "count": 4
+          },
+          {
+            "ms": 828.2701999999999,
+            "count": 20
+          }
+        ]
+      },
+      {
+        "legacy": false,
+        "fast": "openverse",
+        "firstMetadataMs": 118.81829999999991,
+        "firstFourMs": 118.81829999999991,
+        "finalMs": 849.4655000000002,
+        "cachedServerMs": 32.03530000000001,
+        "requests": 2,
+        "cachedExtraRequests": 0,
+        "finalCount": 20,
+        "uniqueIds": 20,
+        "selectedIds": [
+          "openverse-scene-1015",
+          "pixabay-1",
+          "openverse-scene-1010",
+          "openverse-scene-1020",
+          "openverse-scene-1019",
+          "openverse-scene-1029",
+          "openverse-scene-1016",
+          "openverse-scene-1032",
+          "openverse-scene-1013",
+          "openverse-scene-1024",
+          "openverse-scene-1025",
+          "openverse-scene-1017",
+          "openverse-scene-1007",
+          "openverse-scene-1006",
+          "openverse-scene-1012",
+          "openverse-scene-1018",
+          "openverse-scene-1027",
+          "openverse-scene-1014",
+          "openverse-scene-1026",
+          "openverse-scene-1008"
+        ],
+        "providers": {
+          "openverse": 19,
+          "pixabay": 1
+        },
+        "progress": [
+          {
+            "ms": 118.81829999999991,
+            "count": 20
+          },
+          {
+            "ms": 820.8499000000002,
+            "count": 20
+          }
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "before": {
+      "fixture": true,
+      "jpegBytes": 107979,
+      "profiles": [
+        {
+          "mobile": false,
+          "homeMs": 382.5,
+          "searchMs": 5868.199999988079,
+          "workerMetrics": {
+            "resources": [
+              {
+                "name": "/assets/malay-runtime-DScEciuc.json",
+                "startTime": 7.799999997019768,
+                "duration": 210,
+                "bytes": 1417821,
+                "encodedBytes": 1417521
+              },
+              {
+                "name": "/data/cedict.json",
+                "startTime": 8.099999994039536,
+                "duration": 741.4000000059605,
+                "bytes": 4129801,
+                "encodedBytes": 4129501
+              },
+              {
+                "name": "/assets/visual-lexicon-BbIQzTYa.json",
+                "startTime": 8.299999997019768,
+                "duration": 775.5999999940395,
+                "bytes": 268112,
+                "encodedBytes": 267812
+              }
+            ],
+            "measures": []
+          },
+          "metadataMs": 1550.5,
+          "firstImageMs": 1622.3999999910593,
+          "firstFourMs": 1639.5,
+          "maxLoadedMs": 1879.3999999910593,
+          "warmGalleryNavigationMs": 100.20000000298023,
+          "galleryApiRequests": 1,
+          "memory": 5786059,
+          "allImages": 20,
+          "overflow": false,
+          "longTasks": [],
+          "layoutShiftSum": 1.0656983085950216,
+          "imageBytes": 2159580,
+          "resourceRequests": 49
+        },
+        {
+          "mobile": true,
+          "homeMs": 2556.300000011921,
+          "searchMs": 37329.29999999702,
+          "workerMetrics": {
+            "resources": [
+              {
+                "name": "/assets/malay-runtime-DScEciuc.json",
+                "startTime": 560.2999999970198,
+                "duration": 16143,
+                "bytes": 1417821,
+                "encodedBytes": 1417521
+              },
+              {
+                "name": "/data/cedict.json",
+                "startTime": 560.7000000029802,
+                "duration": 29248.79999999702,
+                "bytes": 4129801,
+                "encodedBytes": 4129501
+              },
+              {
+                "name": "/assets/visual-lexicon-BbIQzTYa.json",
+                "startTime": 561,
+                "duration": 5234.79999999702,
+                "bytes": 268112,
+                "encodedBytes": 267812
+              }
+            ],
+            "measures": []
+          },
+          "metadataMs": 1718.0999999940395,
+          "firstImageMs": 4748.5,
+          "firstFourMs": 4885.399999991059,
+          "maxLoadedMs": 12213,
+          "warmGalleryNavigationMs": 640.2999999970198,
+          "galleryApiRequests": 1,
+          "memory": 4800096,
+          "allImages": 20,
+          "overflow": false,
+          "longTasks": [
+            247,
+            192,
+            132,
+            52,
+            150,
+            70
+          ],
+          "layoutShiftSum": 1.2520766974716881,
+          "imageBytes": 2159580,
+          "resourceRequests": 41
+        }
+      ]
+    },
+    "after": {
+      "fixture": true,
+      "jpegBytes": 107979,
+      "profiles": [
+        {
+          "mobile": false,
+          "homeMs": 374.59999999403954,
+          "searchMs": 1308.7999999970198,
+          "workerReadyMs": 4856.5999999940395,
+          "workerMetrics": {
+            "resources": [
+              {
+                "name": "/assets/malay-runtime-packed-DXRu-Ca5.json",
+                "startTime": 10.200000002980232,
+                "duration": 105.5,
+                "bytes": 1159139,
+                "encodedBytes": 1158839
+              },
+              {
+                "name": "/data/cedict.json",
+                "startTime": 10.400000005960464,
+                "duration": 606.3999999910593,
+                "bytes": 4129801,
+                "encodedBytes": 4129501
+              },
+              {
+                "name": "/assets/visual-lexicon-BbIQzTYa.json",
+                "startTime": 10.799999997019768,
+                "duration": 636.4000000059605,
+                "bytes": 268112,
+                "encodedBytes": 267812
+              }
+            ],
+            "measures": [
+              {
+                "name": "kanjian-dictionary-ready",
+                "duration": 4807.9000000059605
+              },
+              {
+                "name": "kanjian-index-build",
+                "duration": 3587.9000000059605
+              }
+            ]
+          },
+          "metadataMs": 1541.5,
+          "firstImageMs": 610.9000000059605,
+          "firstFourMs": 619.2999999970198,
+          "maxLoadedMs": 1817.7999999970198,
+          "warmGalleryNavigationMs": 78,
+          "galleryApiRequests": 1,
+          "memory": 6407782,
+          "allImages": 20,
+          "overflow": false,
+          "longTasks": [],
+          "layoutShiftSum": 1.063719066916572,
+          "imageBytes": 2267559,
+          "resourceRequests": 50
+        },
+        {
+          "mobile": true,
+          "homeMs": 2045.7000000029802,
+          "searchMs": 31542,
+          "workerReadyMs": 35721.29999999702,
+          "workerMetrics": {
+            "resources": [
+              {
+                "name": "/assets/malay-runtime-packed-DXRu-Ca5.json",
+                "startTime": 586.2000000029802,
+                "duration": 14171.40000000596,
+                "bytes": 1159139,
+                "encodedBytes": 1158839
+              },
+              {
+                "name": "/data/cedict.json",
+                "startTime": 586.4000000059605,
+                "duration": 28506.79999999702,
+                "bytes": 4129801,
+                "encodedBytes": 4129501
+              },
+              {
+                "name": "/assets/visual-lexicon-BbIQzTYa.json",
+                "startTime": 586.7000000029802,
+                "duration": 5833.79999999702,
+                "bytes": 268112,
+                "encodedBytes": 267812
+              }
+            ],
+            "measures": [
+              {
+                "name": "kanjian-dictionary-ready",
+                "duration": 33607.79999999702
+              },
+              {
+                "name": "kanjian-index-build",
+                "duration": 4483.5999999940395
+              }
+            ]
+          },
+          "metadataMs": 1895.7999999970198,
+          "firstImageMs": 638.7999999970198,
+          "firstFourMs": 2728.7999999970198,
+          "maxLoadedMs": 10672.20000000298,
+          "warmGalleryNavigationMs": 693.7999999970198,
+          "galleryApiRequests": 1,
+          "memory": 5490346,
+          "allImages": 20,
+          "overflow": false,
+          "longTasks": [
+            200,
+            102,
+            152,
+            50,
+            197,
+            138
+          ],
+          "layoutShiftSum": 1.2531307190964227,
+          "imageBytes": 2159580,
+          "resourceRequests": 42
+        }
+      ]
+    }
+  },
+  "lowMemory": {
+    "cap256MiB": {
+      "heapCapMiB": 256,
+      "completed": false,
+      "failure": "V8 heap limit during construction; isolated stress subprocess only",
+      "retainedDefaultHeapBytes": 220190688
+    },
+    "cap384MiB": {
+      "builtMs": 5187.452899999999,
+      "heapUsedBytes": 315494392,
+      "rssBytes": 542072832,
+      "queries": {
+        "猫": {
+          "medianMs": 0.1000000000003638,
+          "maxMs": 26.109600000000682
+        },
+        "chang jing lu": {
+          "medianMs": 1.4942000000000917,
+          "maxMs": 2.519100000000435
+        },
+        "dog": {
+          "medianMs": 0.09479999999985012,
+          "maxMs": 6.997699999999895
+        },
+        "help": {
+          "medianMs": 0.0819999999994252,
+          "maxMs": 7.900399999999536
+        },
+        "anjing": {
+          "medianMs": 0.5275000000001455,
+          "maxMs": 17.368200000000797
+        },
+        "membantu": {
+          "medianMs": 0.36899999999968713,
+          "maxMs": 7.294600000000173
+        },
+        "tidak malu bertanya": {
+          "medianMs": 0.42410000000018044,
+          "maxMs": 0.9360999999998967
+        },
+        "qzxqzxqzx": {
+          "medianMs": 0.021999999999934516,
+          "maxMs": 0.050900000000183354
+        }
+      },
+      "retainedHeapBytes": 220270792,
+      "retainedRssBytes": 521265152
+    }
+  },
+  "build": {
+    "files": 54,
+    "totalDist": 19202968,
+    "totalJS": 402013,
+    "assets": [
+      {
+        "name": "dictionary.worker-DoRYef4R.js",
+        "bytes": 57853,
+        "gzip": 21945,
+        "sha256": "eafea1ad6bc8dfeb4cd01763d3c76d08089d9dcad63dd09748b80b2d4c91a9a6"
+      },
+      {
+        "name": "index-i8Z91Lx_.js",
+        "bytes": 324802,
+        "gzip": 97129,
+        "sha256": "5151e5b76fb7ca2ce228a4aa38a6fc7dc33d580374daa1bf268e29adcb2cb075"
+      },
+      {
+        "name": "malay-runtime-packed-DXRu-Ca5.json",
+        "bytes": 4102517,
+        "gzip": 1158839,
+        "sha256": "4c350c9fe9403eb6df144f433dbd6bdac8dcf9b62c9ccd403589730641799da5"
+      },
+      {
+        "name": "WordDetail-b1LKD46o.js",
+        "bytes": 13600,
+        "gzip": 4648,
+        "sha256": "e84c0577738dfb9586d93ea8c6a532d7b18f12f723d795c7aeb3e8a1fd9331ff"
+      }
+    ]
+  },
+  "tests": {
+    "unit": {
+      "passed": 875,
+      "total": 875,
+      "success": true,
+      "command": "vitest run --no-file-parallelism"
+    },
+    "browser": {
+      "casesValidated": 90,
+      "latestFullRun": {
+        "passed": 89,
+        "resourceTimeouts": 1
+      },
+      "isolatedFinalRerun": {
+        "passed": 4,
+        "failed": 0
+      },
+      "unresolvedFailures": 0
+    },
+    "offline": true,
+    "lazyAndUpgrade": true,
+    "malayOffline": true,
+    "buildAndPackaging": true,
+    "sourceAndBundle": true,
+    "hostingPlan": "hobby"
+  },
+  "production": {
+    "before": {
+      "at": "2026-10-16T01:52:57.202Z",
+      "base": "https://mandarin-visual-dictionary.vercel.app",
+      "api": [
+        {
+          "word": "跑",
+          "status": 200,
+          "headersMs": 2522.9992,
+          "firstMetadataMs": 2533.0851000000002,
+          "finalMs": 2533.1579,
+          "chunks": 1,
+          "bytes": 25561,
+          "transport": "application/json; charset=utf-8",
+          "count": 20,
+          "resultStatus": "live",
+          "diagnostics": [],
+          "providerCounts": {
+            "openverse": 8,
+            "pixabay": 12
+          },
+          "distinctIds": 20,
+          "licenses": 8
+        },
+        {
+          "word": "不耻下问",
+          "status": 400,
+          "headersMs": 334.67599999999993,
+          "firstMetadataMs": 335.34760000000006,
+          "finalMs": 335.36619999999994,
+          "chunks": 1,
+          "bytes": 96,
+          "transport": "application/json; charset=utf-8",
+          "distinctIds": 0
+        }
+      ],
+      "browser": [
+        {
+          "scenario": "cold full dictionary",
+          "homeMs": 1200.5999999940395,
+          "firstSearchMs": 17599.90000000596,
+          "worker": {
+            "measures": [],
+            "resources": [
+              {
+                "path": "/assets/malay-runtime-DScEciuc.json",
+                "duration": 8784.79999999702,
+                "bytes": 1217529
+              },
+              {
+                "path": "/data/cedict.json",
+                "duration": 12121.70000000298,
+                "bytes": 4100960
+              },
+              {
+                "path": "/assets/visual-lexicon-BbIQzTYa.json",
+                "duration": 12552.40000000596,
+                "bytes": 274669
+              }
+            ]
+          }
+        },
+        {
+          "scenario": "live mobile gallery, unthrottled network",
+          "elapsedMs": 8336.39999999106,
+          "firstDecodedMs": 349.79999999701977,
+          "firstFourDecodedMs": 3272.8999999910593,
+          "figures": 20,
+          "decoded": 20,
+          "failed": 0,
+          "overflow": false,
+          "errors": []
+        }
+      ]
+    },
+    "idiomBefore": {
+      "at": "2026-10-16T02:07:46.076Z",
+      "base": "https://mandarin-visual-dictionary.vercel.app",
+      "api": [
+        {
+          "word": "不耻下问",
+          "status": 200,
+          "headersMs": 5481.5265,
+          "firstMetadataMs": 5487.8123,
+          "finalMs": 5487.867200000001,
+          "chunks": 1,
+          "bytes": 24949,
+          "transport": "application/json; charset=utf-8",
+          "count": 20,
+          "resultStatus": "live",
+          "diagnostics": [
+            "english_definition_plan"
+          ],
+          "providerCounts": {
+            "openverse": 6,
+            "pixabay": 14
+          },
+          "distinctIds": 20,
+          "licenses": 6
+        }
+      ],
+      "browser": []
+    },
+    "after": null
+  },
+  "malay": {
+    "before": 14761,
+    "new": 0,
+    "after": 14761,
+    "explicitLexical": 1861,
+    "untranslated": 183484,
+    "enrichmentDeferred": true
+  }
+}

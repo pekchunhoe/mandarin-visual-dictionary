@@ -26,13 +26,19 @@ export class MalaySearchIndex {
   private trigrams = new Map<string, Set<string>>();
   private keys: string[];
   constructor(words: Word[]) {
+    const normalized = new Map<string, string>();
+    const normalizeOnce = (term: string) => {
+      let key = normalized.get(term);
+      if (key === undefined) { key = normalizeMalay(term); normalized.set(term, key); }
+      return key;
+    };
     for (const word of words) for (const sense of word.senses) {
       if (!sense.malay?.trim()) continue;
       const phrases = sense.malay.split(/[;,]/).map(normalizeMalay).filter(Boolean);
       const lexical = sense.malayLexical?.text.split(/[/;,]/).map(t => t.trim()).filter(Boolean) ?? [];
       const groups = [[...lexical, ...sense.malaySearchTerms ?? phrases], [sense.malay, ...phrases, ...sense.malayDefinition?.text ? [sense.malayDefinition.text] : []], sense.malaySynonyms ?? [], sense.malayMorphology ?? []];
       groups.forEach((terms, rank) => { for (const term of terms) {
-        const key = normalizeMalay(term); if (!key) continue;
+        const key = normalizeOnce(term); if (!key) continue;
         const postings = this.exact.get(key) ?? [];
         if (!postings.some(p => p.word.id === word.id && p.senseId === sense.id && p.rank <= rank)) postings.push({ word, senseId: sense.id, rank, confidence: sense.translationConfidence ?? 0.5, familiar: !!word.category || sense.translationSource === 'KANJIAN existing editorial learning collection' });
         this.exact.set(key, postings);

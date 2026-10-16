@@ -32,3 +32,8 @@
 .card-translation-note{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:5px}
 
 .malay-meanings{display:flex;flex-direction:column;gap:18px}.malay-lexical p{font-weight:600}.malay-definition{border-top:1px solid var(--line);padding-top:14px}.meaning-panel .malay-definition p{font-size:15px;line-height:1.7;color:var(--muted)}
+
+/* Reserve the same leading tile geometry before provider metadata arrives. */
+.gallery-grid>.gallery-skeleton:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:1.26}
+@media(max-width:800px){.gallery-grid>.gallery-skeleton:first-child{aspect-ratio:1.19}}
+@media(max-width:600px){.gallery-grid>.gallery-skeleton:first-child{grid-row:auto;aspect-ratio:1.55}}

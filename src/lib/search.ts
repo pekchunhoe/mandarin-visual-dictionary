@@ -14,7 +14,7 @@ export async function searchDictionary(query: string, signal?: AbortSignal, onPa
   // loads; the final result still includes corpus-wide Malay matches.
   if (core.length) onPartial?.(core);
   let found: Word[];
-  try { found = await requestDictionary({ type: 'search', query }, signal); }
+  try { found = await requestDictionary({ type: 'search', query }, signal, onPartial); }
   catch (error) { if (signal?.aborted || !core.length) throw error; return core; }
   results.set(key, found); if (results.size > 100) results.delete(results.keys().next().value!); return found;
 }

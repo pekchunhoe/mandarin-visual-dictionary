@@ -77,3 +77,15 @@ it('loads Malay once, retries a failed overlay without reloading the corpus, and
   expect(fetcher.mock.calls.filter(([url]) => url === '/data/cedict.json')).toHaveLength(1);
   expect(malayAttempts).toBe(2);
 });
+
+it('publishes complete exact Han headwords before the broader index response, without resolving other queries early', async () => {
+  const fetcher = vi.fn((url: string) => Promise.resolve(new Response(url === '/data/cedict.json' ? JSON.stringify(rows) : url.includes('malay-runtime') ? malay : lexicon)));
+  const { send, responses } = await start(fetcher);
+  await send({ type: 'search', query: '长颈鹿', id: 10 });
+  const messages = responses.mock.calls.map(([message]) => message).filter(message => message.id === 10);
+  expect(messages).toHaveLength(2); expect(messages[0].partial).toBe(true); expect(messages[1].partial).toBeUndefined();
+  expect(messages[0].results[0]).toEqual(messages[1].results[0]);
+  expect(messages[0].results[0].senses[0]).toMatchObject({ english: 'giraffe', malay: 'zirafah' });
+  await send({ type: 'search', query: 'giraffe', id: 11 });
+  expect(responses.mock.calls.filter(([message]) => message.id === 11)).toHaveLength(1);
+});

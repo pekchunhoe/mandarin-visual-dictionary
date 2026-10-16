@@ -6,7 +6,7 @@ const chunks = new Map(graph.filter(item => !item.asset).map(item => [item.file,
 const initial = new Set();
 function visit(file) { if (initial.has(file)) return; initial.add(file); for (const child of chunks.get(file)?.imports ?? []) visit(child); }
 for (const item of chunks.values()) if (item.entry) visit(item.file);
-const forbidden = /(?:visual-inference|dictionary-entry|learning-source|cedict-core|malay-runtime\.json(?!\?url)|visual-lexicon(?:-source)?\.json(?!\?url)|concept-templates|visual-templates|\/server\/)/;
+const forbidden = /(?:visual-inference|dictionary-entry|learning-source|cedict-core|malay-runtime(?:-packed)?\.json(?!\?url)|visual-lexicon(?:-source)?\.json(?!\?url)|concept-templates|visual-templates|\/server\/)/;
 for (const item of chunks.values()) {
   for (const module of item.modules) assert(!forbidden.test(module), `Heavy/server data entered UI chunk: ${module}`);
   for (const module of item.modules) assert(!/node_modules\/(?:vitest|@playwright|@testing-library|esbuild)\//.test(module), `Development tooling entered UI chunk: ${module}`);
@@ -21,7 +21,7 @@ const assets = readdirSync('dist/assets');
 const semantic = assets.filter(file => /^visual-lexicon.*\.json$/.test(file));
 const malay = assets.filter(file => /^malay-runtime.*\.json$/.test(file));
 assert.equal(malay.length, 1);
-assert.deepEqual(JSON.parse(readFileSync('dist/assets/' + malay[0], 'utf8')), JSON.parse(readFileSync('src/data/malay-runtime.json', 'utf8')));
+assert.deepEqual(JSON.parse(readFileSync('dist/assets/' + malay[0], 'utf8')), JSON.parse(readFileSync('src/data/malay-runtime-packed.json', 'utf8')));
 assert.equal(semantic.length, 1);
 assert.deepEqual(JSON.parse(readFileSync('dist/assets/' + semantic[0], 'utf8')), JSON.parse(readFileSync('src/data/visual-lexicon.json', 'utf8')));
 const sw = readFileSync('dist/sw.js', 'utf8');

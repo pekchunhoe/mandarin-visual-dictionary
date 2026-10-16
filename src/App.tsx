@@ -36,6 +36,13 @@ export default function App() {
     if (route.page === 'search' || route.page === 'word') {
       const query = route.value ?? ''; const cached = byId.get(query);
       if (route.page === 'word' && cached && (!route.entry || route.entry === cached.id)) { setSelected(cached); return; }
+      // A clicked search result is already hydrated, including all senses and
+      // Malay metadata. Reuse it immediately even while the worker is finishing
+      // the broad index after an early exact-Mandarin response.
+      if (route.page === 'word' && route.entry && selected?.id === route.entry) {
+        if (selected.matchedSenseId !== route.sense) setSelected({ ...selected, matchedSenseId: route.sense });
+        return;
+      }
       setLoading(true);
       const savedEntry = savedEntries.find(w => w.id === route.entry);
       if (route.page === 'word' && savedEntry) { setSelected(savedEntry); setLoading(false); return; }

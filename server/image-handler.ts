@@ -21,14 +21,31 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   const bucket = buckets.get(ip) ?? { count: 0, until: now + 60_000 }; buckets.set(ip, bucket);
   if (++bucket.count > 30) { res.setHeader('Retry-After', '60'); return send(429, { error: 'Please try again in a minute.' }); }
   try {
-    const result = await getImages(word, sense, { pixabayKey: process.env.PIXABAY_API_KEY, pexelsKey: process.env.PEXELS_API_KEY, openverseClientId: process.env.OPENVERSE_CLIENT_ID, openverseClientSecret: process.env.OPENVERSE_CLIENT_SECRET, mode: mode as 'gallery' | 'thumbnail' });
+    // Opt-in transport; existing JSON callers, validation and rate limits stay
+    // intact. No header flush until a valid, relevant result is available.
+    const streaming = mode === 'gallery' && req.headers.accept?.includes('application/x-ndjson');
+    const write = (result: unknown, done: boolean) => {
+      if (res.destroyed) return;
+      res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-store, no-transform');
+      res.write(JSON.stringify({ result, done }) + '\n');
+    };
+    const result = await getImages(word, sense, { pixabayKey: process.env.PIXABAY_API_KEY, pexelsKey: process.env.PEXELS_API_KEY, openverseClientId: process.env.OPENVERSE_CLIENT_ID, openverseClientSecret: process.env.OPENVERSE_CLIENT_SECRET, mode: mode as 'gallery' | 'thumbnail', onProgress: streaming ? result => {
+      // Headers may only be changed before the first streamed chunk.
+      if (res.headersSent) { if (!res.destroyed) res.write(JSON.stringify({ result, done: false }) + '\n'); }
+      else write(result, false);
+    } : undefined });
     // Explicit expiry travels with the result. No additional HTTP cache may extend URL lifetime.
-    res.setHeader('Cache-Control', 'no-store');
-    send(200, result);
+    if (streaming) {
+      if (res.headersSent) { if (!res.destroyed) res.write(JSON.stringify({ result, done: true }) + '\n'); }
+      else write(result, true);
+      res.end();
+    } else { res.setHeader('Cache-Control', 'no-store'); send(200, result); }
   } catch (error) {
     const detail = (error ?? {}) as { status?: number; diagnostic?: string };
     const status = detail.status === 400 ? 400 : 500;
     if (status === 500) console.error('[images] image_resolution_failed');
-    send(status, { error: status === 400 ? 'Choose a known dictionary word and meaning.' : 'Images unavailable', diagnostic: ['dictionary_word_not_found', 'sense_not_found'].includes(detail.diagnostic ?? '') ? detail.diagnostic : 'image_resolution_failed' });
+    if (res.headersSent) { if (!res.destroyed) res.end(JSON.stringify({ error: 'Images unavailable', done: true }) + '\n'); }
+    else send(status, { error: status === 400 ? 'Choose a known dictionary word and meaning.' : 'Images unavailable', diagnostic: ['dictionary_word_not_found', 'sense_not_found'].includes(detail.diagnostic ?? '') ? detail.diagnostic : 'image_resolution_failed' });
   }
 }

@@ -30,3 +30,5 @@
 .meaning-display{grid-column:1/-1;min-width:0}.meaning-panel>div{min-width:0}@media(max-width:600px){.word-header .meaning-panel{grid-template-columns:1fr}}
 .translation-help{grid-column:1/-1;display:grid;gap:7px;margin-top:12px}.translation-help .text-button{justify-self:start;font-size:13px}.translation-help small{color:var(--muted);font-size:11px;line-height:1.6}
 .card-translation-note{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:5px}
+
+.malay-meanings{display:flex;flex-direction:column;gap:18px}.malay-lexical p{font-weight:600}.malay-definition{border-top:1px solid var(--line);padding-top:14px}.meaning-panel .malay-definition p{font-size:15px;line-height:1.7;color:var(--muted)}

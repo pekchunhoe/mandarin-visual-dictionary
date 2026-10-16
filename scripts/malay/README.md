@@ -222,3 +222,43 @@ over a promoted store into the same run directory. A new recovery session needs
 its own backup, baseline and workspace before extraction. The two canonical Malay
 JSON files have a narrowly scoped 32 MiB preflight ceiling; all other pending
 files retain the 8 MiB check. Weights/caches are excluded from Git and deployment.
+
+## Separate lexical equivalents and preserved explanations
+
+The additive schema keeps every original `malay` text and its metadata intact.
+An optional `malayLexical` or `malayDefinition` object has its own text, status,
+quality, source, license and version. Untyped legacy text is not relabelled based
+on length. The UI presents the equivalent and explanation separately. Full
+lexical evidence stays in the source store, outside the lazy runtime projection.
+
+`lexical-enrichment.mjs` assesses the complete corpus, prioritizing existing
+definitions. Direct lexical extraction requires full English-clause/POS agreement
+and both Wordnet Bahasa and Malay Wiktionary evidence. If Mandarin concordance
+is absent, every English clause must be independently unambiguous. Known sense,
+locale and grammatical conflicts remain withheld. Exact equivalence references
+require unchanged script and numeric pinyin plus agreement across ALL target
+senses. Ordinary see-references, unresolved meanings, POS conflicts and cycles
+are never followed. Seeds are frozen; outputs do not recursively authorize outputs.
+
+The recorded frozen run is `.tmp/malay-lexical-accuracy/run-final`. Do not regenerate
+its preparation over a promoted store. Revalidate or resume with:
+
+```powershell
+node scripts/malay/lexical-enrichment.mjs integrate
+node scripts/malay/lexical-enrichment.mjs integrate --promote-local
+node scripts/malay/lexical-evaluate.mjs
+```
+
+The first command only stages an isolated pair. Promotion binds the original
+store, corpus, candidate file and policy hashes, preserves every old field, uses
+a paired backup/journal, and restores on write failure. A pending journal blocks
+further promotion until its two verified before-files are restored. Repeat imports
+add nothing. A fresh research run needs a new directory and baseline backup.
+All uncertain alternatives and provisional outputs remain in the hashed local
+review queue; the committed lexical review sheet lists all released additions.
+
+The 380-sense evaluation reuses verified offline model shards and includes 300
+licensed reference cases. Source overlap makes extractor/reference matching a
+consistency check, not independent semantic accuracy. Zero independent human
+reviews are claimed. Read KANJIAN_MALAY_LEXICAL_ACCURACY_REPORT.md before
+interpreting acceptance counts or expanding unrestricted neural inference.

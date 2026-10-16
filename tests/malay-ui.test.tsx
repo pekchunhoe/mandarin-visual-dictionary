@@ -29,6 +29,24 @@ it('search cards show the matching sense instead of the first sense', () => {
   expect(open).toHaveBeenCalledWith(word);
 });
 
+it('shows the lexical equivalent prominently while preserving the independently labelled explanation', () => {
+  const dual: Word = { ...word, matchedSenseId: 'sense-0', senses: [{ ...word.senses[0], english: 'electric current', malay: 'Kadar aliran cas elektrik.', translationKind: 'definition-translation', translationStatus: 'generated', malayLexical: { text: 'arus elektrik', status: 'generated', quality: 'automated-review-required', source: 'licensed reference', license: 'MIT', version: 'fixture' } }] };
+  const before = JSON.stringify(dual);
+  const detail = render(<WordDetail word={dual} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);
+  expect(document.querySelector('.malay-lexical p')).toHaveTextContent('arus elektrik');
+  expect(document.querySelector('.malay-definition p')).toHaveTextContent('Kadar aliran cas elektrik.');
+  expect(screen.getByText('PENERANGAN BAHASA MELAYU')).toBeVisible();
+  expect(screen.getByText('Provisional equivalent · awaiting language review')).toBeVisible();
+  fireEvent.click(screen.getByRole('radio', { name: 'English only' }));
+  expect(document.querySelector('.malay-lexical')).toBeNull();
+  expect(document.querySelector('.malay-definition')).toBeNull();
+  expect(JSON.stringify(dual)).toBe(before);
+  detail.unmount();
+  render(<WordCard word={dual} onOpen={vi.fn()}/>);
+  expect(screen.getByText('arus elektrik')).toBeVisible();
+  expect(screen.queryByText('Kadar aliran cas elektrik.')).not.toBeInTheDocument();
+});
+
 it('distinguishes machine-translated definitions from lexical equivalents without claiming review', () => {
   const generated: Word = { ...word, senses: word.senses.map(s => ({ ...s, translationStatus: 'generated', translationKind: s.id === 'sense-1' ? 'definition-translation' : 'lexical-equivalent' })) };
   render(<WordDetail word={generated} onOpen={vi.fn()} saved={[]} onSave={vi.fn()} onBack={vi.fn()}/>);

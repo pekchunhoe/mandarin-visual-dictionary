@@ -27,9 +27,20 @@ export function qualityIssues(record, sense) {
   for (const field of ['malaySearchTerms', 'malaySynonyms', 'malayMorphology']) {
     if (record[field] !== undefined && (!Array.isArray(record[field]) || record[field].some(t => typeof t !== 'string' || !normalizeMalay(t)))) issues.push(`invalid-${field}`);
   }
+  for (const field of ['malayLexical', 'malayDefinition']) {
+    const value = record[field];
+    if (value === undefined) continue;
+    if (!value || typeof value !== 'object' || typeof value.text !== 'string' || !value.text.trim()) { issues.push(`invalid-${field}`); continue; }
+    if (!['generated', 'unreviewed', 'verified'].includes(value.status) || !['automated-review-required', 'human-verified'].includes(value.quality)) issues.push(`invalid-${field}-status`);
+    if ((value.status === 'verified' || value.quality === 'human-verified') && !(value.status === 'verified' && value.quality === 'human-verified' && value.reviewer)) issues.push(`unsupported-${field}-verification`);
+    if (!value.source || !value.license || !value.version) issues.push(`missing-${field}-provenance`);
+    if (/\ufffd|[\uD800-\uDFFF]/u.test(value.text) || /\b(?:TODO|TBD|placeholder|undefined|null)\b/i.test(value.text)) issues.push(`invalid-${field}-text`);
+    if (field === 'malayLexical' && (!/^[\p{Script=Latin}\p{M} ;'’-]+$/u.test(value.text) || value.text.length > 200 || sense.idiom)) issues.push('invalid-lexical-supplement');
+    if (field === 'malayLexical' && record.translationKind === 'lexical-equivalent' || field === 'malayDefinition' && record.translationKind === 'definition-translation') issues.push(`duplicate-${field}-kind`);
+  }
   return issues;
 }
 export function runtimeRecord(record) {
-  const fields = ['key', 'entryId', 'senseId', 'english', 'malay', 'malaySearchTerms', 'malaySynonyms', 'malayMorphology', 'translationSource', 'translationStatus', 'translationKind', 'translationQuality', 'translationModel', 'translationModelRevision', 'translationConfidence', 'translationLicense', 'translationVersion', 'translationReviewer', 'translationNotes'];
+  const fields = ['key', 'entryId', 'senseId', 'english', 'malay', 'malayLexical', 'malayDefinition', 'malaySearchTerms', 'malaySynonyms', 'malayMorphology', 'translationSource', 'translationStatus', 'translationKind', 'translationQuality', 'translationModel', 'translationModelRevision', 'translationConfidence', 'translationLicense', 'translationVersion', 'translationReviewer', 'translationNotes'];
   return Object.fromEntries(fields.filter(k => record[k] !== undefined).map(k => [k, record[k]]));
 }

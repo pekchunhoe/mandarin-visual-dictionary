@@ -90,3 +90,13 @@ maintainer-authored grammatical normalization, CC BY-SA 4.0. The raw model
 input/output and exact sense linkage are retained in the source store.
 These definitions are labelled separately from lexical equivalents and all
 remain provisional pending independent Mandarin-Malaysian Malay review.
+
+Lexical enrichment preserves the original Malay definition and adds a separate
+provisional lexical field only with complete sense/POS evidence. Direct additions
+require both Wordnet Bahasa and Malay Wiktionary; absent Mandarin concordance,
+each complete English clause must be unambiguous. Equivalence references retain
+exact script and numeric pinyin and require every target sense to agree.
+Per-sense source pages: /data/MALAY-LEXICAL-ATTRIBUTION.json
+New adapted additions remain CC BY-SA 4.0 with the additional licenses above.
+The two Wiktionary extracts are mirrors, not independent dictionaries.
+See KANJIAN_MALAY_LEXICAL_ACCURACY_REPORT.md for current counts and limitations.

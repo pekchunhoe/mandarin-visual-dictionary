@@ -29,7 +29,8 @@ export class MalaySearchIndex {
     for (const word of words) for (const sense of word.senses) {
       if (!sense.malay?.trim()) continue;
       const phrases = sense.malay.split(/[;,]/).map(normalizeMalay).filter(Boolean);
-      const groups = [sense.malaySearchTerms ?? phrases, [sense.malay, ...phrases], sense.malaySynonyms ?? [], sense.malayMorphology ?? []];
+      const lexical = sense.malayLexical?.text.split(/[/;,]/).map(t => t.trim()).filter(Boolean) ?? [];
+      const groups = [[...lexical, ...sense.malaySearchTerms ?? phrases], [sense.malay, ...phrases, ...sense.malayDefinition?.text ? [sense.malayDefinition.text] : []], sense.malaySynonyms ?? [], sense.malayMorphology ?? []];
       groups.forEach((terms, rank) => { for (const term of terms) {
         const key = normalizeMalay(term); if (!key) continue;
         const postings = this.exact.get(key) ?? [];
@@ -95,7 +96,13 @@ export function applyMalayRecords(words: Word[], asset: MalayAsset): Word[] {
     const senses = word.senses.map(sense => {
     const record = records.get(`${word.dictionaryId ?? word.id}\t${sense.id}`);
     // A corpus edit can never attach an old translation to a different sense.
-    if (!record || record.english !== sense.english || !record.malay?.trim() || sense.malay?.trim()) return sense;
+    if (!record || record.english !== sense.english || !record.malay?.trim()) return sense;
+    if (sense.malay?.trim()) {
+      // Starter/editorial meanings remain protected; add only missing supplements.
+      const additions = { ...!sense.malayLexical && record.malayLexical ? { malayLexical: record.malayLexical } : {}, ...!sense.malayDefinition && record.malayDefinition ? { malayDefinition: record.malayDefinition } : {} };
+      if (!Object.keys(additions).length) return sense;
+      changed = true; return { ...sense, ...additions };
+    }
     const { entryId: _entry, senseId: _sense, english: _english, key: _key, ...translation } = record;
     changed = true;
     return { ...sense, ...translation };

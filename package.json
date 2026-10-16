@@ -33,7 +33,9 @@
     "malay:datasets:prepare": "node scripts/malay/bulk-dataset.mjs prepare",
     "malay:datasets:test-import": "node scripts/malay/bulk-dataset.mjs integrate",
     "malay:datasets:import": "node scripts/malay/bulk-dataset.mjs integrate --promote-local",
-    "test:malay-offline": "node scripts/verify-malay-offline.mjs"
+    "test:malay-offline": "node scripts/verify-malay-offline.mjs",
+    "malay:lexical:prepare": "node scripts/malay/lexical-enrichment.mjs prepare",
+    "malay:lexical:integrate": "node scripts/malay/lexical-enrichment.mjs integrate"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",

@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "version": "sense-lexical-enrichment-v1",
+  "reviewerRole": "AI assistant screening; independent human approval remains pending",
+  "excludedEnglish": {
+    "not": "Negation requires predicate and grammatical context; bukan cannot cover all occurrences."
+  },
+  "excludedTerms": {
+    "sapi": "Prefer Malaysian lembu; zebu needs its qualified term.",
+    "pijat-pijat": "Prefer a verified Malaysian bedbug term.",
+    "lentera": "Prefer Malaysian tanglung; locale review.",
+    "posyen": "Specialized magic/medicinal scope needs review.",
+    "nek": "Informal contraction requires register review.",
+    "bebek": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "obat": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "hewan": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "sumur": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "algoritme": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "pangan": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "tim": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "lensa": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "drebar": "Prefer established natural Malaysian vocabulary; regional or register review pending.",
+    "sepatu": "Prefer established natural Malaysian vocabulary; regional or register review pending."
+  },
+  "excludedSenses": {
+    "一带|region; area": "Anatomical region synset conflicts with geographic Mandarin scope.",
+    "水螅体|sea anemone": "Polyp versus sea anemone requires review.",
+    "甑|cauldron": "Traditional steamer versus cauldron requires review.",
+    "试制|prototype": "Trial manufacture is not automatically a prototype noun.",
+    "种族清洗|genocide": "Ethnic cleansing and genocide must not be conflated.",
+    "蝽|bedbug": "Stink bugs and bedbugs must not be conflated.",
+    "渔|fisherman": "Verb fishing versus person requires review.",
+    "杀虫|insecticide": "Action versus substance requires review.",
+    "调味|condiment": "Action versus substance requires review.",
+    "香精|condiment": "Essence/flavouring versus condiment requires review.",
+    "音|syllable": "Sound versus syllable needs context."
+  },
+  "excludedPairs": {
+    "middle class|borjuis": "Prefer kelas pertengahan; bourgeois is not assumed interchangeable.",
+    "demography|kependudukan": "Prefer demografi; kependudukan has broader scope.",
+    "substandard|substandard": "Unchanged English spelling needs Malaysian lexical review.",
+    "opportunity|can": "can is not a natural general Malaysian equivalent.",
+    "graveyard|makam": "makam denotes a grave/tomb; cemetery scope needs review.",
+    "womb|peranakan": "Prefer rahim; peranakan has competing senses.",
+    "puberty|baligh": "Bare baligh needs category review.",
+    "clutch pedal|klac": "klac alone omits the pedal.",
+    "kiss|cium": "Nominal cium requires grammatical review; prefer ciuman.",
+    "answer|jawab": "Nominal jawab requires grammatical review; prefer jawapan.",
+    "fight|lawan": "Nominal lawan requires grammatical review.",
+    "show|tunjuk": "Nominal tunjuk requires grammatical review.",
+    "a lie|tipu": "Nominal tipu requires grammatical review.",
+    "to whip|pecut": "pecut can select acceleration instead of striking.",
+    "to work|kerja": "kerja does not establish the functional sense.",
+    "sea anemone|buran": "Rare marine term requires specialist Malaysian review.",
+    "a pump|bomba": "Prefer pam; bomba needs locale review.",
+    "sadist|sadis": "Person versus adjective sadis requires review.",
+    "bedbug|bangsat": "Derogatory alternative needs Malaysian lexical review."
+  }
+}

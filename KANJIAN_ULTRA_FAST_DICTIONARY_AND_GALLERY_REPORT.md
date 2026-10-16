@@ -1,6 +1,6 @@
 # KANJIAN — dictionary startup and progressive semantic galleries
 
-16 October 2026, Asia/Kuala_Lumpur. Local implementation and validation are complete. The Production record below will be completed after deployment and live verification.
+16 October 2026, Asia/Kuala_Lumpur. Implementation, testing, GitHub synchronization and the application Production release are complete. Live verification finished at 2026-10-16T02:36:09Z.
 
 ## A. Baseline, root causes and implementation
 
@@ -149,7 +149,33 @@ Remaining limits: actual provider metadata can be sparse or incorrect; filtering
 
 ## F. Release, live verification and rollback
 
-All essential local checks are complete. Safe commit/push and the existing Git-triggered Production deployment follow. No force push or replacement repository/project is authorized or used. The prior Production deployment remains the rollback target until the new release is verified. Detailed final source SHA, READY deployment, asset hashes, public gallery streaming and actual loaded image counts will be appended here.
+The application release is commit `24f679f5756738959a766f83f1494e2d7bacb43d`, pushed normally to the existing GitHub `main` branch. An independent remote-ref check matched that SHA. The existing Git-triggered workflow produced **`dpl_skngLN6Te1h6MbFuXj4R4ETFKtdy`, READY**, with the correct source SHA, existing Production aliases and **Hobby** plan. Live site: https://mandarin-visual-dictionary.vercel.app. No force push, new project, paid upgrade or credential change occurred. This report and its evidence record are finalized in a following documentation commit.
+
+Genuine unmocked Production observations on the same uncontrolled connection:
+
+| API scenario | First metadata before → after | Final response before → after | Final provider inventory |
+| --- | ---: | ---: | --- |
+| Running | 2,533 → 1,005 ms | 2,533 → 1,197 ms | 20: 12 Pixabay + 8 Openverse |
+| 不耻下问, canonical ID | 5,488 → 1,241 ms | 5,488 → 1,777 ms | 20: 14 Pixabay + 6 Openverse |
+
+The running response contained three metadata events over seven actual network chunks: **15 pictures at 1,005 ms**, then **20 at 1,194 ms**, followed by completion. The idiom response contained five events over eleven network chunks: **10 at 1,241 ms**, **19 at 1,425 ms**, **20 at 1,633 ms**, then an improved 20 and completion at about 1,777 ms. This verifies progressive delivery through the actual hosting path. Each final inventory has 20 distinct IDs; all Openverse selections retain license metadata. These before/after observations include uncontrolled provider, cache and network variation; the deterministic comparison establishes the architectural effect separately.
+
+Full-snapshot streaming increases raw API metadata: running 25,561 → 72,393 B and the idiom 24,949 → 109,969 B. That is a measured bandwidth tradeoff for early pictures; repeated client-cache views make no new API call. No production-wide upstream request count or cache hit rate is exposed by the public API, so none is invented.
+
+The live phone-width browser loaded **all 20 final running pictures**, with **zero failed images, zero JavaScript errors and no horizontal overflow**. Its first four image-load events took 1,379 ms after navigation and can include the existing bundled fallback; they are not a cold-provider-only metric. The first full dictionary result took **11,502 ms**, versus 17,600 ms in the baseline observation; worker index construction was **3,755 ms**. Live home visibility was 1,500 ms versus 1,201 ms before, so no live-home speed improvement is claimed. A screenshot spot-check confirms the rendered gallery and credits, but some photographs remain visually ambiguous teaching examples. Existing metadata-based ranking is not human certification of every depicted scene.
+
+The deployed main JavaScript, detail chunk, worker, packed Malay data, semantic lexicon and full canonical dictionary matched local SHA-256 values exactly. The Production service worker is not byte-identical to the Windows build: Linux line endings and asset enumeration order change its generated cache ID. A strict comparison after normalizing only those differences confirms identical executable code and exact precache/runtime/immutable asset sets. CSP, nosniff and referrer-policy headers remain correct. A separate browser check of the **actual Production service worker and data assets** then passed saved-sense reload, offline Malay search, unchanged saved storage, zero page errors and zero cached API responses. Only that isolated offline scenario mocks the image API unavailable; the provider and gallery observations above are unmocked.
+
+Release asset hashes:
+
+| Payload | SHA-256 |
+| --- | --- |
+| Main JS, 324,802 B | `5151e5b76fb7ca2ce228a4aa38a6fc7dc33d580374daa1bf268e29adcb2cb075` |
+| Dictionary worker, 57,853 B | `eafea1ad6bc8dfeb4cd01763d3c76d08089d9dcad63dd09748b80b2d4c91a9a6` |
+| Packed Malay, 4,102,517 B | `4c350c9fe9403eb6df144f433dbd6bdac8dcf9b62c9ccd403589730641799da5` |
+| Detail JS | `e84c0577738dfb9586d93ea8c6a532d7b18f12f723d795c7aeb3e8a1fd9331ff` |
+
+No unresolved critical regression remains. The previous READY deployment and verified local checkpoint remain available for rollback. All 15 unrelated research files remain untouched and uncommitted.
 
 Rollback can restore the previous known-good commit through a normal revert and the existing deployment workflow, or restore the previous READY deployment using the established Vercel project. Local source/data restoration instructions and verified bytes remain in the checkpoint. No canonical data migration needs reversal because the authoritative files were unchanged.
 

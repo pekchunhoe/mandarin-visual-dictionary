@@ -972,7 +972,231 @@
       ],
       "browser": []
     },
-    "after": null
+    "after": {
+      "at": "2026-10-16T02:31:25.973Z",
+      "base": "https://mandarin-visual-dictionary.vercel.app",
+      "api": [
+        {
+          "word": "跑",
+          "status": 200,
+          "headersMs": 995.8317999999999,
+          "firstMetadataMs": 1004.6385,
+          "finalMs": 1196.9619,
+          "chunks": 3,
+          "networkChunks": 7,
+          "events": [
+            {
+              "ms": 1004.6267,
+              "done": false,
+              "count": 15
+            },
+            {
+              "ms": 1194.209,
+              "done": false,
+              "count": 20
+            },
+            {
+              "ms": 1195.0916,
+              "done": true,
+              "count": 20
+            }
+          ],
+          "bytes": 72393,
+          "transport": "application/x-ndjson; charset=utf-8",
+          "count": 20,
+          "resultStatus": "live",
+          "diagnostics": [],
+          "providerCounts": {
+            "openverse": 8,
+            "pixabay": 12
+          },
+          "distinctIds": 20,
+          "licenses": 8
+        },
+        {
+          "word": "不耻下问",
+          "status": 200,
+          "headersMs": 1240.6792000000003,
+          "firstMetadataMs": 1241.383,
+          "finalMs": 1777.4787,
+          "chunks": 5,
+          "networkChunks": 11,
+          "events": [
+            {
+              "ms": 1241.3807,
+              "done": false,
+              "count": 10
+            },
+            {
+              "ms": 1424.5955000000001,
+              "done": false,
+              "count": 19
+            },
+            {
+              "ms": 1632.6915000000001,
+              "done": false,
+              "count": 20
+            },
+            {
+              "ms": 1776.9163,
+              "done": false,
+              "count": 20
+            },
+            {
+              "ms": 1777.1975,
+              "done": true,
+              "count": 20
+            }
+          ],
+          "bytes": 109969,
+          "transport": "application/x-ndjson; charset=utf-8",
+          "count": 20,
+          "resultStatus": "live",
+          "diagnostics": [
+            "english_definition_plan"
+          ],
+          "providerCounts": {
+            "openverse": 6,
+            "pixabay": 14
+          },
+          "distinctIds": 20,
+          "licenses": 6
+        }
+      ],
+      "browser": [
+        {
+          "scenario": "cold full dictionary",
+          "homeMs": 1500.2999999970198,
+          "firstSearchMs": 11502.29999999702,
+          "worker": {
+            "measures": [
+              {
+                "name": "kanjian-dictionary-ready",
+                "duration": 14690.20000000298
+              },
+              {
+                "name": "kanjian-index-build",
+                "duration": 3755.2000000029802
+              }
+            ],
+            "resources": [
+              {
+                "path": "/assets/malay-runtime-packed-DXRu-Ca5.json",
+                "duration": 2037.9000000059605,
+                "bytes": 1146683
+              },
+              {
+                "path": "/data/cedict.json",
+                "duration": 10420.29999999702,
+                "bytes": 4100960
+              },
+              {
+                "path": "/assets/visual-lexicon-BbIQzTYa.json",
+                "duration": 2420.300000011921,
+                "bytes": 274669
+              }
+            ]
+          }
+        },
+        {
+          "scenario": "live mobile gallery, unthrottled network",
+          "elapsedMs": 6542.29999999702,
+          "firstDecodedMs": 425.09999999403954,
+          "firstFourDecodedMs": 1379.0999999940395,
+          "figures": 20,
+          "decoded": 20,
+          "failed": 0,
+          "overflow": false,
+          "errors": []
+        }
+      ]
+    },
+    "assetVerification": {
+      "at": "2026-10-16T02:34:42.914Z",
+      "allPayloadAssetsIdentical": true,
+      "serviceWorkerCodeAndAssetSetsIdentical": true,
+      "files": [
+        {
+          "path": "/assets/dictionary.worker-DoRYef4R.js",
+          "status": 200,
+          "bytes": 57853,
+          "sha256": "eafea1ad6bc8dfeb4cd01763d3c76d08089d9dcad63dd09748b80b2d4c91a9a6",
+          "expectedSha256": "eafea1ad6bc8dfeb4cd01763d3c76d08089d9dcad63dd09748b80b2d4c91a9a6",
+          "identical": true,
+          "ms": 100.98559999999998
+        },
+        {
+          "path": "/assets/index-i8Z91Lx_.js",
+          "status": 200,
+          "bytes": 324802,
+          "sha256": "5151e5b76fb7ca2ce228a4aa38a6fc7dc33d580374daa1bf268e29adcb2cb075",
+          "expectedSha256": "5151e5b76fb7ca2ce228a4aa38a6fc7dc33d580374daa1bf268e29adcb2cb075",
+          "identical": true,
+          "ms": 483.0116
+        },
+        {
+          "path": "/assets/malay-runtime-packed-DXRu-Ca5.json",
+          "status": 200,
+          "bytes": 4102517,
+          "sha256": "4c350c9fe9403eb6df144f433dbd6bdac8dcf9b62c9ccd403589730641799da5",
+          "expectedSha256": "4c350c9fe9403eb6df144f433dbd6bdac8dcf9b62c9ccd403589730641799da5",
+          "identical": true,
+          "ms": 2196.8189
+        },
+        {
+          "path": "/assets/WordDetail-b1LKD46o.js",
+          "status": 200,
+          "bytes": 13600,
+          "sha256": "e84c0577738dfb9586d93ea8c6a532d7b18f12f723d795c7aeb3e8a1fd9331ff",
+          "expectedSha256": "e84c0577738dfb9586d93ea8c6a532d7b18f12f723d795c7aeb3e8a1fd9331ff",
+          "identical": true,
+          "ms": 245.50429999999994
+        },
+        {
+          "path": "/assets/visual-lexicon-BbIQzTYa.json",
+          "status": 200,
+          "bytes": 750817,
+          "sha256": "ff017c91a46fe29109b7d0d8992c59c306e2b48bb9d5c6a4bf069992fb6b134a",
+          "expectedSha256": "ff017c91a46fe29109b7d0d8992c59c306e2b48bb9d5c6a4bf069992fb6b134a",
+          "identical": true,
+          "ms": 791.2306999999998
+        },
+        {
+          "path": "/data/cedict.json",
+          "status": 200,
+          "bytes": 10883962,
+          "sha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+          "expectedSha256": "29ef153e108ce38023db98baabfdfe40447b2ff70d4c6d5c4643773755fea27a",
+          "identical": true,
+          "ms": 12272.1703
+        },
+        {
+          "path": "/sw.js",
+          "status": 200,
+          "bytes": 4146,
+          "sha256": "099ce4aea82c6049b94791a699de88d328f789c1bc34e45dab5cc2df66c8a5bf",
+          "expectedSha256": "5b65da572e1637f61c6098ffb9477d191382de839ef68c4baf5388c7d9464d8b",
+          "identical": false,
+          "ms": 249.98440000000005,
+          "sameCodeAndAssetSets": true
+        }
+      ],
+      "headers": {
+        "csp": "default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.pexels.com https://pixabay.com https://www.pixabay.com https://cdn.pixabay.com https: data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
+        "nosniff": "nosniff",
+        "referrerPolicy": "strict-origin-when-cross-origin"
+      }
+    },
+    "offline": {
+      "at": "2026-10-16T02:36:09.769Z",
+      "realProductionAssets": true,
+      "imageAPI": "mocked unavailable for this isolated offline scenario; separate live-provider check is unmocked",
+      "savedSensePreserved": true,
+      "offlineMalaySearch": true,
+      "savedStorageUnchanged": true,
+      "apiCacheEntries": 0,
+      "errors": []
+    }
   },
   "malay": {
     "before": 14761,
@@ -981,5 +1205,14 @@
     "explicitLexical": 1861,
     "untranslated": 183484,
     "enrichmentDeferred": true
+  },
+  "finalizedUTC": "2026-10-16T02:38:20.332Z",
+  "release": {
+    "commit": "24f679f5756738959a766f83f1494e2d7bacb43d",
+    "deployment": "dpl_skngLN6Te1h6MbFuXj4R4ETFKtdy",
+    "state": "READY",
+    "plan": "hobby",
+    "url": "https://mandarin-visual-dictionary.vercel.app",
+    "pushedWithoutForce": true
   }
 }

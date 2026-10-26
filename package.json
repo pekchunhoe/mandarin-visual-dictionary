@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node scripts/build-learning-data.mjs && node scripts/build-malay-transport.mjs && vite --host 127.0.0.1",
-    "build": "node scripts/build-learning-data.mjs && node scripts/malay/pipeline.mjs build && node scripts/build-malay-transport.mjs && tsc -b && node scripts/build-image-function.mjs && node scripts/verify-server-package.mjs && vite build && node scripts/verify-translation-cost.mjs",
+    "build": "node scripts/build-learning-data.mjs && node scripts/malay/pipeline.mjs build && node scripts/build-malay-transport.mjs && tsc -b && node scripts/build-image-function.mjs && node scripts/build-teacher-function.mjs && node scripts/verify-server-package.mjs && vite build && node scripts/verify-translation-cost.mjs && node scripts/verify-teacher-package.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "typecheck": "tsc -b",
@@ -19,7 +19,8 @@
     "check:whitespace": "node scripts/check-whitespace.mjs",
     "check:source": "node scripts/check-source.mjs",
     "check:translation-cost": "node scripts/verify-translation-cost.mjs",
-    "test:packaging": "node scripts/build-image-function.mjs && node scripts/verify-server-package.mjs",
+    "test:packaging": "node scripts/build-image-function.mjs && node scripts/build-teacher-function.mjs && node scripts/verify-server-package.mjs",
+    "test:teacher-packaging": "node scripts/build-teacher-function.mjs && node scripts/verify-teacher-package.mjs",
     "data:learning": "node scripts/build-learning-data.mjs",
     "test:bundle": "node scripts/verify-bundle.mjs",
     "measure:bundle": "node scripts/measure-bundle.mjs",
@@ -39,6 +40,7 @@
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",
+    "@vercel/firewall": "^1.2.6",
     "lucide-react": "^0.468.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
@@ -53,10 +55,10 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.7.0",
+    "esbuild": "^0.28.2",
     "jsdom": "^26.1.0",
     "typescript": "~5.8.3",
     "vite": "^7.3.6",
-    "vitest": "^4.1.11",
-    "esbuild": "^0.28.2"
+    "vitest": "^4.1.11"
   }
 }

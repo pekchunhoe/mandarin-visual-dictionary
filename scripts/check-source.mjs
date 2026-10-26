@@ -4,10 +4,10 @@ async function files(dir) { return (await Promise.all((await readdir(dir, { with
 for (const file of await files('src')) {
   if (!/\.(tsx?|js)$/.test(file)) continue;
   const source = await readFile(file, 'utf8');
-  assert(!/PIXABAY_API_KEY|PEXELS_API_KEY|OPENVERSE_CLIENT_ID|OPENVERSE_CLIENT_SECRET|from\s+['"][^'"]*server\//.test(source), `Server boundary violated: ${file}`);
+  assert(!/GEMINI_API_KEY|PIXABAY_API_KEY|PEXELS_API_KEY|OPENVERSE_CLIENT_ID|OPENVERSE_CLIENT_SECRET|from\s+['"][^'"]*server\//.test(source), `Server boundary violated: ${file}`);
 }
 const example = await readFile('.env.example', 'utf8');
-for (const name of ['PIXABAY_API_KEY', 'PEXELS_API_KEY', 'OPENVERSE_CLIENT_ID', 'OPENVERSE_CLIENT_SECRET']) {
+for (const name of ['GEMINI_API_KEY', 'PIXABAY_API_KEY', 'PEXELS_API_KEY', 'OPENVERSE_CLIENT_ID', 'OPENVERSE_CLIENT_SECRET']) {
   assert(new RegExp(`^${name}=\\s*$`, 'm').test(example), `Missing empty environment placeholder: ${name}`);
   for (const file of (await files('dist')).filter(file => /\.(js|html|css|json|map|webmanifest)$/.test(file))) {
     const source = await readFile(file, 'utf8');
@@ -15,6 +15,7 @@ for (const name of ['PIXABAY_API_KEY', 'PEXELS_API_KEY', 'OPENVERSE_CLIENT_ID', 
     if (process.env[name]?.length > 8) assert(!source.includes(process.env[name]), `Server credential leaked into ${file}`);
     assert(!source.includes('https://pixabay.com/api/'), `Upstream API leaked into ${file}`);
     assert(!source.includes('auth_tokens/token') && !source.includes('client_credentials'), `OAuth implementation leaked into ${file}`);
+    assert(!source.includes('generativelanguage.googleapis.com'), `Gemini implementation leaked into ${file}`);
   }
 }
 assert((await readFile('.gitignore', 'utf8')).split(/\r?\n/).includes('.env.local'), 'Local secrets must be ignored');

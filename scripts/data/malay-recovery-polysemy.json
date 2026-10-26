@@ -1,0 +1,26 @@
+{
+  "status": "Assistant-authored reference drafts; independent human review required",
+  "license": "CC-BY-SA-4.0",
+  "cases": [
+    {"simplified":"开","pinyin":"kai1","english":"(of ships, vehicles, troops etc) to start","references":["mula bergerak atau beroperasi, bagi kapal, kenderaan, pasukan dan sebagainya"]},
+    {"simplified":"开","pinyin":"kai1","english":"to turn on; to put in operation; to operate; to run","references":["menghidupkan; menjalankan; mengendalikan"]},
+    {"simplified":"开","pinyin":"kai1","english":"(directional complement) away; off","references":["pelengkap arah yang menunjukkan pergerakan menjauh atau pemisahan"]},
+    {"simplified":"开","pinyin":"kai1","english":"carat (gold)","references":["karat, ukuran ketulenan emas"]},
+    {"simplified":"长","pinyin":"chang2","english":"(bound form) strong point; forte","references":["kelebihan; kekuatan utama"]},
+    {"simplified":"长","pinyin":"zhang3","english":"elder","references":["orang yang lebih tua"]},
+    {"simplified":"行","pinyin":"hang2","english":"(in data tables) row; (Tw) column","references":["baris dalam jadual data; di Taiwan, lajur"]},
+    {"simplified":"好","pinyin":"hao3","english":"(of two people) close; on intimate terms","references":["rapat; mempunyai hubungan akrab antara dua orang"]},
+    {"simplified":"好","pinyin":"hao3","english":"(before an adjective for exclamatory effect) so","references":["sungguh; amat; digunakan sebelum kata sifat untuk menegaskan seruan"]},
+    {"simplified":"得","pinyin":"de2","english":"to catch (a disease)","references":["menghidap atau dijangkiti penyakit"]},
+    {"simplified":"得","pinyin":"dei3","english":"ought to","references":["sepatutnya; sewajarnya"]},
+    {"simplified":"打","pinyin":"da2","english":"(loanword) dozen","references":["sedozen; dua belas"]},
+    {"simplified":"会","pinyin":"hui4","english":"can; to have the skill; to know how to","references":["boleh; mempunyai kemahiran; tahu cara melakukan sesuatu"]},
+    {"simplified":"会","pinyin":"hui4","english":"meeting; gathering","references":["mesyuarat; perhimpunan"]},
+    {"simplified":"会","pinyin":"kuai4","english":"(bound form) to reckon accounts","references":["mengira akaun"]},
+    {"simplified":"生","pinyin":"sheng1","english":"raw; uncooked; unprocessed","references":["mentah; belum dimasak; belum diproses"]},
+    {"simplified":"发","pinyin":"fa4","english":"hair","references":["rambut"]},
+    {"simplified":"上","pinyin":"shang4","english":"to attend (class or university)","references":["menghadiri kelas atau mengikuti pengajian di universiti"]},
+    {"simplified":"下","pinyin":"xia4","english":"measure word to show the frequency of an action","references":["penjodoh bilangan untuk menunjukkan bilangan kali sesuatu tindakan dilakukan"]},
+    {"simplified":"过","pinyin":"guo5","english":"(experienced action marker)","references":["penanda bahawa sesuatu perbuatan pernah dilakukan atau dialami"]}
+  ]
+}

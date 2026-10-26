@@ -1,0 +1,276 @@
+{
+  "testDate": "2026-10-26",
+  "timeZone": "Asia/Kuala_Lumpur",
+  "authorization": "Four additional requests for the four specified v2 acceptance cases",
+  "model": "gemini-3.5-flash-lite",
+  "promptVersion": "teacher-v2-linguistic",
+  "requestCap": 4,
+  "realRequestsUsed": 4,
+  "billingChanged": false,
+  "automaticRetries": 0,
+  "environmentUnchanged": true,
+  "pipeline": "api/teacher.js -> server/teacher-service.mjs -> official Gemini generateContent",
+  "cases": [
+    {
+      "request": {
+        "id": "addition-sentences",
+        "word": "画蛇添足|畫蛇添足|hua4 she2 tian1 zu2",
+        "headword": "画蛇添足",
+        "sense": "sense-0",
+        "action": "sentences"
+      },
+      "evidence": {
+        "number": 1,
+        "task": "addition-sentences",
+        "action": "sentences",
+        "model": "gemini-3.5-flash-lite",
+        "version": "teacher-v2-linguistic",
+        "sourcePolicyMatched": true,
+        "systemInstructionSha256": "1df2da650e9d945006b55bf41e1cae15fa54d58d8982f9e99bd6eb11cf7bd8ee",
+        "selectedMeaning": "lit. draw legs on a snake (idiom); fig. to ruin the effect by adding sth superfluous",
+        "idiomFlag": true,
+        "startedAt": "2026-10-26T04:27:53.114Z",
+        "httpStatus": 200,
+        "providerModelVersion": "gemini-3.5-flash-lite",
+        "finishReason": "STOP",
+        "usage": {
+          "promptTokenCount": 710,
+          "candidatesTokenCount": 317,
+          "totalTokenCount": 1027
+        },
+        "elapsedMs": 3208
+      },
+      "outcome": {
+        "task": "addition-sentences",
+        "applicationStatus": 200,
+        "freshUpstreamRequest": true,
+        "currentPromptVersion": true,
+        "cacheControl": "no-store",
+        "resultValidated": true,
+        "sentenceCount": 3
+      },
+      "result": {
+        "word": "画蛇添足",
+        "sentences": [
+          {
+            "chinese": "这篇文章已经很完美了，你不用再加这段话，以免画蛇添足。",
+            "english": "This article is already perfect; you do not need to add this paragraph, so as not to ruin it by adding something superfluous.",
+            "malay": "Artikel ini sudah cukup sempurna; anda tidak perlu lagi menambah perenggan ini supaya tidak menjadi sia-sia seperti melukis ular menambah kaki."
+          },
+          {
+            "chinese": "老师提醒我们做画时要恰到好处，千万不要画蛇添足。",
+            "english": "The teacher reminded us to be just right when painting, and by all means not to ruin the effect by adding unnecessary details.",
+            "malay": "Cikgu mengingatkan kami supaya melukis dengan kadar yang secukupnya dan jangan sekali-kali melakukan sesuatu yang berlebihan."
+          },
+          {
+            "chinese": "他的演讲本来已经很有说服力了，最后却画蛇添足多说了几句，反而扣了分.",
+            "english": "His speech was already persuasive, but in the end he added unnecessary remarks which instead cost him points.",
+            "malay": "Ucapannya tadinya sudah cukup menyakinkan, tetapi akhirnya dia menambah beberapa patah perkataan yang tidak perlu sehingga markahnya dipotong."
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "id": "humble-learning-sentences",
+        "word": "不耻下问|不恥下問|bu4 chi3 xia4 wen4",
+        "headword": "不耻下问",
+        "sense": "sense-0",
+        "action": "sentences"
+      },
+      "evidence": {
+        "number": 2,
+        "task": "humble-learning-sentences",
+        "action": "sentences",
+        "model": "gemini-3.5-flash-lite",
+        "version": "teacher-v2-linguistic",
+        "sourcePolicyMatched": true,
+        "systemInstructionSha256": "1df2da650e9d945006b55bf41e1cae15fa54d58d8982f9e99bd6eb11cf7bd8ee",
+        "selectedMeaning": "not feel ashamed to ask and learn from one's subordinates",
+        "idiomFlag": false,
+        "startedAt": "2026-10-26T04:27:56.332Z",
+        "httpStatus": 200,
+        "providerModelVersion": "gemini-3.5-flash-lite",
+        "finishReason": "STOP",
+        "usage": {
+          "promptTokenCount": 695,
+          "candidatesTokenCount": 361,
+          "totalTokenCount": 1056
+        },
+        "elapsedMs": 2020
+      },
+      "outcome": {
+        "task": "humble-learning-sentences",
+        "applicationStatus": 200,
+        "freshUpstreamRequest": true,
+        "currentPromptVersion": true,
+        "cacheControl": "no-store",
+        "resultValidated": true,
+        "sentenceCount": 3
+      },
+      "result": {
+        "word": "不耻下问",
+        "sentences": [
+          {
+            "chinese": "作为经理，他经常向年轻的员工请教，这种不耻下问的精神值得大家学习。",
+            "english": "As a manager, he often consults younger employees, and this spirit of not feeling ashamed to ask and learn from one's subordinates is worthy of everyone's emulation.",
+            "malay": "Sebagai seorang pengurus, beliau sering meminta pandangan daripada pekerja yang lebih muda, dan sikap tidak malu bertanya serta belajar daripada orang bawahan ini wajar dicontohi oleh semua."
+          },
+          {
+            "chinese": "老师总是鼓励我们在学习上要不耻下问，遇到不懂的问题就要勇敢发问。",
+            "english": "Teachers always encourage us not to feel ashamed to ask and learn from those of lower status when studying, and to bravely ask questions whenever we encounter things we do not understand.",
+            "malay": "Guru sentiasa menggalakkan kami supaya tidak malu bertanya dan belajar daripada orang bawahan dalam pelajaran, serta berani mengemukakan soalan apabila menghadapi perkara yang tidak difahami."
+          },
+          {
+            "chinese": "他虽然在学术上很有成就，但对待学问依然保持不耻下问的态度。",
+            "english": "Although he has great academic achievements, he still maintains an attitude of not feeling ashamed to ask and learn from his subordinates when it comes to knowledge.",
+            "malay": "Walaupun beliau sangat berjaya dalam bidang akademik, beliau tetap mengekalkan sikap tidak malu bertanya dan belajar daripada orang bawahan dalam menuntut ilmu."
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "id": "beautiful-relations",
+        "word": "美丽|美麗|mei3 li4",
+        "headword": "美丽",
+        "sense": "sense-0",
+        "action": "synonyms-antonyms"
+      },
+      "evidence": {
+        "number": 3,
+        "task": "beautiful-relations",
+        "action": "synonyms-antonyms",
+        "model": "gemini-3.5-flash-lite",
+        "version": "teacher-v2-linguistic",
+        "sourcePolicyMatched": true,
+        "systemInstructionSha256": "30ee4a5e1966cdbbaf6ede160b4a8c9b6c3a96ed0f8e9f65439ca5fa03ef824f",
+        "selectedMeaning": "beautiful",
+        "idiomFlag": false,
+        "startedAt": "2026-10-26T04:27:58.356Z",
+        "httpStatus": 200,
+        "providerModelVersion": "gemini-3.5-flash-lite",
+        "finishReason": "STOP",
+        "usage": {
+          "promptTokenCount": 781,
+          "candidatesTokenCount": 311,
+          "totalTokenCount": 1092
+        },
+        "elapsedMs": 2928
+      },
+      "outcome": {
+        "task": "beautiful-relations",
+        "applicationStatus": 200,
+        "freshUpstreamRequest": true,
+        "currentPromptVersion": true,
+        "cacheControl": "no-store",
+        "resultValidated": true,
+        "synonymCount": 6,
+        "antonymCount": 2
+      },
+      "result": {
+        "word": "美丽",
+        "synonyms": [
+          {
+            "chinese": "漂亮",
+            "english": "pretty",
+            "malay": "cantik"
+          },
+          {
+            "chinese": "好看",
+            "english": "good-looking",
+            "malay": "elok"
+          },
+          {
+            "chinese": "秀丽",
+            "english": "pretty and graceful",
+            "malay": "indah"
+          },
+          {
+            "chinese": "俊美",
+            "english": "handsome and beautiful",
+            "malay": "kacak dan cantik"
+          },
+          {
+            "chinese": "美观",
+            "english": "pleasing to the eye",
+            "malay": "menarik pandangan"
+          },
+          {
+            "chinese": "奇丽",
+            "english": "strikingly beautiful",
+            "malay": "cantik menawan"
+          }
+        ],
+        "antonyms": [
+          {
+            "chinese": "丑陋",
+            "english": "ugly",
+            "malay": "hodoh"
+          },
+          {
+            "chinese": "难看",
+            "english": "ugly",
+            "malay": "buruk"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "id": "apple-relations",
+        "word": "苹果",
+        "headword": "苹果",
+        "sense": "sense-0",
+        "action": "synonyms-antonyms"
+      },
+      "evidence": {
+        "number": 4,
+        "task": "apple-relations",
+        "action": "synonyms-antonyms",
+        "model": "gemini-3.5-flash-lite",
+        "version": "teacher-v2-linguistic",
+        "sourcePolicyMatched": true,
+        "systemInstructionSha256": "30ee4a5e1966cdbbaf6ede160b4a8c9b6c3a96ed0f8e9f65439ca5fa03ef824f",
+        "selectedMeaning": "apple",
+        "idiomFlag": false,
+        "startedAt": "2026-10-26T04:28:01.287Z",
+        "httpStatus": 200,
+        "providerModelVersion": "gemini-3.5-flash-lite",
+        "finishReason": "STOP",
+        "usage": {
+          "promptTokenCount": 787,
+          "candidatesTokenCount": 97,
+          "totalTokenCount": 884
+        },
+        "elapsedMs": 2531
+      },
+      "outcome": {
+        "task": "apple-relations",
+        "applicationStatus": 200,
+        "freshUpstreamRequest": true,
+        "currentPromptVersion": true,
+        "cacheControl": "no-store",
+        "resultValidated": true,
+        "synonymCount": 2,
+        "antonymCount": 0
+      },
+      "result": {
+        "word": "苹果",
+        "synonyms": [
+          {
+            "chinese": "红富士",
+            "english": "Fuji apple",
+            "malay": "epal fuji"
+          },
+          {
+            "chinese": "果实",
+            "english": "fruit",
+            "malay": "buah"
+          }
+        ],
+        "antonyms": []
+      }
+    }
+  ]
+}

@@ -1,25 +1,12 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { loadEnv } from 'vite';
+import { verifyPackageSecurity } from './verify-package-security.mjs';
 
 // Read local secrets in memory for comparisons only. Never print values or dotenv contents.
 const environment = loadEnv('production', process.cwd(), ['GEMINI_API_KEY', 'PIXABAY_', 'PEXELS_', 'OPENVERSE_']);
 const localKeyConfigured = Boolean(environment.GEMINI_API_KEY?.trim());
-assert(readFileSync('.gitignore', 'utf8').split(/\r?\n/).includes('.env.local'), 'Private environment files must be ignored.');
-if (existsSync('.git')) {
-  execFileSync('git', ['check-ignore', '.env.local'], { stdio: 'pipe' });
-  const trackedEnvironmentFiles = execFileSync('git', ['ls-files', '.env*'], { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
-  assert(trackedEnvironmentFiles.every(path => path === '.env.example'), 'A private environment file is tracked.');
-}
-const walk = directory => readdirSync(directory, { withFileTypes: true }).flatMap(item => item.isDirectory() ? walk(join(directory, item.name)) : [join(directory, item.name)]);
-const sources = [...walk('src'), ...walk('server'), ...walk('api'), ...walk('scripts'), ...walk('tests'), ...walk('dist')].filter(file => !file.startsWith(join('scripts', 'data')) && /\.(?:ts|tsx|js|mjs|json|css|html|md|map)$/.test(file));
-const credentials = Object.values(environment).filter(value => value.trim().length >= 8);
-for (const file of sources) {
-  const source = readFileSync(file, 'utf8');
-  assert(!credentials.some(value => source.includes(value) || source.includes(encodeURIComponent(value))), 'A configured credential appears in a source or generated asset.');
-}
+const security = verifyPackageSecurity({ environment });
 const browserGraph = JSON.parse(readFileSync('.tmp/browser-bundle-graph.json', 'utf8'));
 const initial = browserGraph.filter(item => item.entry);
 assert(initial.every(item => !item.modules.some(module => /ai-teacher|AITeacher|teacher-clipboard/.test(module))), 'AI Teacher must not enter the startup bundle.');
@@ -52,4 +39,4 @@ for (const action of ['sentences', 'synonyms-antonyms']) {
   assert(!JSON.stringify(body).includes('packaged-fixture-key'));
 }
 assert.equal(calls, 2);
-console.log(`PASS: local server key ${localKeyConfigured ? 'present' : 'absent (AI remains optional)'}, private env files ignored, credentials absent from source/assets, lazy browser boundary, and both native teacher actions (mocked).`);
+console.log(`PASS: ${security.gitMetadata ? 'Git ignore/tracked-file checks' : 'metadata-free filesystem checks'}, private-file/credential artifact checks, local server key ${localKeyConfigured ? 'present' : 'absent (AI remains optional)'}, lazy browser boundary, and both native teacher actions (mocked).`);

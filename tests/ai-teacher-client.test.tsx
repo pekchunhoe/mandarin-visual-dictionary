@@ -11,7 +11,7 @@ afterEach(() => { vi.unstubAllGlobals(); });
 const mount = () => render(<AITeacher word={word} sense={word.senses[0]}/>);
 const buttons = () => ({ sentences: screen.getByRole('button', { name: /造句 · Example Sentences/ }), relations: screen.getByRole('button', { name: /近义词和反义词 · Synonyms/ }) });
 it('renders exactly two feature buttons and performs no request on mount', () => {
-  const fetcher = vi.spyOn(globalThis, 'fetch'); mount(); expect(screen.getAllByRole('button')).toHaveLength(2); expect(fetcher).not.toHaveBeenCalled();
+  const fetcher = vi.spyOn(globalThis, 'fetch'); mount(); expect(screen.getAllByRole('button')).toHaveLength(4); expect(screen.getAllByRole('button', { name: /^Copy .+ prompt for/ })).toHaveLength(2); expect(fetcher).not.toHaveBeenCalled();
 });
 it('generates only on click and copies just the selected trilingual sentence', async () => {
   const clipboard = vi.fn().mockResolvedValue(undefined); Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: clipboard } });
